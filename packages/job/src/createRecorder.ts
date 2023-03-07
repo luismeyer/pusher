@@ -1,9 +1,9 @@
-import { existsSync, readFileSync } from "fs";
+import { existsSync } from "fs";
 import { resolve } from "path";
 import { Page } from "puppeteer-core";
 import { PuppeteerScreenRecorder } from "puppeteer-screen-recorder";
 
-const ffmpegPath = resolve(__dirname, "../bin/ffmpeg");
+const ffmpegPath = resolve(__dirname, "../ffmpeg");
 
 if (!existsSync(ffmpegPath)) {
   throw new Error("Missing ffmpeg installation");

@@ -40,3 +40,5 @@ dist
 output.mp4
 .parcel-cache
 bin
+
+*ffmpeg*
