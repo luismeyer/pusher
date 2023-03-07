@@ -1,4 +1,4 @@
-import { Page } from "puppeteer";
+import { Page } from "puppeteer-core";
 
 export const scrollPageToBottom = async (page: Page) =>
   page.evaluate(

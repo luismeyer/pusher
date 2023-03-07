@@ -1,6 +1,11 @@
-import { Page } from "puppeteer";
+import { Page } from "puppeteer-core";
 import { click } from "./click";
-import { Action, isDecisionAction, isNavigationAction } from "./db";
+import {
+  Action,
+  isDecisionAction,
+  isNavigationAction,
+  isSelectorAction,
+} from "./db";
 import { openPage } from "./openPage";
 import { scrollPageToBottom } from "./scrollPageToBottom";
 import { type } from "./type";
@@ -10,11 +15,38 @@ import { exists } from "./exists";
 import { textContentMatches } from "./textContentMatches";
 import { sendTelegramMessage } from "./sendTelegramMessage";
 
+const createSelector = (
+  action: Action,
+  variables?: Record<string, string>
+): string => {
+  if (!variables || !isSelectorAction(action)) {
+    return "";
+  }
+
+  // find {{variableName}} in the selector
+  const [_match, variableName] = action.selector.match(/{{(.*)}}/) ?? [];
+
+  if (!variableName) {
+    return action.selector;
+  }
+
+  const override = variables[variableName];
+
+  if (!override) {
+    throw new Error("Missing variable: " + variableName);
+  }
+
+  return action.selector.replace(`{{${variableName}}}`, override);
+};
+
 export const executeActions = async (
   page: Page,
-  action: Action
+  action: Action,
+  variables?: Record<string, string>
 ): Promise<boolean> => {
   let decision = undefined;
+
+  const selector = createSelector(action, variables);
 
   switch (action.type) {
     case "openPage":
@@ -22,11 +54,11 @@ export const executeActions = async (
       break;
 
     case "type":
-      await type(page, action.selector, action.text);
+      await type(page, selector, action.text);
       break;
 
     case "click":
-      await click(page, action.selector);
+      await click(page, selector);
       break;
 
     case "scrollToBottom":
@@ -34,7 +66,7 @@ export const executeActions = async (
       break;
 
     case "waitFor":
-      await waitFor(page, action.selector);
+      await waitFor(page, selector);
       break;
 
     case "timeout":
@@ -42,7 +74,7 @@ export const executeActions = async (
       break;
 
     case "exists":
-      decision = await exists(page, action.selector);
+      decision = await exists(page, selector);
       break;
 
     case "textContentMatches":
@@ -59,15 +91,15 @@ export const executeActions = async (
   }
 
   if (decision && isDecisionAction(action) && action.trueNextAction) {
-    return executeActions(page, action.trueNextAction);
+    return executeActions(page, action.trueNextAction, variables);
   }
 
   if (!decision && isDecisionAction(action) && action.falseNextAction) {
-    return executeActions(page, action.falseNextAction);
+    return executeActions(page, action.falseNextAction, variables);
   }
 
   if (isNavigationAction(action) && action.nextAction) {
-    return executeActions(page, action.nextAction);
+    return executeActions(page, action.nextAction, variables);
   }
 
   return true;

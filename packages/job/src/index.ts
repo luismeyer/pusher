@@ -1,44 +1,54 @@
-import puppeteer from "puppeteer";
-import { CheckOptions } from "./checkCenter";
+import chromium from "@sparticuz/chromium-min";
+import pup from "puppeteer";
+import puppeteer from "puppeteer-core";
+
+import { startRecorder } from "./createRecorder";
 import { Flow } from "./db";
 import { executeFlow } from "./executeFlow";
-
-// const centers: CheckOptions[] = [
-//   {
-//     page,
-//     centerName: "Mitte",
-//     accordionNumber: 2916,
-//     serviceNumber: 8228,
-//   },
-//   {
-//     page,
-//     centerName: "Nord",
-//     accordionNumber: 2928,
-//     serviceNumber: 8274,
-//   },
-//   {
-//     page,
-//     centerName: "Stresemannstraße",
-//     accordionNumber: 2941,
-//     serviceNumber: 8322,
-//   },
-// ];
+import { uploadFileToS3 } from "./uploadFileToS3";
 
 const ExampleFlow: Flow = {
   id: "1234567890",
   name: "Example",
-  actions: {
+  fails: 0,
+  executions: [
+    {
+      name: "Mitte",
+      variables: {
+        centerName: "Mitte",
+        accordionNumber: "3240",
+        serviceNumber: "8580",
+      },
+    },
+    {
+      name: "Nord",
+      variables: {
+        centerName: "Nord",
+        accordionNumber: "2928",
+        serviceNumber: "8274",
+      },
+    },
+    {
+      name: "Stresemannstraße",
+      variables: {
+        centerName: "Stresemannstraße",
+        accordionNumber: "2941",
+        serviceNumber: "8322",
+      },
+    },
+  ],
+  actionTree: {
     type: "openPage",
     pageUrl: "https://termin.bremen.de/termine/",
     nextAction: {
       type: "click",
-      selector: '[name="BürgerServiceCenter-Mitte"]',
+      selector: '[name="BürgerServiceCenter-{{centerName}}"]',
       nextAction: {
         type: "click",
-        selector: "#header_concerns_accordion-3240",
+        selector: "#header_concerns_accordion-{{accordionNumber}}",
         nextAction: {
           type: "click",
-          selector: "#button-plus-8580",
+          selector: "#button-plus-{{serviceNumber}}",
           nextAction: {
             type: "scrollToBottom",
             nextAction: {
@@ -67,16 +77,50 @@ const ExampleFlow: Flow = {
   },
 };
 
-const main = async () => {
-  const browser = await puppeteer.launch({ headless: false });
-  const page = await browser.newPage();
-
-  // Set screen size
-  await page.setViewport({ width: 1080, height: 1024 });
-
-  await executeFlow(page, ExampleFlow);
-
-  await browser.close();
+type Payload = {
+  flow: Flow;
+  debug: boolean;
 };
 
-main();
+export const handler = async ({
+  flow,
+  debug,
+}: Payload): Promise<string | boolean> => {
+  const executablePath = process.env.IS_LOCAL
+    ? pup.executablePath()
+    : await chromium.executablePath(
+        "https://github.com/Sparticuz/chromium/releases/download/v110.0.1/chromium-v110.0.1-pack.tar"
+      );
+
+  const browser = await puppeteer.launch({
+    args: chromium.args,
+    defaultViewport: chromium.defaultViewport,
+    executablePath,
+    headless: chromium.headless,
+    ignoreHTTPSErrors: true,
+  });
+
+  const page = await browser.newPage();
+
+  const stopRecorder = debug && (await startRecorder(page));
+
+  let result: string | boolean = true;
+
+  await executeFlow(page, flow).catch((error) => {
+    console.info(`Error in ${flow.id}:`, error);
+
+    result = false;
+  });
+
+  if (stopRecorder) {
+    const videoPath = await stopRecorder();
+
+    result = await uploadFileToS3(videoPath);
+  }
+
+  await browser.close();
+
+  return result;
+};
+
+// handler({ flow: ExampleFlow, debug: true }).then(console.log);

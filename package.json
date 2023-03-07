@@ -2,16 +2,20 @@
   "name": "pusher",
   "version": "1.0.0",
   "description": "",
-  "scripts": {
-    "watch": "npx lerna run watch --parallel"
-  },
+  "keywords": [],
+  "license": "ISC",
+  "author": "",
   "workspaces": [
     "packages/*"
   ],
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
+  "scripts": {
+    "watch": "npx lerna run watch --parallel"
+  },
+  "dependencies": {
+    "typescript": "^4.9.5"
+  },
   "devDependencies": {
+    "@types/node": "^18.14.0",
     "lerna": "^6.5.1"
   }
 }
