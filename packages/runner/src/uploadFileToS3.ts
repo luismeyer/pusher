@@ -1,5 +1,6 @@
-import { S3Client, PutObjectCommand } from "@aws-sdk/client-s3";
 import { readFileSync } from "fs";
+
+import { PutObjectCommand, S3Client } from "@aws-sdk/client-s3";
 
 const { VIDEO_BUCKET } = process.env;
 if (!VIDEO_BUCKET) {

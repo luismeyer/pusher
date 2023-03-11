@@ -1,6 +1,7 @@
-import chromium from "@sparticuz/chromium-min";
 import pup from "puppeteer";
 import puppeteer from "puppeteer-core";
+
+import chromium from "@sparticuz/chromium-min";
 
 export const createBrowser = async () => {
   const executablePath = process.env.IS_LOCAL

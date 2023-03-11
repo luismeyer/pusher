@@ -1,4 +1,4 @@
-import { Page } from "puppeteer-core";
+import { Page } from 'puppeteer-core';
 
 export const exists = async (page: Page, selector: string) => {
   try {
