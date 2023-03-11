@@ -1,5 +1,5 @@
+import { Flow } from "@pusher/shared";
 import { Page } from "puppeteer-core";
-import { Flow } from "./db";
 import { executeActions } from "./executeActions";
 
 export const executeFlow = async (page: Page, flow: Flow) => {

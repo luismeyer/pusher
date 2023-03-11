@@ -1,5 +1,5 @@
+import { Flow } from "@pusher/shared";
 import { handler } from ".";
-import { Flow } from "./db";
 
 const ExampleFlow: Flow = {
   id: "1234567890",

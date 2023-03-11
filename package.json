@@ -9,7 +9,8 @@
     "packages/*"
   ],
   "scripts": {
-    "watch": "npx lerna run watch --parallel"
+    "watch": "lerna run watch --parallel",
+    "ts": "lerna run ts --parallel"
   },
   "dependencies": {
     "typescript": "^4.9.5"

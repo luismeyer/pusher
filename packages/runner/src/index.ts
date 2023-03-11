@@ -1,6 +1,6 @@
+import { Flow } from "@pusher/shared";
 import { createBrowser } from "./createBrowser";
 import { startRecorder } from "./createRecorder";
-import { Flow } from "./db";
 import { executeFlow } from "./executeFlow";
 import { uploadFileToS3 } from "./uploadFileToS3";
 
