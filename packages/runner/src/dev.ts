@@ -5,6 +5,7 @@ import { handler } from "./";
 const ExampleFlow: Flow = {
   id: "1234567890",
   name: "Example",
+  interval: "6h",
   fails: 0,
   executions: [
     {

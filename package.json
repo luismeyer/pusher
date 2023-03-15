@@ -10,12 +10,11 @@
   ],
   "scripts": {
     "watch": "lerna run watch --parallel",
-    "ts": "lerna run ts --parallel"
-  },
-  "dependencies": {
-    "typescript": "^4.9.5"
+    "ts": "lerna run ts --parallel",
+    "dev": "lerna run dev --parallel"
   },
   "devDependencies": {
+    "typescript": "^4.9.5",
     "@types/node": "^18.14.0",
     "lerna": "^6.5.1"
   }

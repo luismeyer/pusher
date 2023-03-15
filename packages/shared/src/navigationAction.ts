@@ -1,7 +1,7 @@
 import { Action } from "./flow";
 
 export type NavigationBaseAction = {
-  nextAction: Action;
+  nextAction?: Action;
 };
 
 export type ClickAction = NavigationBaseAction & {
