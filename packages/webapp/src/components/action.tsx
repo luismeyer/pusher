@@ -1,11 +1,5 @@
 import { Button, Card, theme } from "antd";
-import React, {
-  useCallback,
-  useEffect,
-  useMemo,
-  useRef,
-  useState,
-} from "react";
+import React, { useCallback, useEffect, useMemo, useRef } from "react";
 
 import { useActionIndexAtom } from "@/state/actionIndexSelector";
 import { useConnectingAtom } from "@/state/connecting";
@@ -20,6 +14,8 @@ import { useConnection } from "../hooks/useConnection";
 import { useDragAndDrop } from "../hooks/useDragAndDrop";
 import { useActionAtom } from "../state/actionSelector";
 import { useActionsAtom } from "../state/actions";
+import { ActionContent } from "./actionContent";
+import { ActionHeader } from "./actionHeadline";
 
 type ActionProps = {
   canvas: React.RefObject<HTMLDivElement>;
@@ -30,8 +26,6 @@ export const Action: React.FC<ActionProps> = ({ id, canvas }) => {
   const { deleteAction } = useActionsAtom();
 
   const [action, setAction] = useActionAtom(id);
-
-  const index = useActionIndexAtom(id);
 
   const [{ actionA }] = useConnectingAtom();
 
@@ -63,8 +57,8 @@ export const Action: React.FC<ActionProps> = ({ id, canvas }) => {
   } = theme.useToken();
 
   const handleDeleteClick = useCallback(() => {
-    deleteAction(id);
-  }, [deleteAction, id]);
+    deleteAction(action);
+  }, [action, deleteAction]);
 
   const handleMouseDown: React.MouseEventHandler<HTMLDivElement> = useCallback(
     (event) => {
@@ -128,7 +122,7 @@ export const Action: React.FC<ActionProps> = ({ id, canvas }) => {
         }}
         title={
           <div className={styles.header}>
-            <h3>{index}. Action</h3>
+            <ActionHeader id={id} />
 
             <div className={styles.buttons}>
               <Button
@@ -156,10 +150,7 @@ export const Action: React.FC<ActionProps> = ({ id, canvas }) => {
         bordered={true}
         className={styles.card}
       >
-        <p>
-          ActionType: <b>{action.data.type}</b>
-        </p>
-        <p>{id}</p>
+        <ActionContent id={id} />
       </Card>
     </div>
   );

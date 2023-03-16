@@ -1,9 +1,10 @@
 import { useCallback } from "react";
 import { atom, useRecoilState } from "recoil";
 
+import { removeItemAtIndex, replaceItemAtIndex } from "@/utils/array";
 import { Action as Data } from "@pusher/shared";
 
-import { removeItemAtIndex, replaceItemAtIndex } from "../utils/array";
+import { useDatasAtom } from "./data";
 
 export type Action = {
   x: number;
@@ -11,8 +12,10 @@ export type Action = {
   width?: number;
   height?: number;
   id: string;
-  data: Data;
+
   nextAction?: string;
+  trueNextAction?: string;
+  falseNextAction?: string;
 };
 
 export type ActionStore = Action[];
@@ -25,8 +28,10 @@ export const actionsAtom = atom<ActionStore>({
 export const useActionsAtom = () => {
   const [actions, setActions] = useRecoilState(actionsAtom);
 
+  const { addData, deleteData } = useDatasAtom();
+
   const deleteAction = useCallback(
-    (id: string) => {
+    ({ id }: Action) => {
       const prevIndex = actions.findIndex((action) => action.nextAction === id);
       const prevAction = actions[prevIndex];
 
@@ -44,23 +49,28 @@ export const useActionsAtom = () => {
       newActions = removeItemAtIndex(newActions, index);
 
       setActions(newActions);
+
+      deleteData(id);
     },
-    [actions, setActions]
+    [actions, deleteData, setActions]
   );
 
   const addAction = useCallback(
-    (action: Data) => {
+    (data: Data) => {
+      const id = Math.floor(Math.random() * 1000).toString();
+
       setActions([
         ...actions,
         {
-          id: Math.floor(Math.random() * 1000).toString(),
+          id,
           x: 10,
           y: 10,
-          data: action,
         },
       ]);
+
+      addData(id, data);
     },
-    [actions, setActions]
+    [actions, addData, setActions]
   );
 
   return {
