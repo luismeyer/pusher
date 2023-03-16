@@ -1,10 +1,9 @@
-import { Layout, Menu, MenuProps, theme, Typography } from "antd";
-import { useRecoilState } from "recoil";
+import { Layout, Menu, MenuProps, theme } from "antd";
 
 import { Canvas } from "@/components/canvas";
-
 import { CodeOutlined } from "@ant-design/icons";
-import { actionsAtom } from "../state/actions";
+
+import { useActionsAtom } from "../state/actions";
 
 const { Header, Sider, Content } = Layout;
 
@@ -13,7 +12,7 @@ export default function Console() {
     token: { colorBgContainer },
   } = theme.useToken();
 
-  const [actions, setActions] = useRecoilState(actionsAtom);
+  const [actions, setActions] = useActionsAtom();
 
   const items: MenuProps["items"] = [
     {

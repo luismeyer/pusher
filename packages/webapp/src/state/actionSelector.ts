@@ -1,12 +1,12 @@
 import { RecoilState, selector, useRecoilState } from "recoil";
 import { FrontendAction, actionsAtom } from "./actions";
 
-let actionSelectorCache = new Map<string, RecoilState<FrontendAction>>();
+let cache = new Map<string, RecoilState<FrontendAction>>();
 
 export const actionSelector = (actionId: string) => {
-  const cached = actionSelectorCache.get(actionId);
+  const cached = cache.get(actionId);
 
-  if (actionSelectorCache.has(actionId) && cached) {
+  if (cache.has(actionId) && cached) {
     return cached;
   }
 
@@ -38,7 +38,7 @@ export const actionSelector = (actionId: string) => {
     },
   });
 
-  actionSelectorCache.set(actionId, func);
+  cache.set(actionId, func);
 
   return func;
 };
