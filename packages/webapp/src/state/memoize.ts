@@ -1,9 +1,7 @@
-import { RecoilValue } from "recoil";
-
-type FN<T> = (id?: string) => RecoilValue<T>;
+type FN<T> = (id?: string) => T;
 
 export const memoize = <V>(fn: FN<V>): FN<V> => {
-  const cache = new Map<string, RecoilValue<V>>();
+  const cache = new Map<string, V>();
 
   return (id = "") => {
     const cached = cache.get(id);

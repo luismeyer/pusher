@@ -68,6 +68,7 @@ export default function Console() {
             mode="inline"
             defaultOpenKeys={["actions"]}
             style={{ height: "100%" }}
+            selectable={false}
             items={items}
           />
         </Sider>

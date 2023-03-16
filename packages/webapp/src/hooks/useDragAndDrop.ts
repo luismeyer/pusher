@@ -1,13 +1,13 @@
 import { useCallback, useRef, useState } from "react";
-import { useSetRecoilState } from "recoil";
-import { actionSelector } from "../state/actionSelector";
+
+import { useActionAtom } from "@/state/actionSelector";
 
 export const useDragAndDrop = (
   id: string,
   ref: React.RefObject<HTMLDivElement>,
   canvas: React.RefObject<HTMLDivElement>
 ) => {
-  const setAction = useSetRecoilState(actionSelector(id));
+  const [_action, setAction] = useActionAtom(id);
 
   const actionOffsetY = useRef(0);
   const actionOffsetX = useRef(0);

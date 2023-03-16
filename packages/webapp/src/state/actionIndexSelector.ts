@@ -1,21 +1,9 @@
-import {
-  RecoilValue,
-  RecoilValueReadOnly,
-  selector,
-  useRecoilValue,
-} from "recoil";
+import { selector, useRecoilValue } from "recoil";
 import { FrontendAction, actionsAtom } from "./actions";
+import { memoize } from "./memoize";
 
-const cache = new Map<string, RecoilValueReadOnly<number>>();
-
-export const actionIndexSelector = (actionId: string) => {
-  const cached = cache.get(actionId);
-
-  if (cache.has(actionId) && cached) {
-    return cached;
-  }
-
-  const func = selector({
+const actionIndexSelector = memoize((actionId?: string) =>
+  selector({
     key: `ActionIndexSelector-${actionId}`,
     get: ({ get }): number => {
       const allActions = get(actionsAtom);
@@ -41,12 +29,8 @@ export const actionIndexSelector = (actionId: string) => {
 
       return index;
     },
-  });
-
-  cache.set(actionId, func);
-
-  return func;
-};
+  })
+);
 
 export const useActionIndexAtom = (id: string) =>
   useRecoilValue(actionIndexSelector(id));

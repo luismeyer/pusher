@@ -1,16 +1,10 @@
-import { RecoilState, selector, useRecoilState } from "recoil";
-import { FrontendAction, actionsAtom } from "./actions";
+import { selector, useRecoilState } from "recoil";
 
-let cache = new Map<string, RecoilState<FrontendAction>>();
+import { actionsAtom, FrontendAction } from "./actions";
+import { memoize } from "./memoize";
 
-export const actionSelector = (actionId: string) => {
-  const cached = cache.get(actionId);
-
-  if (cache.has(actionId) && cached) {
-    return cached;
-  }
-
-  const func = selector({
+export const actionSelector = memoize((actionId?: string) =>
+  selector({
     key: `ActionSelector-${actionId}`,
     get: ({ get }): FrontendAction => {
       const allActions = get(actionsAtom);
@@ -36,12 +30,8 @@ export const actionSelector = (actionId: string) => {
 
       set(actionsAtom, newAllActions);
     },
-  });
-
-  cache.set(actionId, func);
-
-  return func;
-};
+  })
+);
 
 const replaceItemAtIndex = <T>(arr: T[], index: number, newValue: T): T[] => {
   return [...arr.slice(0, index), newValue, ...arr.slice(index + 1)];
