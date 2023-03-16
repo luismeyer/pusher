@@ -11,14 +11,21 @@ export const useConnection = (id: string, hovered: boolean) => {
 
   const previousAction = usePreviousActionAtom(id);
 
+  // should the action allow a connecting click
+  const allowConnection =
+    actionA &&
+    !previousAction &&
+    actionA !== id &&
+    action.nextAction !== actionA;
+
   // runs in actionB to notifiy first action
   const connectPreviousAction = useCallback(() => {
-    if (previousAction) {
-      throw new Error("trying to connect to already connected action");
+    if (!allowConnection) {
+      throw new Error("trying unallowd connection");
     }
 
     setConnecting((prev) => ({ ...prev, actionB: id }));
-  }, [id, previousAction, setConnecting]);
+  }, [allowConnection, id, setConnecting]);
 
   const handleConnectionClick = useCallback(() => {
     // unconnect
@@ -50,10 +57,6 @@ export const useConnection = (id: string, hovered: boolean) => {
     setAction((prev) => ({ ...prev, nextAction: actionB }));
     setConnecting({});
   }, [action, actionA, actionB, id, setAction, setConnecting]);
-
-  // should the action allow a connecting click
-  const allowConnection =
-    !previousAction && !action.nextAction && actionA && actionA !== id;
 
   // should the button that starts and cancels the connection be visible
   const showConnectionButton = (hovered && !actionA) || actionA === id;

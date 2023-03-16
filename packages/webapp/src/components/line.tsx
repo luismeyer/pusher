@@ -1,59 +1,147 @@
-import React, { useEffect, useState } from "react";
+import React, { forwardRef, useCallback, useEffect, useState } from "react";
 import { Line as Points } from "@/state/lineSelector";
 
 type LineProps = {
   points: Points;
 };
 
-export const Line: React.FC<LineProps> = ({ points }) => {
-  const [line, setLine] = useState({ distance: 0, degree: 0, y: 0, x: 0 });
+type Border = "bottomLeft" | "bottomRight" | "topLeft" | "topRight";
 
-  const calculateLine = ({ ax, ay, bx, by }: Points) => {
-    if (ax > bx) {
-      bx = ax + bx;
-      ax = bx - ax;
-      bx = bx - ax;
+type State = {
+  width: number;
+  height: number;
+  y: number;
+  x: number;
+  border: Border;
+};
 
-      by = ay + by;
-      ay = by - ay;
-      by = by - ay;
-    }
+export const Line = forwardRef<HTMLDivElement, LineProps>(({ points }, ref) => {
+  const calculateBorder = useCallback(
+    ({ ax, ay, bx, by }: Points, width: number, height: number) => {
+      let border: Border = "bottomLeft";
 
-    const distance = Math.sqrt(Math.pow(bx - ax, 2) + Math.pow(by - ay, 2));
-    const calc = Math.atan((by - ay) / (bx - ax));
-    const degree = (calc * 180) / Math.PI;
+      if (ax < bx) {
+        // a is left of b
 
-    return { distance, degree, x: ax, y: ay };
-  };
+        if (ay < by) {
+          /**
+           * #a###
+           * #####
+           * ###b#
+           */
+          border = height > width ? "bottomLeft" : "topRight";
+        } else {
+          /**
+           * ###b#
+           * #####
+           * #a###
+           */
+          border = height > width ? "topLeft" : "bottomRight";
+        }
+      }
+
+      if (ax > bx) {
+        // a is right of b
+
+        if (ay < by) {
+          /**
+           * ###a#
+           * #####
+           * #b###
+           */
+          border = height > width ? "bottomRight" : "topLeft";
+        } else {
+          /**
+           * #b###
+           * #####
+           * ###a#
+           */
+          border = height > width ? "topRight" : "bottomLeft";
+        }
+      }
+
+      return border;
+    },
+    []
+  );
+
+  const calculateState = useCallback(
+    (points: Points): State => {
+      const { ax, ay, bx, by } = points;
+
+      const width = Math.abs(bx - ax);
+      const height = Math.abs(by - ay);
+
+      return {
+        width,
+        height,
+        x: Math.min(ax, bx),
+        y: Math.min(ay, by),
+        border: calculateBorder(points, width, height),
+      };
+    },
+    [calculateBorder]
+  );
+
+  const [state, setState] = useState<State>(calculateState(points));
 
   useEffect(() => {
-    const newLine = calculateLine(points);
+    const newState = calculateState(points);
+    const { width, height, x, y, border } = state;
 
     if (
-      newLine.degree === line.degree &&
-      newLine.distance === line.distance &&
-      newLine.x === line.x &&
-      newLine.y === line.y
+      newState.width === width &&
+      newState.height === height &&
+      newState.x === x &&
+      newState.y === y &&
+      newState.border === border
     ) {
       return;
     }
 
-    setLine(newLine);
-  }, [line.degree, line.distance, line.x, line.y, points]);
+    setState(newState);
+  }, [calculateState, points, state]);
+
+  const border = "2px dashed black";
+
+  const borderTop =
+    state.border === "topRight" || state.border === "topLeft"
+      ? border
+      : undefined;
+
+  const borderRight =
+    state.border === "topRight" || state.border === "bottomRight"
+      ? border
+      : undefined;
+
+  const borderLeft =
+    state.border === "topLeft" || state.border === "bottomLeft"
+      ? border
+      : undefined;
+
+  const borderBottom =
+    state.border === "bottomLeft" || state.border === "bottomRight"
+      ? border
+      : undefined;
 
   return (
     <div
+      ref={ref}
       style={{
         position: "absolute",
-        height: "1px",
         transformOrigin: "top left",
-        width: line.distance,
-        top: line.y + "px",
-        left: line.x + "px",
-        transform: `rotate(${line.degree}deg)`,
+        height: state.height,
+        width: state.width,
+        top: state.y + "px",
+        left: state.x + "px",
         zIndex: 0,
-        borderTop: "2px dotted black",
+        borderTop,
+        borderRight,
+        borderBottom,
+        borderLeft,
       }}
     />
   );
-};
+});
+
+Line.displayName = "Line";

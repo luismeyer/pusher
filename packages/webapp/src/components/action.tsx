@@ -72,7 +72,7 @@ export const Action: React.FC<ActionProps> = ({ id, canvas }) => {
       <div
         className={styles.nextAction}
         style={{
-          transform: showConnectionButton ? "translateY(0)" : undefined,
+          bottom: showConnectionButton ? "calc(-32px - 5px)" : undefined,
         }}
       >
         <Button

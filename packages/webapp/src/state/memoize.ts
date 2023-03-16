@@ -2,7 +2,7 @@ import { RecoilValue } from "recoil";
 
 type FN<T> = (id?: string) => RecoilValue<T>;
 
-export const memoize = <V, T extends FN<V>>(fn: T): FN<V> => {
+export const memoize = <V>(fn: FN<V>): FN<V> => {
   const cache = new Map<string, RecoilValue<V>>();
 
   return (id = "") => {
