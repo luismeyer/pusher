@@ -1,5 +1,6 @@
 import React, { forwardRef, useCallback, useEffect, useState } from "react";
 import { Line as Points } from "@/state/lineSelector";
+import { theme } from "antd";
 
 type LineProps = {
   points: Points;
@@ -16,6 +17,10 @@ type State = {
 };
 
 export const Line = forwardRef<HTMLDivElement, LineProps>(({ points }, ref) => {
+  const {
+    token: { colorPrimary },
+  } = theme.useToken();
+
   const calculateBorder = useCallback(
     ({ ax, ay, bx, by }: Points, width: number, height: number) => {
       let border: Border = "bottomLeft";
@@ -102,7 +107,7 @@ export const Line = forwardRef<HTMLDivElement, LineProps>(({ points }, ref) => {
     setState(newState);
   }, [calculateState, points, state]);
 
-  const border = "2px dashed black";
+  const border = `2px dashed ${colorPrimary}`;
 
   const borderTop =
     state.border === "topRight" || state.border === "topLeft"

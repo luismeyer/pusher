@@ -9,14 +9,16 @@ import { Line } from "./line";
 import { useCurrentLine } from "../hooks/useCurrentLine";
 
 export const Canvas: React.FC = () => {
-  const [actions] = useActionsAtom();
+  const { actions } = useActionsAtom();
 
   const lines = useLineAtom();
 
   const canvasRef = useRef<HTMLDivElement>(null);
 
+  const lineRefs = useRef<HTMLDivElement[]>([]);
+
   const { currentLine, currentLineRef, handleCanvasClick, updateCurrentLine } =
-    useCurrentLine(canvasRef);
+    useCurrentLine(canvasRef, lineRefs);
 
   return (
     <div
@@ -30,7 +32,11 @@ export const Canvas: React.FC = () => {
       ))}
 
       {lines.map((line, index) => (
-        <Line key={index} points={line} />
+        <Line
+          ref={(ref) => ref && (lineRefs.current[index] = ref)}
+          key={index}
+          points={line}
+        />
       ))}
 
       {currentLine && <Line ref={currentLineRef} points={currentLine} />}

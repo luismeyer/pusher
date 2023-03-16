@@ -4,7 +4,10 @@ import { useConnectingAtom } from "@/state/connecting";
 import { useNullableActionAtom } from "@/state/nullableActionSelector";
 import { Line as Points } from "@/state/lineSelector";
 
-export const useCurrentLine = (canvasRef: React.RefObject<HTMLDivElement>) => {
+export const useCurrentLine = (
+  canvasRef: React.RefObject<HTMLDivElement>,
+  lines: React.RefObject<HTMLDivElement[]>
+) => {
   const [connecting, setConnecting] = useConnectingAtom();
 
   const actionA = useNullableActionAtom(connecting.actionA);
@@ -31,16 +34,21 @@ export const useCurrentLine = (canvasRef: React.RefObject<HTMLDivElement>) => {
 
   const handleCanvasClick: React.MouseEventHandler<HTMLDivElement> =
     useCallback(
-      (event) => {
+      ({ target }) => {
+        if (!currentLine) {
+          return;
+        }
+
+        const isCanvasClick = target === canvasRef.current;
+        const isCurrentLineClick = target === currentLineRef.current;
+        const isLineClick = lines.current?.some((line) => target === line);
+
         // clear the current connection line if clicked anywhere
-        if (
-          event.target === canvasRef.current ||
-          event.target === currentLineRef.current
-        ) {
+        if (isCanvasClick || isCurrentLineClick || isLineClick) {
           setConnecting({});
         }
       },
-      [canvasRef, setConnecting]
+      [canvasRef, currentLine, lines, setConnecting]
     );
 
   // Clear the line if connecting canceled or finished

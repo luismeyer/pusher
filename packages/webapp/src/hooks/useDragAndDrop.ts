@@ -59,6 +59,8 @@ export const useDragAndDrop = (
 
   const dragStart: React.MouseEventHandler<HTMLDivElement> = useCallback(
     (event) => {
+      event.preventDefault();
+
       setDragging(true);
 
       actionOffsetX.current = event.pageX - canvasOffsetX - actionOffsetLeft;

@@ -1,22 +1,41 @@
-import { useCallback, useEffect } from "react";
+import { useCallback, useEffect, useMemo } from "react";
 
-import { useActionAtom } from "../state/actionSelector";
-import { useConnectingAtom } from "../state/connecting";
-import { usePreviousActionAtom } from "../state/previousActionSelector";
+import { Action, useActionsAtom } from "@/state/actions";
+import { useActionAtom } from "@/state/actionSelector";
+import { useConnectingAtom } from "@/state/connecting";
+import { usePreviousActionAtom } from "@/state/previousActionSelector";
 
-export const useConnection = (id: string, hovered: boolean) => {
+export const useConnection = (id: string) => {
   const [{ actionA, actionB }, setConnecting] = useConnectingAtom();
 
   const [action, setAction] = useActionAtom(id);
 
   const previousAction = usePreviousActionAtom(id);
 
+  const { actions } = useActionsAtom();
+
+  const hasTransitiveConnection = useCallback(
+    (action: Action): boolean => {
+      const nextAction = actions.find(({ id }) => id === action.nextAction);
+
+      if (!nextAction) {
+        return false;
+      }
+
+      return nextAction.id === actionA || hasTransitiveConnection(nextAction);
+    },
+    [actionA, actions]
+  );
+
   // should the action allow a connecting click
-  const allowConnection =
-    actionA &&
-    !previousAction &&
-    actionA !== id &&
-    action.nextAction !== actionA;
+  const allowConnection = useMemo(() => {
+    return (
+      actionA &&
+      actionA !== id &&
+      !previousAction &&
+      !hasTransitiveConnection(action)
+    );
+  }, [action, actionA, hasTransitiveConnection, id, previousAction]);
 
   // runs in actionB to notifiy first action
   const connectPreviousAction = useCallback(() => {
@@ -58,13 +77,11 @@ export const useConnection = (id: string, hovered: boolean) => {
     setConnecting({});
   }, [action, actionA, actionB, id, setAction, setConnecting]);
 
-  // should the button that starts and cancels the connection be visible
-  const showConnectionButton = (hovered && !actionA) || actionA === id;
-
   return {
     connectPreviousAction,
     handleConnectionClick,
+    previousAction,
     allowConnection,
-    showConnectionButton,
+    isConnecting: Boolean(actionA && !actionB),
   };
 };

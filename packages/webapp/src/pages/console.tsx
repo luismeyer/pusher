@@ -12,7 +12,7 @@ export default function Console() {
     token: { colorBgContainer },
   } = theme.useToken();
 
-  const [actions, setActions] = useActionsAtom();
+  const { addAction } = useActionsAtom();
 
   const items: MenuProps["items"] = [
     {
@@ -28,19 +28,7 @@ export default function Console() {
             {
               key: "1",
               label: "Click",
-              onClick: () =>
-                setActions([
-                  ...actions,
-                  {
-                    id: Math.floor(Math.random() * 1000).toString(),
-                    x: 10,
-                    y: 10,
-                    data: {
-                      type: "click",
-                      selector: "",
-                    },
-                  },
-                ]),
+              onClick: () => addAction({ type: "click", selector: "" }),
             },
             {
               key: "2",

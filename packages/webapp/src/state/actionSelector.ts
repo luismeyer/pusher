@@ -1,12 +1,12 @@
 import { selector, useRecoilState } from "recoil";
 
-import { actionsAtom, FrontendAction } from "./actions";
+import { actionsAtom, Action } from "./actions";
 import { memoize } from "./memoize";
 
 export const actionSelector = memoize((actionId?: string) =>
   selector({
     key: `ActionSelector-${actionId}`,
-    get: ({ get }): FrontendAction => {
+    get: ({ get }): Action => {
       const allActions = get(actionsAtom);
 
       const action = allActions.find(({ id }) => id === actionId);
@@ -25,7 +25,7 @@ export const actionSelector = memoize((actionId?: string) =>
       const newAllActions = replaceItemAtIndex(
         allActions,
         index,
-        newValue as FrontendAction
+        newValue as Action
       );
 
       set(actionsAtom, newAllActions);

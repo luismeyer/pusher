@@ -1,5 +1,6 @@
 import { selector, useRecoilValue } from "recoil";
-import { FrontendAction, actionsAtom } from "./actions";
+
+import { Action, actionsAtom } from "./actions";
 import { memoize } from "./memoize";
 
 const actionIndexSelector = memoize((actionId?: string) =>
@@ -14,7 +15,7 @@ const actionIndexSelector = memoize((actionId?: string) =>
         throw new Error("Trying to select non existing action " + actionId);
       }
 
-      const getPrevAction = (action: FrontendAction) => {
+      const getPrevAction = (action: Action) => {
         return allActions.find(({ nextAction }) => action.id === nextAction);
       };
 
