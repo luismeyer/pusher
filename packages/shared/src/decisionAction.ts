@@ -1,8 +1,8 @@
 import { Action } from "./flow";
 
 export type DecisionBaseAction = {
-  trueNextAction: Action;
-  falseNextAction: Action;
+  trueNextAction?: Action;
+  falseNextAction?: Action;
 };
 
 export type ExistsAction = DecisionBaseAction & {
@@ -12,7 +12,7 @@ export type ExistsAction = DecisionBaseAction & {
 
 export type TextContentMatchesAction = DecisionBaseAction & {
   type: "textContentMatches";
-  textContent: string;
+  text: string;
   selector: string;
 };
 

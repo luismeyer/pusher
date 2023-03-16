@@ -34,3 +34,16 @@
   display: flex;
   gap: 6px;
 }
+
+.content {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.noContent {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}

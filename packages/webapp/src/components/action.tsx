@@ -1,7 +1,6 @@
 import { Button, Card, theme } from "antd";
 import React, { useCallback, useEffect, useMemo, useRef } from "react";
 
-import { useActionIndexAtom } from "@/state/actionIndexSelector";
 import { useConnectingAtom } from "@/state/connecting";
 import styles from "@/styles/action.module.css";
 import {
