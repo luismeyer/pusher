@@ -1,4 +1,4 @@
-import { selectorFamily, useRecoilValue } from "recoil";
+import { selectorFamily, useRecoilState, useRecoilValue } from "recoil";
 
 import { actionsAtom, Action } from "./actions";
 
@@ -14,7 +14,18 @@ export const nullableActionSelector = selectorFamily<
 
       return action;
     },
+  set:
+    (actionId?: string) =>
+    ({ set, get }, newValue) => {
+      const allActions = get(actionsAtom);
+
+      if (!actionId) {
+        return;
+      }
+
+      set(actionsAtom, { ...allActions, [actionId]: newValue as Action });
+    },
 });
 
 export const useNullableActionAtom = (id?: string) =>
-  useRecoilValue(nullableActionSelector(id));
+  useRecoilState(nullableActionSelector(id));

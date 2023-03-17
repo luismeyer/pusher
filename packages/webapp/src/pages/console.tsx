@@ -1,8 +1,13 @@
 import { Layout, theme } from "antd";
+import dynamic from "next/dynamic";
 
-import { Canvas } from "@/components/canvas";
 import { SideBar } from "@/components/sideBar";
 import { TopBar } from "@/components/topBar";
+
+const Canvas = dynamic(
+  import("@/components/canvas").then((i) => i.Canvas),
+  { ssr: false }
+);
 
 const { Header, Sider, Content } = Layout;
 

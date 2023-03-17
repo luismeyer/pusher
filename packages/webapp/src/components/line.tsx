@@ -144,6 +144,8 @@ export const Line = forwardRef<HTMLDivElement, LineProps>(({ points }, ref) => {
         borderRight,
         borderBottom,
         borderLeft,
+
+        // backgroundColor: "pink",
       }}
     />
   );

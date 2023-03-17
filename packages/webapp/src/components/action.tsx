@@ -10,18 +10,17 @@ import {
 } from "@ant-design/icons";
 
 import { useConnection } from "../hooks/useConnection";
-import { useDragAndDrop } from "../hooks/useDragAndDrop";
 import { useActionAtom } from "../state/actionSelector";
 import { useDeleteAction } from "../state/actions";
 import { ActionContent } from "./actionContent";
 import { ActionHeader } from "./actionHeadline";
+import { useDragIdAtom } from "../state/drag";
 
 type ActionProps = {
-  canvas: React.RefObject<HTMLDivElement>;
   id: string;
 };
 
-export const Action: React.FC<ActionProps> = ({ id, canvas }) => {
+export const Action: React.FC<ActionProps> = ({ id }) => {
   const deleteAction = useDeleteAction();
 
   const [action, setAction] = useActionAtom(id);
@@ -30,7 +29,7 @@ export const Action: React.FC<ActionProps> = ({ id, canvas }) => {
 
   const ref = useRef<HTMLDivElement>(null);
 
-  const { dragStart, dragging } = useDragAndDrop(id, ref, canvas);
+  const [dragId, setDragId] = useDragIdAtom();
 
   const {
     connectPreviousAction,
@@ -59,23 +58,36 @@ export const Action: React.FC<ActionProps> = ({ id, canvas }) => {
     deleteAction(action);
   }, [action, deleteAction]);
 
-  const handleMouseDown: React.MouseEventHandler<HTMLDivElement> = useCallback(
-    (event) => {
+  const handleMouseDown: React.MouseEventHandler<HTMLDivElement> =
+    useCallback(() => {
       if (allowConnection) {
         connectPreviousAction();
         return;
       }
 
+      // start drag
       if (!isConnecting) {
-        dragStart(event);
+        setDragId(id);
       }
-    },
-    [allowConnection, connectPreviousAction, dragStart, isConnecting]
-  );
+    }, [allowConnection, connectPreviousAction, id, isConnecting, setDragId]);
+
+  // stop drag
+  const handleMouseUp: React.MouseEventHandler<HTMLDivElement> =
+    useCallback(() => {
+      if (!dragId) {
+        return;
+      }
+
+      setDragId(undefined);
+    }, [dragId, setDragId]);
 
   const cursor = useMemo(() => {
     if (allowConnection) {
       return "pointer";
+    }
+
+    if (isConnecting && !allowConnection) {
+      return "not-allowed";
     }
 
     if (!isConnecting) {
@@ -105,20 +117,20 @@ export const Action: React.FC<ActionProps> = ({ id, canvas }) => {
     <div
       ref={ref}
       onMouseDown={handleMouseDown}
+      onMouseUp={handleMouseUp}
       className={styles.container}
       key={id}
       style={{
         top: action.y,
         left: action.x,
-        zIndex: dragging ? "100" : "initial",
+        zIndex: dragId === id ? "100" : "initial",
         cursor,
       }}
     >
       <Card
-        style={{
-          transition: "border-color 0.5s",
-          borderColor,
-        }}
+        style={{ transition: "border-color 0.5s", borderColor }}
+        bordered={true}
+        className={styles.card}
         title={
           <div className={styles.header}>
             <ActionHeader id={id} />
@@ -129,10 +141,10 @@ export const Action: React.FC<ActionProps> = ({ id, canvas }) => {
                 shape="round"
                 danger={Boolean(action.nextAction) || actionA === id}
                 disabled={isConnecting}
+                onClick={handleConnectionClick}
                 icon={
                   action.nextAction ? <DisconnectOutlined /> : <ApiOutlined />
                 }
-                onClick={handleConnectionClick}
               />
 
               <Button
@@ -146,8 +158,6 @@ export const Action: React.FC<ActionProps> = ({ id, canvas }) => {
             </div>
           </div>
         }
-        bordered={true}
-        className={styles.card}
       >
         <ActionContent id={id} />
       </Card>

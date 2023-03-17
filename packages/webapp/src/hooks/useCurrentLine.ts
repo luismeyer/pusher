@@ -10,7 +10,7 @@ export const useCurrentLine = (
 ) => {
   const [connecting, setConnecting] = useConnectingAtom();
 
-  const actionA = useNullableActionAtom(connecting.actionA);
+  const [actionA] = useNullableActionAtom(connecting.actionA);
 
   const currentLineRef = useRef<HTMLDivElement>(null);
   const [currentLine, setCurrentLine] = useState<Points | undefined>();

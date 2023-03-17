@@ -14,6 +14,7 @@ export type Action = {
   id: string;
 
   nextAction?: string;
+
   trueNextAction?: string;
   falseNextAction?: string;
 };
