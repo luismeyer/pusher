@@ -1,75 +1,60 @@
 import { Input, Select } from "antd";
-import React, { useCallback, useMemo, useRef } from "react";
+import React, { useCallback, useEffect, useMemo, useRef } from "react";
 
 type TextInputProps = {
   addonBeforeOptions?: { value: string }[];
-  addonAfterOptions?: { value: string }[];
   placeholder?: string;
   onChange: (value: string) => void;
+  value: string;
 };
 
 export const TextInput: React.FC<TextInputProps> = ({
   addonBeforeOptions,
-  addonAfterOptions,
   placeholder,
   onChange,
+  value: fullValue,
 }) => {
-  const prefix = useRef<string>("");
-  const suffix = useRef<string>("");
-  const value = useRef<string>("");
+  const { prefix, value } = useMemo(() => {
+    const prefixInValue = addonBeforeOptions?.find(({ value }) =>
+      fullValue.startsWith(value)
+    );
+
+    if (!prefixInValue) {
+      return { prefix: "", value: fullValue };
+    }
+
+    return {
+      value: fullValue.replace(prefixInValue.value, ""),
+      prefix: prefixInValue.value,
+    };
+  }, [addonBeforeOptions, fullValue]);
 
   const handleInputChange = useCallback(
-    (options: { prefix?: string; value?: string; suffix?: string }) => {
-      if (options.prefix) {
-        prefix.current = options.prefix;
-      }
-
-      if (options.value) {
-        value.current = options.value;
-      }
-
-      if (options.suffix) {
-        suffix.current = options.suffix;
-      }
-
-      onChange(prefix.current + value.current + suffix.current);
+    (options: { prefix?: string; value?: string }) => {
+      onChange((options.prefix ?? prefix) + (options.value ?? value));
     },
-    [onChange]
+    [onChange, prefix, value]
   );
 
   const addonBefore = useMemo(() => {
-    if (addonBeforeOptions) {
-      prefix.current = addonBeforeOptions[0].value;
-
-      return (
-        <Select
-          defaultValue={prefix.current}
-          options={addonBeforeOptions}
-          onChange={(value) => handleInputChange({ prefix: value })}
-        />
-      );
+    if (!addonBeforeOptions) {
+      return;
     }
-  }, [addonBeforeOptions, handleInputChange]);
 
-  const addonAfter = useMemo(() => {
-    if (addonAfterOptions) {
-      prefix.current = addonAfterOptions[0].value;
-
-      return (
-        <Select
-          defaultValue={prefix.current}
-          options={addonAfterOptions}
-          onChange={(value) => handleInputChange({ suffix: value })}
-        />
-      );
-    }
-  }, [addonAfterOptions, handleInputChange]);
+    return (
+      <Select
+        value={prefix}
+        options={addonBeforeOptions}
+        onChange={(value) => handleInputChange({ prefix: value })}
+      />
+    );
+  }, [addonBeforeOptions, handleInputChange, prefix]);
 
   return (
     <Input
       addonBefore={addonBefore}
-      addonAfter={addonAfter}
       placeholder={placeholder}
+      value={value}
       onChange={(e) => handleInputChange({ value: e.target.value })}
     />
   );

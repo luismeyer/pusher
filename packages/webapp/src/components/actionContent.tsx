@@ -14,8 +14,6 @@ type ActionContentProps = {
 export const ActionContent: React.FC<ActionContentProps> = ({ id }) => {
   const [data, setData] = useDataAtom(id);
 
-  // console.log({ data });
-
   const inputs = useMemo(() => {
     let components: JSX.Element[] = [];
 
@@ -26,6 +24,7 @@ export const ActionContent: React.FC<ActionContentProps> = ({ id }) => {
         ...components,
         <TextInput
           key={components.length}
+          value={data.selector}
           addonBeforeOptions={prefixOptions}
           placeholder="Enter CSS Selector"
           onChange={(value) => setData((pre) => ({ ...pre, selector: value }))}
@@ -38,8 +37,8 @@ export const ActionContent: React.FC<ActionContentProps> = ({ id }) => {
         ...components,
         <InputNumber
           key={components.length}
+          value={data.timeInSeconds}
           addonAfter="Seconds"
-          defaultValue={data.timeInSeconds}
           onChange={(value) =>
             setData((pre) => ({ ...pre, timeInSeconds: value ?? 0 }))
           }
@@ -48,12 +47,13 @@ export const ActionContent: React.FC<ActionContentProps> = ({ id }) => {
     }
 
     if ("pageUrl" in data) {
-      const prefixOptions = [{ value: "http://" }, { value: "https://" }];
+      const prefixOptions = [{ value: "https://" }, { value: "http://" }];
 
       components = [
         ...components,
         <TextInput
           key={components.length}
+          value={data.pageUrl}
           placeholder="google.com"
           addonBeforeOptions={prefixOptions}
           onChange={(value) => setData((pre) => ({ ...pre, pageUrl: value }))}
@@ -76,6 +76,7 @@ export const ActionContent: React.FC<ActionContentProps> = ({ id }) => {
         ...components,
         <TextInput
           key={components.length}
+          value={data.text}
           placeholder={placeholder}
           onChange={(value) => setData((pre) => ({ ...pre, text: value }))}
         />,
@@ -87,11 +88,13 @@ export const ActionContent: React.FC<ActionContentProps> = ({ id }) => {
         ...components,
         <TextInput
           key={components.length}
+          value={data.chatId}
           placeholder="Enter Telegram ChatId"
           onChange={(value) => setData((pre) => ({ ...pre, chatId: value }))}
         />,
         <TextInput
           key={components.length + 1}
+          value={data.message}
           placeholder="Enter Telegram Message"
           onChange={(value) => setData((pre) => ({ ...pre, message: value }))}
         />,

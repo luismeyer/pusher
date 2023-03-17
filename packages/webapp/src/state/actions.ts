@@ -4,6 +4,7 @@ import { atom, useRecoilState, useRecoilValue } from "recoil";
 import { Action as Data } from "@pusher/shared";
 
 import { useDatasAtom } from "./data";
+import { localStorageEffect } from "./localStorage";
 
 export type Action = {
   x: number;
@@ -22,6 +23,7 @@ export type ActionStore = Record<string, Action>;
 export const actionsAtom = atom<ActionStore>({
   key: "ActionsAtom",
   default: {},
+  effects: [localStorageEffect("actions")],
 });
 
 export const useDeleteAction = () => {

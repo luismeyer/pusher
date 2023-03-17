@@ -1,19 +1,15 @@
 import { useCallback } from "react";
-import {
-  atom,
-  atomFamily,
-  selector,
-  selectorFamily,
-  useRecoilState,
-} from "recoil";
+import { atom, selectorFamily, useRecoilState } from "recoil";
 
 import { Action } from "@pusher/shared";
+import { localStorageEffect } from "./localStorage";
 
 type ActionsData = Record<string, Action>;
 
 export const actionDatasAtom = atom<ActionsData>({
   key: "DatasAtom",
   default: {},
+  effects: [localStorageEffect("datas")],
 });
 
 const actionDataSelector = selectorFamily({
