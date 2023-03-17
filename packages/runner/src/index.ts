@@ -25,7 +25,9 @@ export const handler = async ({
   await executeFlow(page, flow).catch(async (error) => {
     console.info(`Error in ${flow.id}:`, error);
 
-    await increaseFails(flow);
+    if (!debug) {
+      await increaseFails(flow);
+    }
 
     result = false;
   });

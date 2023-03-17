@@ -35,5 +35,5 @@ export type Flow = {
   fails: number;
   interval: "6h" | "12h";
   executions?: Execution[];
-  actionTree: OpenPageAction;
+  actionTree: Action;
 };

@@ -2,15 +2,18 @@ import { Button, Menu, MenuProps } from "antd";
 import { useCallback, useMemo } from "react";
 
 import { useDatasAtom } from "@/state/data";
-import { Action, isNavigationAction } from "@pusher/shared";
+import { Action, Flow, isNavigationAction } from "@pusher/shared";
 
 import { useActionsAtom } from "../state/actions";
 import { getFirstParentAction } from "../utils/action";
+import { useFlowAtom } from "../state/flow";
 
 export const TopBar: React.FC = () => {
   const { datas } = useDatasAtom();
 
   const { actionsStore, actions } = useActionsAtom();
+
+  const [flowData] = useFlowAtom();
 
   const transformActions = useCallback(
     (action: { id: string; nextAction?: string }): Action => {
@@ -36,7 +39,7 @@ export const TopBar: React.FC = () => {
     [datas, actionsStore]
   );
 
-  const createFlow = useCallback(() => {
+  const debugFlow = useCallback(async () => {
     const firstAction = actions.find((action) => action.nextAction);
 
     const { action } = getFirstParentAction(
@@ -44,19 +47,33 @@ export const TopBar: React.FC = () => {
       firstAction ?? actions[0]
     );
 
-    const data = transformActions(action);
-    console.log(data);
-  }, [actions, actionsStore, transformActions]);
+    const actionTree = transformActions(action);
+
+    const flow: Flow = {
+      ...flowData,
+      actionTree,
+    };
+
+    console.log(flow);
+
+    const body = encodeURIComponent(JSON.stringify(flow));
+
+    const response = await fetch(`/api/debug?flow=${body}`, {
+      method: "POST",
+    }).then((res) => res.json());
+
+    console.log(response);
+  }, [actions, actionsStore, flowData, transformActions]);
 
   const items: MenuProps["items"] = useMemo(
     () => [
       { type: "group", label: <h1>Pusher Console</h1> },
       {
         type: "group",
-        label: <Button onClick={createFlow}>Emulate</Button>,
+        label: <Button onClick={debugFlow}>Emulate</Button>,
       },
     ],
-    [createFlow]
+    [debugFlow]
   );
 
   return <Menu theme="dark" mode="horizontal" items={items} />;

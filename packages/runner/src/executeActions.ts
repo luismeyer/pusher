@@ -21,8 +21,12 @@ const createSelector = (
   action: Action,
   variables?: Record<string, string>
 ): string => {
-  if (!variables || !isSelectorAction(action)) {
+  if (!isSelectorAction(action)) {
     return "";
+  }
+
+  if (!variables) {
+    return action.selector;
   }
 
   // find {{variableName}} in the selector
@@ -80,11 +84,7 @@ export const executeActions = async (
       break;
 
     case "textContentMatches":
-      decision = await textContentMatches(
-        page,
-        action.selector,
-        action.textContent
-      );
+      decision = await textContentMatches(page, action.selector, action.text);
       break;
 
     case "telegram":

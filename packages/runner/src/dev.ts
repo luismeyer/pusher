@@ -3,69 +3,27 @@ import { Flow } from "@pusher/shared";
 import { handler } from "./";
 
 const ExampleFlow: Flow = {
-  id: "1234567890",
-  name: "Example",
-  interval: "6h",
+  id: "1d8713b0-16f1-4408-bc99-5e890c676b37",
   fails: 0,
-  executions: [
-    {
-      name: "Mitte",
-      variables: {
-        centerName: "Mitte",
-        accordionNumber: "3240",
-        serviceNumber: "8580",
-      },
-    },
-    {
-      name: "Nord",
-      variables: {
-        centerName: "Nord",
-        accordionNumber: "2928",
-        serviceNumber: "8274",
-      },
-    },
-    {
-      name: "Stresemannstraße",
-      variables: {
-        centerName: "Stresemannstraße",
-        accordionNumber: "2941",
-        serviceNumber: "8322",
-      },
-    },
-  ],
+  interval: "12h",
+  name: "Example Flow",
   actionTree: {
     type: "openPage",
-    pageUrl: "https://termin.bremen.de/termine/",
+    pageUrl: "https://google.com",
     nextAction: {
       type: "click",
-      selector: '[name="BürgerServiceCenter-{{centerName}}"]',
+      selector: "#L2AGLb",
       nextAction: {
-        type: "click",
-        selector: "#header_concerns_accordion-{{accordionNumber}}",
+        type: "type",
+        selector: "input",
+        text: "Schafe",
         nextAction: {
           type: "click",
-          selector: "#button-plus-{{serviceNumber}}",
+          selector: "#jZ2SBf",
           nextAction: {
-            type: "scrollToBottom",
-            nextAction: {
-              type: "click",
-              selector: "#WeiterButton",
-              nextAction: {
-                type: "textContentMatches",
-                selector: "h1",
-                textContent: "Keine Terminvorschläge verfügbar",
-                trueNextAction: {
-                  type: "telegram",
-                  chatId: "876296520",
-                  message: "Keine Termine verfügbar 😢",
-                },
-                falseNextAction: {
-                  type: "telegram",
-                  chatId: "876296520",
-                  message: "Es sind Neue Termine verfügbar 🎉",
-                },
-              },
-            },
+            type: "telegram",
+            chatId: "876296520",
+            message: "SCHAFE",
           },
         },
       },
