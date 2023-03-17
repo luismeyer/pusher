@@ -1,15 +1,13 @@
-import { selector, useRecoilState } from "recoil";
+import { selectorFamily, useRecoilState } from "recoil";
 
 import { actionsAtom, Action } from "./actions";
-import { memoize } from "./memoize";
 
-export const actionSelector = memoize((actionId?: string) =>
-  selector({
-    key: `ActionSelector-${actionId}`,
-    get: ({ get }): Action => {
-      const allActions = get(actionsAtom);
-
-      const action = allActions.find(({ id }) => id === actionId);
+const actionSelector = selectorFamily({
+  key: "ActionSelectorFamily",
+  get:
+    (actionId: string) =>
+    ({ get }) => {
+      const { [actionId]: action } = get(actionsAtom);
 
       if (!action) {
         throw new Error("Trying to select non existing action " + actionId);
@@ -17,21 +15,14 @@ export const actionSelector = memoize((actionId?: string) =>
 
       return action;
     },
-    set({ set, get }, newValue) {
+  set:
+    (actionId: string) =>
+    ({ set, get }, newValue) => {
       const allActions = get(actionsAtom);
 
-      const index = allActions.findIndex(({ id }) => id === actionId);
-
-      const newAllActions = replaceItemAtIndex(
-        allActions,
-        index,
-        newValue as Action
-      );
-
-      set(actionsAtom, newAllActions);
+      set(actionsAtom, { ...allActions, [actionId]: newValue as Action });
     },
-  })
-);
+});
 
 const replaceItemAtIndex = <T>(arr: T[], index: number, newValue: T): T[] => {
   return [...arr.slice(0, index), newValue, ...arr.slice(index + 1)];

@@ -12,11 +12,11 @@ export const useConnection = (id: string) => {
 
   const previousAction = usePreviousActionAtom(id);
 
-  const { actions } = useActionsAtom();
+  const { actionsStore } = useActionsAtom();
 
   const hasTransitiveConnection = useCallback(
     (action: Action): boolean => {
-      const nextAction = actions.find(({ id }) => id === action.nextAction);
+      const nextAction = actionsStore[action.nextAction ?? ""];
 
       if (!nextAction) {
         return false;
@@ -24,7 +24,7 @@ export const useConnection = (id: string) => {
 
       return nextAction.id === actionA || hasTransitiveConnection(nextAction);
     },
-    [actionA, actions]
+    [actionsStore, actionA]
   );
 
   // should the action allow a connecting click

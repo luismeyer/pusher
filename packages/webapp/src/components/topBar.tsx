@@ -4,22 +4,19 @@ import { useCallback, useMemo } from "react";
 import { useDatasAtom } from "@/state/data";
 import { Action, isNavigationAction } from "@pusher/shared";
 
-import { Action as FrontendAction, useActionsAtom } from "../state/actions";
+import { useActionsAtom } from "../state/actions";
+import { getFirstParentAction } from "../utils/action";
 
 export const TopBar: React.FC = () => {
   const { datas } = useDatasAtom();
 
-  const { actions } = useActionsAtom();
-
-  console.log(datas);
+  const { actionsStore, actions } = useActionsAtom();
 
   const transformActions = useCallback(
-    (action: FrontendAction): Action => {
+    (action: { id: string; nextAction?: string }): Action => {
       const data = datas[action.id];
 
-      const nextFrontendAction = actions.find(
-        ({ id }) => id === action.nextAction
-      );
+      const nextFrontendAction = actionsStore[action.nextAction ?? ""];
 
       const nextAction = nextFrontendAction
         ? transformActions(nextFrontendAction)
@@ -36,15 +33,20 @@ export const TopBar: React.FC = () => {
         ...data,
       };
     },
-    [actions, datas]
+    [datas, actionsStore]
   );
 
   const createFlow = useCallback(() => {
-    const [firstAction] = actions;
+    const firstAction = actions.find((action) => action.nextAction);
 
-    const data = transformActions(firstAction);
+    const { action } = getFirstParentAction(
+      actionsStore,
+      firstAction ?? actions[0]
+    );
+
+    const data = transformActions(action);
     console.log(data);
-  }, [actions, transformActions]);
+  }, [actions, actionsStore, transformActions]);
 
   const items: MenuProps["items"] = useMemo(
     () => [

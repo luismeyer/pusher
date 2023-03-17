@@ -7,14 +7,15 @@
     "noImplicitAny": true,
     "strict": true,
     "forceConsistentCasingInFileNames": true,
-    "noEmit": true,
     "esModuleInterop": true,
     "module": "CommonJS",
     "moduleResolution": "node",
     "resolveJsonModule": true,
     "isolatedModules": true,
     "jsx": "preserve",
-    "incremental": true
+    "incremental": true,
+    "outDir": "dist",
+    "declaration": true
   },
   "include": ["src"],
   "exclude": ["node_modules"]

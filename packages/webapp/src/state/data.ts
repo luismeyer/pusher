@@ -1,9 +1,13 @@
 import { useCallback } from "react";
-import { atom, selector, useRecoilState } from "recoil";
+import {
+  atom,
+  atomFamily,
+  selector,
+  selectorFamily,
+  useRecoilState,
+} from "recoil";
 
 import { Action } from "@pusher/shared";
-
-import { memoize } from "./memoize";
 
 type ActionsData = Record<string, Action>;
 
@@ -12,10 +16,11 @@ export const actionDatasAtom = atom<ActionsData>({
   default: {},
 });
 
-export const actionDataSelector = memoize((actionId?: string) =>
-  selector({
-    key: `DataSelector-${actionId}`,
-    get: ({ get }): Action => {
+const actionDataSelector = selectorFamily({
+  key: "DataSelectorFamily",
+  get:
+    (actionId: string) =>
+    ({ get }) => {
       const datas = get(actionDatasAtom);
 
       const data = datas[actionId ?? ""];
@@ -26,7 +31,9 @@ export const actionDataSelector = memoize((actionId?: string) =>
 
       return data;
     },
-    set({ set, get }, newValue) {
+  set:
+    (actionId: string) =>
+    ({ set, get }, newValue) => {
       const allActions = get(actionDatasAtom);
 
       if (!actionId) {
@@ -35,10 +42,9 @@ export const actionDataSelector = memoize((actionId?: string) =>
 
       set(actionDatasAtom, { ...allActions, [actionId]: newValue as Action });
     },
-  })
-);
+});
 
-export const useDataAtom = (actionId?: string) =>
+export const useDataAtom = (actionId: string) =>
   useRecoilState(actionDataSelector(actionId));
 
 export const useDatasAtom = () => {

@@ -1,6 +1,6 @@
 import { Menu, MenuProps } from "antd";
 
-import { useActionsAtom } from "@/state/actions";
+import { useAddAction } from "@/state/actions";
 import {
   CodeOutlined,
   SendOutlined,
@@ -9,7 +9,7 @@ import {
 import { useMemo } from "react";
 
 export const SideBar: React.FC = () => {
-  const { addAction } = useActionsAtom();
+  const addAction = useAddAction();
 
   const items: MenuProps["items"] = useMemo(
     () => [

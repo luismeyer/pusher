@@ -14,6 +14,8 @@ type ActionContentProps = {
 export const ActionContent: React.FC<ActionContentProps> = ({ id }) => {
   const [data, setData] = useDataAtom(id);
 
+  // console.log({ data });
+
   const inputs = useMemo(() => {
     let components: JSX.Element[] = [];
 

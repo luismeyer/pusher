@@ -1,7 +1,6 @@
 import { useCallback } from "react";
-import { atom, useRecoilState } from "recoil";
+import { atom, useRecoilState, useRecoilValue } from "recoil";
 
-import { removeItemAtIndex, replaceItemAtIndex } from "@/utils/array";
 import { Action as Data } from "@pusher/shared";
 
 import { useDatasAtom } from "./data";
@@ -18,35 +17,33 @@ export type Action = {
   falseNextAction?: string;
 };
 
-export type ActionStore = Action[];
+export type ActionStore = Record<string, Action>;
 
 export const actionsAtom = atom<ActionStore>({
   key: "ActionsAtom",
-  default: [],
+  default: {},
 });
 
-export const useActionsAtom = () => {
+export const useDeleteAction = () => {
   const [actions, setActions] = useRecoilState(actionsAtom);
 
-  const { addData, deleteData } = useDatasAtom();
+  const { deleteData } = useDatasAtom();
 
-  const deleteAction = useCallback(
+  return useCallback(
     ({ id }: Action) => {
-      const prevIndex = actions.findIndex((action) => action.nextAction === id);
-      const prevAction = actions[prevIndex];
+      let { [id]: deleted, ...newActions } = actions;
 
-      let newActions = [...actions];
+      const prevAction = Object.values(newActions).find(
+        (action) => action.nextAction === id
+      );
 
       if (prevAction) {
-        newActions = replaceItemAtIndex(actions, prevIndex, {
-          ...prevAction,
-          nextAction: undefined,
-        });
+        newActions = {
+          ...newActions,
+
+          [prevAction.id]: { ...prevAction, nextAction: undefined },
+        };
       }
-
-      const index = newActions.findIndex((action) => action.id === id);
-
-      newActions = removeItemAtIndex(newActions, index);
 
       setActions(newActions);
 
@@ -54,28 +51,33 @@ export const useActionsAtom = () => {
     },
     [actions, deleteData, setActions]
   );
+};
 
-  const addAction = useCallback(
+export const useAddAction = () => {
+  const [actions, setActions] = useRecoilState(actionsAtom);
+
+  const { addData } = useDatasAtom();
+
+  return useCallback(
     (data: Data) => {
       const id = Math.floor(Math.random() * 1000).toString();
 
-      setActions([
+      setActions({
         ...actions,
-        {
-          id,
-          x: 10,
-          y: 10,
-        },
-      ]);
+        [id]: { id, x: 10, y: 10 },
+      });
 
       addData(id, data);
     },
     [actions, addData, setActions]
   );
+};
+
+export const useActionsAtom = () => {
+  const actionsStore = useRecoilValue(actionsAtom);
 
   return {
-    actions,
-    addAction,
-    deleteAction,
+    actionsStore,
+    actions: Object.values(actionsStore),
   };
 };

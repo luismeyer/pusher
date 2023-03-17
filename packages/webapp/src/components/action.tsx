@@ -12,7 +12,7 @@ import {
 import { useConnection } from "../hooks/useConnection";
 import { useDragAndDrop } from "../hooks/useDragAndDrop";
 import { useActionAtom } from "../state/actionSelector";
-import { useActionsAtom } from "../state/actions";
+import { useDeleteAction } from "../state/actions";
 import { ActionContent } from "./actionContent";
 import { ActionHeader } from "./actionHeadline";
 
@@ -22,7 +22,7 @@ type ActionProps = {
 };
 
 export const Action: React.FC<ActionProps> = ({ id, canvas }) => {
-  const { deleteAction } = useActionsAtom();
+  const deleteAction = useDeleteAction();
 
   const [action, setAction] = useActionAtom(id);
 

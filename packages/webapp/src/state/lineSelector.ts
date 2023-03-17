@@ -20,11 +20,9 @@ export const lineSelector = selector({
     if (connecting.actionA && !connecting.actionB) {
     }
 
-    const actionLines = allActions
+    const actionLines = Object.values(allActions)
       .map((action) => {
-        const nextAction = allActions.find(
-          ({ id }) => action.nextAction === id
-        );
+        const nextAction = allActions[action.nextAction ?? ""];
 
         if (!nextAction) {
           return;
