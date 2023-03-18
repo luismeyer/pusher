@@ -31,4 +31,4 @@ const ExampleFlow: Flow = {
   },
 };
 
-handler({ flow: ExampleFlow, debug: true });
+handler({ flow: ExampleFlow, debug: true }).then(console.log);

@@ -2,6 +2,8 @@ import { selector, useRecoilValue } from "recoil";
 
 import { actionsAtom } from "./actions";
 import { connectingAtom } from "./connecting";
+import { positionAtom } from "./position";
+import { sizeAtom } from "./size";
 
 export type Line = {
   ax: number;
@@ -28,16 +30,17 @@ export const lineSelector = selector({
           return;
         }
 
-        const aWidth = action.width ?? 0;
-        const aHeight = action.height ?? 0;
-        const bWidth = nextAction.width ?? 0;
-        const bHeight = nextAction.height ?? 0;
+        const position = get(positionAtom(action.id));
+        const size = get(sizeAtom(action.id));
+
+        const nextPosition = get(positionAtom(nextAction.id));
+        const nextSize = get(sizeAtom(nextAction.id));
 
         return {
-          ax: action.x + aWidth / 2,
-          ay: action.y + aHeight / 2,
-          bx: nextAction.x + bWidth / 2,
-          by: nextAction.y + bHeight / 2,
+          ax: position.x + size.width / 2,
+          ay: position.y + size.height / 2,
+          bx: nextPosition.x + nextSize.width / 2,
+          by: nextPosition.y + nextSize.height / 2,
         };
       })
       .filter((action): action is Line => Boolean(action));

@@ -1,16 +1,19 @@
 import { useCallback } from "react";
-import { atom, useRecoilState, useRecoilValue } from "recoil";
+import {
+  atom,
+  useRecoilState,
+  useRecoilValue,
+  useResetRecoilState,
+} from "recoil";
 
 import { Action as Data } from "@pusher/shared";
 
 import { useDatasAtom } from "./data";
 import { localStorageEffect } from "./localStorage";
+import { sizeAtom } from "./size";
+import { positionAtom } from "./position";
 
 export type Action = {
-  x: number;
-  y: number;
-  width?: number;
-  height?: number;
   id: string;
 
   nextAction?: string;
@@ -24,36 +27,41 @@ export type ActionStore = Record<string, Action>;
 export const actionsAtom = atom<ActionStore>({
   key: "ActionsAtom",
   default: {},
-  effects: [localStorageEffect("actions")],
+  effects: [localStorageEffect],
 });
 
-export const useDeleteAction = () => {
+export const useDeleteAction = (id: string) => {
   const [actions, setActions] = useRecoilState(actionsAtom);
 
   const { deleteData } = useDatasAtom();
 
-  return useCallback(
-    ({ id }: Action) => {
-      let { [id]: deleted, ...newActions } = actions;
+  const resetSize = useResetRecoilState(sizeAtom(id));
+  const resetPosition = useResetRecoilState(positionAtom(id));
 
-      const prevAction = Object.values(newActions).find(
-        (action) => action.nextAction === id
-      );
+  return useCallback(() => {
+    let { [id]: deleted, ...newActions } = actions;
 
-      if (prevAction) {
-        newActions = {
-          ...newActions,
+    const prevAction = Object.values(newActions).find(
+      (action) => action.nextAction === id
+    );
 
-          [prevAction.id]: { ...prevAction, nextAction: undefined },
-        };
-      }
+    if (prevAction) {
+      newActions = {
+        ...newActions,
 
-      setActions(newActions);
+        [prevAction.id]: { ...prevAction, nextAction: undefined },
+      };
+    }
 
-      deleteData(id);
-    },
-    [actions, deleteData, setActions]
-  );
+    console.log(id, newActions);
+    setActions(newActions);
+
+    deleteData(id);
+
+    resetPosition();
+
+    resetSize();
+  }, [actions, deleteData, id, resetPosition, resetSize, setActions]);
 };
 
 export const useAddAction = () => {
@@ -67,7 +75,7 @@ export const useAddAction = () => {
 
       setActions({
         ...actions,
-        [id]: { id, x: 10, y: 10 },
+        [id]: { id },
       });
 
       addData(id, data);

@@ -9,7 +9,7 @@ type ActionsData = Record<string, Action>;
 export const actionDatasAtom = atom<ActionsData>({
   key: "DatasAtom",
   default: {},
-  effects: [localStorageEffect("datas")],
+  effects: [localStorageEffect],
 });
 
 const actionDataSelector = selectorFamily({

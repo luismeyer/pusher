@@ -1,22 +1,27 @@
 import { AtomEffect } from "recoil";
 import { isServer } from "../utils/ssr";
 
-export const localStorageEffect =
-  <T>(key: string): AtomEffect<T> =>
-  ({ setSelf, onSet }) => {
-    if (isServer) {
-      return;
-    }
+export const localStorageEffect: AtomEffect<any> = ({
+  setSelf,
+  onSet,
+  node,
+}) => {
+  if (isServer) {
+    return;
+  }
 
-    const savedValue = localStorage.getItem(key);
+  const { key } = node;
 
-    if (savedValue !== null) {
-      setSelf(JSON.parse(savedValue));
-    }
+  const savedValue = localStorage.getItem(key);
 
-    onSet((newValue, _, isReset) => {
-      isReset
-        ? localStorage.removeItem(key)
-        : localStorage.setItem(key, JSON.stringify(newValue));
-    });
-  };
+  if (savedValue !== null) {
+    setSelf(JSON.parse(savedValue));
+  }
+
+  onSet((newValue, _, isReset) => {
+    console.log("test", key);
+    isReset
+      ? localStorage.removeItem(key)
+      : localStorage.setItem(key, JSON.stringify(newValue));
+  });
+};

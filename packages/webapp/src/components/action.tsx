@@ -2,30 +2,36 @@ import { Button, Card, theme } from "antd";
 import React, { useCallback, useEffect, useMemo, useRef } from "react";
 
 import { useConnectingAtom } from "@/state/connecting";
+import { usePositionAtom } from "@/state/position";
+import { useSizeAtom } from "@/state/size";
 import styles from "@/styles/action.module.css";
 import {
   ApiOutlined,
-  DisconnectOutlined,
   DeleteOutlined,
+  DisconnectOutlined,
 } from "@ant-design/icons";
 
 import { useConnection } from "../hooks/useConnection";
-import { useActionAtom } from "../state/actionSelector";
 import { useDeleteAction } from "../state/actions";
+import { useActionAtom } from "../state/actionSelector";
+import { useDragIdAtom } from "../state/drag";
 import { ActionContent } from "./actionContent";
 import { ActionHeader } from "./actionHeadline";
-import { useDragIdAtom } from "../state/drag";
 
 type ActionProps = {
   id: string;
 };
 
 export const Action: React.FC<ActionProps> = ({ id }) => {
-  const deleteAction = useDeleteAction();
+  const deleteAction = useDeleteAction(id);
 
   const [action, setAction] = useActionAtom(id);
 
   const [{ actionA }] = useConnectingAtom();
+
+  const [size, setSize] = useSizeAtom(id);
+
+  const [position] = usePositionAtom(id);
 
   const ref = useRef<HTMLDivElement>(null);
 
@@ -41,22 +47,22 @@ export const Action: React.FC<ActionProps> = ({ id }) => {
 
   // effect saves the element height in the atom
   useEffect(() => {
-    if (action.height !== ref.current?.clientHeight) {
-      setAction((pre) => ({ ...pre, height: ref.current?.clientHeight }));
+    if (size.height !== ref.current?.clientHeight) {
+      setSize((pre) => ({ ...pre, height: ref.current?.clientHeight ?? 0 }));
     }
 
-    if (action.width !== ref.current?.clientWidth) {
-      setAction((pre) => ({ ...pre, width: ref.current?.clientWidth }));
+    if (size.width !== ref.current?.clientWidth) {
+      setSize((pre) => ({ ...pre, width: ref.current?.clientWidth ?? 0 }));
     }
-  }, [action.height, action.width, ref, setAction]);
+  }, [ref, setAction, setSize, size.height, size.width]);
 
   const {
     token: { colorPrimary, colorSuccess },
   } = theme.useToken();
 
   const handleDeleteClick = useCallback(() => {
-    deleteAction(action);
-  }, [action, deleteAction]);
+    deleteAction();
+  }, [deleteAction]);
 
   const handleMouseDown: React.MouseEventHandler<HTMLDivElement> =
     useCallback(() => {
@@ -121,8 +127,8 @@ export const Action: React.FC<ActionProps> = ({ id }) => {
       className={styles.container}
       key={id}
       style={{
-        top: action.y,
-        left: action.x,
+        top: position.y,
+        left: position.x,
         zIndex: dragId === id ? "100" : "initial",
         cursor,
       }}

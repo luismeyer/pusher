@@ -1,12 +1,16 @@
 import { useCallback, useEffect, useRef } from "react";
 
 import { useDragIdAtom } from "../state/drag";
-import { useNullableActionAtom } from "../state/nullableActionSelector";
+
+import { usePositionAtom } from "../state/position";
+import { useSizeAtom } from "../state/size";
 
 export const useDrag = (canvas: React.RefObject<HTMLDivElement>) => {
   const [dragId] = useDragIdAtom();
 
-  const [action, setAction] = useNullableActionAtom(dragId);
+  const [position, setPosition] = usePositionAtom(dragId ?? "");
+
+  const [size] = useSizeAtom(dragId ?? "");
 
   // refs stores the offset of the pointer from the top left corner of the action
   const pointerActionOffsetX = useRef<number>();
@@ -14,20 +18,20 @@ export const useDrag = (canvas: React.RefObject<HTMLDivElement>) => {
 
   // clear the pointer offset after dragging
   useEffect(() => {
-    if (!action && pointerActionOffsetX.current) {
+    if (!dragId && pointerActionOffsetX.current) {
       pointerActionOffsetX.current = undefined;
     }
 
-    if (!action && pointerActionOffsetY.current) {
+    if (!dragId && pointerActionOffsetY.current) {
       pointerActionOffsetY.current = undefined;
     }
-  }, [action]);
+  }, [dragId]);
 
   const handleDrag = useCallback(
     (event: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
       event.preventDefault();
 
-      if (!dragId || !action) {
+      if (!dragId) {
         return;
       }
 
@@ -38,16 +42,16 @@ export const useDrag = (canvas: React.RefObject<HTMLDivElement>) => {
         offsetTop: canvasOffsetY = 0,
       } = canvas.current ?? {};
 
-      const { height: actionHeight = 0, width: actionWidth = 0 } = action;
+      const { height: actionHeight = 0, width: actionWidth = 0 } = size;
 
       // set the pointer offset on the first drag event
       if (!pointerActionOffsetX.current) {
-        pointerActionOffsetX.current = event.pageX - canvasOffsetX - action.x;
+        pointerActionOffsetX.current = event.pageX - canvasOffsetX - position.x;
       }
 
       // set the pointer offset on the first drag event
       if (!pointerActionOffsetY.current) {
-        pointerActionOffsetY.current = event.pageY - canvasOffsetY - action.y;
+        pointerActionOffsetY.current = event.pageY - canvasOffsetY - position.y;
       }
 
       const newX = event.pageX - canvasOffsetX - pointerActionOffsetX.current;
@@ -55,14 +59,14 @@ export const useDrag = (canvas: React.RefObject<HTMLDivElement>) => {
       const newY = event.pageY - canvasOffsetY - pointerActionOffsetY.current;
 
       if (newX + actionWidth <= canvasWidth && newX >= 0) {
-        setAction((prev) => prev && { ...prev, x: newX });
+        setPosition((prev) => prev && { ...prev, x: newX });
       }
 
       if (newY + actionHeight <= canvasHeight && newY >= 0) {
-        setAction((prev) => prev && { ...prev, y: newY });
+        setPosition((prev) => prev && { ...prev, y: newY });
       }
     },
-    [action, canvas, dragId, setAction]
+    [canvas, dragId, position.x, position.y, setPosition, size]
   );
 
   return handleDrag;

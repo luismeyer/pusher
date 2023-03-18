@@ -1,8 +1,9 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 
 import { useConnectingAtom } from "@/state/connecting";
-import { useNullableActionAtom } from "@/state/nullableActionSelector";
 import { Line as Points } from "@/state/lineSelector";
+import { usePositionAtom } from "@/state/position";
+import { useSizeAtom } from "@/state/size";
 
 export const useCurrentLine = (
   canvasRef: React.RefObject<HTMLDivElement>,
@@ -10,7 +11,9 @@ export const useCurrentLine = (
 ) => {
   const [connecting, setConnecting] = useConnectingAtom();
 
-  const [actionA] = useNullableActionAtom(connecting.actionA);
+  const [position] = usePositionAtom(connecting.actionA ?? "");
+
+  const [size] = useSizeAtom(connecting.actionA ?? "");
 
   const currentLineRef = useRef<HTMLDivElement>(null);
   const [currentLine, setCurrentLine] = useState<Points | undefined>();
@@ -18,18 +21,25 @@ export const useCurrentLine = (
   const updateCurrentLine: React.MouseEventHandler<HTMLDivElement> =
     useCallback(
       (event) => {
-        if (!actionA || !actionA.width || !actionA.height) {
+        if (!connecting.actionA) {
           return;
         }
 
         setCurrentLine({
-          ax: actionA.x + actionA.width / 2,
-          ay: actionA.y + actionA.height / 2,
+          ax: position.x + size.width / 2,
+          ay: position.y + size.height / 2,
           bx: event.pageX - (canvasRef.current?.offsetLeft ?? 0),
           by: event.pageY - (canvasRef.current?.offsetTop ?? 0),
         });
       },
-      [actionA, canvasRef]
+      [
+        canvasRef,
+        connecting.actionA,
+        position.x,
+        position.y,
+        size.height,
+        size.width,
+      ]
     );
 
   const handleCanvasClick: React.MouseEventHandler<HTMLDivElement> =
@@ -53,10 +63,10 @@ export const useCurrentLine = (
 
   // Clear the line if connecting canceled or finished
   useEffect(() => {
-    if (currentLine && !actionA) {
+    if (currentLine && !connecting.actionA) {
       setCurrentLine(undefined);
     }
-  }, [actionA, currentLine]);
+  }, [connecting.actionA, currentLine]);
 
   return {
     handleCanvasClick,

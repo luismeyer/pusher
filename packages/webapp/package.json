@@ -6,7 +6,8 @@
     "build": "next build",
     "dev": "next dev",
     "lint": "next lint",
-    "start": "next start"
+    "start": "next start",
+    "ts": "tsc --build"
   },
   "dependencies": {
     "@ant-design/icons": "^5.0.1",
