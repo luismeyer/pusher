@@ -15,7 +15,9 @@ if (!isInterval(INTERVAL)) {
 export const handler = async () => {
   const flows = await flowsByInterval(INTERVAL);
 
-  const runnableFlows = flows.filter(({ fails }) => fails < 3);
+  const runnableFlows = flows.filter(
+    ({ fails, disabled }) => !disabled && fails < 3
+  );
 
   await Promise.all(runnableFlows.map(callRunner));
 };

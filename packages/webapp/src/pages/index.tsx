@@ -10,7 +10,11 @@ export default function Home() {
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
-      <main></main>
+      <main>
+        <h1>Pusher</h1>
+
+        <h2>Push notifications 4 everyone</h2>
+      </main>
     </>
   );
 }

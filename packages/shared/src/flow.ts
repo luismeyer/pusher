@@ -37,6 +37,7 @@ export type Flow = {
   id: string;
   fails: number;
   interval: "6h" | "12h";
+  disabled: boolean;
   executions?: Execution[];
   actionTree: Action;
 };

@@ -1,13 +1,17 @@
 import { FloatButton, Layout, theme } from "antd";
 import dynamic from "next/dynamic";
+import { useState } from "react";
 
 import { SideBar } from "@/components/sideBar";
-import { TopBar } from "@/components/topBar";
 import { MinusOutlined, PlusOutlined } from "@ant-design/icons";
-import { useCallback, useEffect, useRef, useState } from "react";
 
 const Canvas = dynamic(
   import("@/components/canvas").then((i) => i.Canvas),
+  { ssr: false }
+);
+
+const TopBar = dynamic(
+  import("@/components/topBar").then((i) => i.TopBar),
   { ssr: false }
 );
 
@@ -22,7 +26,7 @@ export default function Console() {
 
   return (
     <Layout style={{ height: "100vh" }}>
-      <Header>
+      <Header style={{ height: "auto" }}>
         <TopBar />
       </Header>
 
