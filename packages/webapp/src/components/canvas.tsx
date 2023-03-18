@@ -1,4 +1,4 @@
-import React, { useCallback, useRef } from "react";
+import React, { useCallback, useRef, useState } from "react";
 import { useRecoilValue } from "recoil";
 
 import { useCurrentLine } from "@/hooks/useCurrentLine";
@@ -10,14 +10,17 @@ import styles from "@/styles/canvas.module.css";
 import { Action } from "./action";
 import { Line } from "./line";
 
-export const Canvas: React.FC = () => {
+type CanvasProps = {
+  zoom: number;
+};
+
+export const Canvas: React.FC<CanvasProps> = ({ zoom }) => {
   const actionIds = useRecoilValue(actionIdsAtom);
 
   const lines = useRecoilValue(lineSelector);
+  const lineRefs = useRef<HTMLDivElement[]>([]);
 
   const canvasRef = useRef<HTMLDivElement>(null);
-
-  const lineRefs = useRef<HTMLDivElement[]>([]);
 
   const handleDrag = useDrag(canvasRef);
 
@@ -39,6 +42,7 @@ export const Canvas: React.FC = () => {
       ref={canvasRef}
       onMouseMove={handleMouseMove}
       onClick={handleCanvasClick}
+      style={{ zoom }}
     >
       {actionIds.map((id) => (
         <Action key={id} id={id} />
