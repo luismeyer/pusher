@@ -10,8 +10,8 @@ export const positionAtom = atomFamily<SizeAndPosition, string>({
   key: "Position",
   effects: [localStorageEffect],
   default: {
-    x: 0,
-    y: 0,
+    x: 10,
+    y: 10,
   },
 });
 

@@ -8,19 +8,24 @@ const ExampleFlow: Flow = {
   interval: "12h",
   name: "Example Flow",
   actionTree: {
+    id: "123",
     type: "openPage",
     pageUrl: "https://google.com",
     nextAction: {
+      id: "456",
       type: "click",
       selector: "#L2AGLb",
       nextAction: {
+        id: "789",
         type: "type",
         selector: "input",
         text: "Schafe",
         nextAction: {
+          id: "1011",
           type: "click",
           selector: "#jZ2SBf",
           nextAction: {
+            id: "1213",
             type: "telegram",
             chatId: "876296520",
             message: "SCHAFE",

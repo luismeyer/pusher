@@ -1,7 +1,7 @@
 import { Button, Menu, MenuProps } from "antd";
 import { useCallback, useMemo } from "react";
 
-import { useDatasAtom } from "@/state/data";
+import { useAllDataAtom } from "@/state/data";
 import { Action, Flow, isNavigationAction } from "@pusher/shared";
 
 import { useActionsAtom } from "../state/actions";
@@ -9,15 +9,19 @@ import { getFirstParentAction } from "../utils/action";
 import { useFlowAtom } from "../state/flow";
 
 export const TopBar: React.FC = () => {
-  const { datas } = useDatasAtom();
-
   const { actionsStore, actions } = useActionsAtom();
+
+  const datas = useAllDataAtom(...Object.keys(actionsStore));
 
   const [flowData] = useFlowAtom();
 
   const transformActions = useCallback(
     (action: { id: string; nextAction?: string }): Action => {
-      const data = datas[action.id];
+      const data = datas.find((data) => data.id === action.id);
+
+      if (!data) {
+        throw new Error("Data not found " + action.id);
+      }
 
       const nextFrontendAction = actionsStore[action.nextAction ?? ""];
 
@@ -32,9 +36,7 @@ export const TopBar: React.FC = () => {
         };
       }
 
-      return {
-        ...data,
-      };
+      return data;
     },
     [datas, actionsStore]
   );

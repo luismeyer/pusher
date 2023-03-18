@@ -1,17 +1,18 @@
-import { useCallback } from "react";
+import { useCallback, useState } from "react";
 import {
   atom,
   useRecoilState,
   useRecoilValue,
   useResetRecoilState,
 } from "recoil";
+import { v4 } from "uuid";
 
 import { Action as Data } from "@pusher/shared";
 
-import { useDatasAtom } from "./data";
+import { useDataAtom, useDeleteData } from "./data";
 import { localStorageEffect } from "./localStorage";
-import { sizeAtom } from "./size";
 import { positionAtom } from "./position";
+import { sizeAtom } from "./size";
 
 export type Action = {
   id: string;
@@ -33,7 +34,7 @@ export const actionsAtom = atom<ActionStore>({
 export const useDeleteAction = (id: string) => {
   const [actions, setActions] = useRecoilState(actionsAtom);
 
-  const { deleteData } = useDatasAtom();
+  const deleteData = useDeleteData(id);
 
   const resetSize = useResetRecoilState(sizeAtom(id));
   const resetPosition = useResetRecoilState(positionAtom(id));
@@ -53,10 +54,9 @@ export const useDeleteAction = (id: string) => {
       };
     }
 
-    console.log(id, newActions);
     setActions(newActions);
 
-    deleteData(id);
+    deleteData();
 
     resetPosition();
 
@@ -67,21 +67,24 @@ export const useDeleteAction = (id: string) => {
 export const useAddAction = () => {
   const [actions, setActions] = useRecoilState(actionsAtom);
 
-  const { addData } = useDatasAtom();
+  const generateId = useCallback(() => v4(), []);
 
-  return useCallback(
+  const [newId, setNewId] = useState(generateId);
+
+  const [_data, setData] = useDataAtom(newId);
+
+  const addAction = useCallback(
     (data: Data) => {
-      const id = Math.floor(Math.random() * 1000).toString();
+      setActions({ ...actions, [newId]: { id: newId } });
 
-      setActions({
-        ...actions,
-        [id]: { id },
-      });
+      setData(data);
 
-      addData(id, data);
+      setNewId(generateId);
     },
-    [actions, addData, setActions]
+    [actions, generateId, newId, setActions, setData]
   );
+
+  return addAction;
 };
 
 export const useActionsAtom = () => {

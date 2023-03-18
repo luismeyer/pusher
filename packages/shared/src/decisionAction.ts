@@ -1,6 +1,6 @@
-import { Action } from "./flow";
+import { Action, BaseAction } from "./flow";
 
-export type DecisionBaseAction = {
+export type DecisionBaseAction = BaseAction & {
   trueNextAction?: Action;
   falseNextAction?: Action;
 };

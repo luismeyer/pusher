@@ -1,69 +1,43 @@
-import { useCallback } from "react";
-import { atom, selectorFamily, useRecoilState } from "recoil";
+import {
+  atomFamily,
+  selectorFamily,
+  useRecoilState,
+  useRecoilValue,
+  useResetRecoilState,
+} from "recoil";
 
 import { Action } from "@pusher/shared";
+
 import { localStorageEffect } from "./localStorage";
 
-type ActionsData = Record<string, Action>;
-
-export const actionDatasAtom = atom<ActionsData>({
-  key: "DatasAtom",
-  default: {},
+export const dataAtom = atomFamily<Action, string>({
+  key: "Data",
   effects: [localStorageEffect],
+  default: {
+    id: "123",
+    type: "click",
+    selector: "",
+  },
 });
 
-const actionDataSelector = selectorFamily({
-  key: "DataSelectorFamily",
+const allDataAtom = selectorFamily<Action[], string[]>({
+  key: "AllData",
   get:
-    (actionId: string) =>
+    (ids: string[]) =>
     ({ get }) => {
-      const datas = get(actionDatasAtom);
-
-      const data = datas[actionId ?? ""];
-
-      if (!data) {
-        throw new Error("Trying to select non existing data " + actionId);
-      }
-
-      return data;
-    },
-  set:
-    (actionId: string) =>
-    ({ set, get }, newValue) => {
-      const allActions = get(actionDatasAtom);
-
-      if (!actionId) {
-        return;
-      }
-
-      set(actionDatasAtom, { ...allActions, [actionId]: newValue as Action });
+      return ids
+        .map((id) => get(dataAtom(id)))
+        .filter((data): data is Action => Boolean(data));
     },
 });
 
 export const useDataAtom = (actionId: string) =>
-  useRecoilState(actionDataSelector(actionId));
+  useRecoilState(dataAtom(actionId));
 
-export const useDatasAtom = () => {
-  const [datas, setDatas] = useRecoilState(actionDatasAtom);
+export const useDeleteData = (actionId: string) => {
+  return useResetRecoilState(dataAtom(actionId));
+};
 
-  const deleteData = useCallback(
-    (id: string) => {
-      const { [id]: toBeDelete, ...rest } = datas;
-
-      setDatas(rest);
-    },
-    [datas, setDatas]
-  );
-
-  const addData = useCallback(
-    (id: string, data: Action) => {
-      setDatas({
-        ...datas,
-        [id]: data,
-      });
-    },
-    [datas, setDatas]
-  );
-
-  return { datas, addData, deleteData };
+export const useAllDataAtom = (...ids: string[]) => {
+  return useRecoilValue(allDataAtom(ids));
 };

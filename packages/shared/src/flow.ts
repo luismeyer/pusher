@@ -8,7 +8,6 @@ import {
   TypeAction,
   WaitForAction,
   NavigationAction,
-  OpenPageAction,
 } from "./navigationAction";
 import { OutputAction } from "./outputAction";
 
@@ -21,6 +20,10 @@ export type SelectorAction =
 
 export const isSelectorAction = (action: Action): action is SelectorAction =>
   "selector" in action;
+
+export type BaseAction = {
+  id: string;
+};
 
 export type Action = DecisionAction | NavigationAction | OutputAction;
 
