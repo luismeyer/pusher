@@ -1,7 +1,7 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 import type {} from "aws-lambda";
+import { callRunner } from "@/api/callRunner";
 import { Flow } from "@pusher/shared";
-import { callRunner } from "../../api/callRunner";
 
 interface Request extends NextApiRequest {
   query: {

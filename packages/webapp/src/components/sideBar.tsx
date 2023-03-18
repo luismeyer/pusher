@@ -1,15 +1,15 @@
 import { Menu, MenuProps } from "antd";
+import { useMemo } from "react";
 
 import { useAddAction } from "@/state/actions";
 import {
   CodeOutlined,
-  SendOutlined,
   NodeCollapseOutlined,
+  SendOutlined,
 } from "@ant-design/icons";
-import { useMemo } from "react";
 
 export const SideBar: React.FC = () => {
-  const addAction = useAddAction();
+  const { addAction, id } = useAddAction();
 
   const items: MenuProps["items"] = useMemo(
     () => [
@@ -21,32 +21,33 @@ export const SideBar: React.FC = () => {
           {
             key: "1",
             label: "Click",
-            onClick: () => addAction({ type: "click", selector: "" }),
+            onClick: () => addAction({ id, type: "click", selector: "" }),
           },
           {
             key: "2",
             label: "Scroll To Bottom",
-            onClick: () => addAction({ type: "scrollToBottom" }),
+            onClick: () => addAction({ id, type: "scrollToBottom" }),
           },
           {
             key: "4",
             label: "Timeout",
-            onClick: () => addAction({ type: "timeout", timeInSeconds: 0 }),
+            onClick: () => addAction({ id, type: "timeout", timeInSeconds: 0 }),
           },
           {
             key: "5",
             label: "Wait For Element",
-            onClick: () => addAction({ type: "waitFor", selector: "" }),
+            onClick: () => addAction({ id, type: "waitFor", selector: "" }),
           },
           {
             key: "6",
             label: "Open Page",
-            onClick: () => addAction({ type: "openPage", pageUrl: "" }),
+            onClick: () => addAction({ id, type: "openPage", pageUrl: "" }),
           },
           {
             key: "7",
             label: "Type Text",
-            onClick: () => addAction({ type: "type", selector: "", text: "" }),
+            onClick: () =>
+              addAction({ id, type: "type", selector: "", text: "" }),
           },
         ],
       },
@@ -58,13 +59,18 @@ export const SideBar: React.FC = () => {
           {
             key: "8",
             label: "Element Exists",
-            onClick: () => addAction({ type: "exists", selector: "" }),
+            onClick: () => addAction({ id, type: "exists", selector: "" }),
           },
           {
             key: "9",
             label: "Text Content Matches",
             onClick: () =>
-              addAction({ type: "textContentMatches", selector: "", text: "" }),
+              addAction({
+                id,
+                type: "textContentMatches",
+                selector: "",
+                text: "",
+              }),
           },
         ],
       },
@@ -77,12 +83,12 @@ export const SideBar: React.FC = () => {
             key: "10",
             label: "Telegram",
             onClick: () =>
-              addAction({ type: "telegram", chatId: "", message: "" }),
+              addAction({ id, type: "telegram", chatId: "", message: "" }),
           },
         ],
       },
     ],
-    [addAction]
+    [addAction, id]
   );
 
   return (

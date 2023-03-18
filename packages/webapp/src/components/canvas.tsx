@@ -1,18 +1,19 @@
 import React, { useCallback, useRef } from "react";
+import { useRecoilValue } from "recoil";
 
-import { useActionsAtom } from "@/state/actions";
-import { useLineAtom } from "@/state/lineSelector";
+import { useCurrentLine } from "@/hooks/useCurrentLine";
+import { useDrag } from "@/hooks/useDrag";
+import { actionIdsAtom } from "@/state/actions";
+import { lineSelector } from "@/state/line";
 import styles from "@/styles/canvas.module.css";
 
 import { Action } from "./action";
 import { Line } from "./line";
-import { useCurrentLine } from "../hooks/useCurrentLine";
-import { useDrag } from "../hooks/useDrag";
 
 export const Canvas: React.FC = () => {
-  const { actions } = useActionsAtom();
+  const actionIds = useRecoilValue(actionIdsAtom);
 
-  const lines = useLineAtom();
+  const lines = useRecoilValue(lineSelector);
 
   const canvasRef = useRef<HTMLDivElement>(null);
 
@@ -39,8 +40,8 @@ export const Canvas: React.FC = () => {
       onMouseMove={handleMouseMove}
       onClick={handleCanvasClick}
     >
-      {actions.map((action) => (
-        <Action key={action.id} id={action.id} />
+      {actionIds.map((id) => (
+        <Action key={id} id={id} />
       ))}
 
       {lines.map((line, index) => (

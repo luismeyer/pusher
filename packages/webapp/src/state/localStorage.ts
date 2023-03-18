@@ -1,6 +1,6 @@
 import { AtomEffect } from "recoil";
 
-import { isServer } from "../utils/ssr";
+import { isServer } from "@/utils/ssr";
 
 export const localStorageEffect: AtomEffect<any> = ({
   setSelf,

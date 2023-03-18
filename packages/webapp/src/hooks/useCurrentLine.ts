@@ -1,27 +1,28 @@
 import { useCallback, useEffect, useRef, useState } from "react";
+import { useRecoilState, useRecoilValue } from "recoil";
 
-import { useConnectingAtom } from "@/state/connecting";
-import { Line as Points } from "@/state/lineSelector";
-import { usePositionAtom } from "@/state/position";
-import { useSizeAtom } from "@/state/size";
+import { connectStartAtom } from "@/state/connection";
+import { Line } from "@/state/line";
+import { positionAtom } from "@/state/position";
+import { sizeAtom } from "@/state/size";
 
 export const useCurrentLine = (
   canvasRef: React.RefObject<HTMLDivElement>,
   lines: React.RefObject<HTMLDivElement[]>
 ) => {
-  const [connecting, setConnecting] = useConnectingAtom();
+  const [connectStart, setConnectStart] = useRecoilState(connectStartAtom);
 
-  const [position] = usePositionAtom(connecting.actionA ?? "");
+  const [position] = useRecoilState(positionAtom(connectStart ?? ""));
 
-  const [size] = useSizeAtom(connecting.actionA ?? "");
+  const size = useRecoilValue(sizeAtom(connectStart ?? ""));
 
   const currentLineRef = useRef<HTMLDivElement>(null);
-  const [currentLine, setCurrentLine] = useState<Points | undefined>();
+  const [currentLine, setCurrentLine] = useState<Line | undefined>();
 
   const updateCurrentLine: React.MouseEventHandler<HTMLDivElement> =
     useCallback(
       (event) => {
-        if (!connecting.actionA) {
+        if (!connectStart) {
           return;
         }
 
@@ -32,14 +33,7 @@ export const useCurrentLine = (
           by: event.pageY - (canvasRef.current?.offsetTop ?? 0),
         });
       },
-      [
-        canvasRef,
-        connecting.actionA,
-        position.x,
-        position.y,
-        size.height,
-        size.width,
-      ]
+      [canvasRef, connectStart, position.x, position.y, size.height, size.width]
     );
 
   const handleCanvasClick: React.MouseEventHandler<HTMLDivElement> =
@@ -55,18 +49,18 @@ export const useCurrentLine = (
 
         // clear the current connection line if clicked anywhere
         if (isCanvasClick || isCurrentLineClick || isLineClick) {
-          setConnecting({});
+          setConnectStart(undefined);
         }
       },
-      [canvasRef, currentLine, lines, setConnecting]
+      [canvasRef, currentLine, lines, setConnectStart]
     );
 
   // Clear the line if connecting canceled or finished
   useEffect(() => {
-    if (currentLine && !connecting.actionA) {
+    if (currentLine && !connectStart) {
       setCurrentLine(undefined);
     }
-  }, [connecting.actionA, currentLine]);
+  }, [connectStart, currentLine]);
 
   return {
     handleCanvasClick,

@@ -20,7 +20,11 @@ export const TextInput: React.FC<TextInputProps> = ({
     );
 
     if (!prefixInValue) {
-      return { prefix: "", value: fullValue };
+      if (!addonBeforeOptions?.length) {
+        return { prefix: "", value: fullValue };
+      }
+
+      return { prefix: addonBeforeOptions[0].value, value: fullValue };
     }
 
     return {

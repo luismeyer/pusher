@@ -1,16 +1,16 @@
 import { useCallback, useEffect, useRef } from "react";
+import { useRecoilState, useRecoilValue } from "recoil";
 
-import { useDragIdAtom } from "../state/drag";
-
-import { usePositionAtom } from "../state/position";
-import { useSizeAtom } from "../state/size";
+import { dragIdAtom } from "@/state/drag";
+import { positionAtom } from "@/state/position";
+import { sizeAtom } from "@/state/size";
 
 export const useDrag = (canvas: React.RefObject<HTMLDivElement>) => {
-  const [dragId] = useDragIdAtom();
+  const dragId = useRecoilValue(dragIdAtom);
 
-  const [position, setPosition] = usePositionAtom(dragId ?? "");
+  const [position, setPosition] = useRecoilState(positionAtom(dragId ?? ""));
 
-  const [size] = useSizeAtom(dragId ?? "");
+  const size = useRecoilValue(sizeAtom(dragId ?? ""));
 
   // refs stores the offset of the pointer from the top left corner of the action
   const pointerActionOffsetX = useRef<number>();
@@ -36,8 +36,8 @@ export const useDrag = (canvas: React.RefObject<HTMLDivElement>) => {
       }
 
       const {
-        clientHeight: canvasHeight = 0,
-        clientWidth: canvasWidth = 0,
+        scrollHeight: canvasHeight = 0,
+        scrollWidth: canvasWidth = 0,
         offsetLeft: canvasOffsetX = 0,
         offsetTop: canvasOffsetY = 0,
       } = canvas.current ?? {};

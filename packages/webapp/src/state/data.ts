@@ -1,10 +1,5 @@
-import {
-  atomFamily,
-  selectorFamily,
-  useRecoilState,
-  useRecoilValue,
-  useResetRecoilState,
-} from "recoil";
+import { atomFamily } from "recoil";
+import { v4 } from "uuid";
 
 import { Action } from "@pusher/shared";
 
@@ -14,30 +9,8 @@ export const dataAtom = atomFamily<Action, string>({
   key: "Data",
   effects: [localStorageEffect],
   default: {
-    id: "123",
+    id: v4(),
     type: "click",
     selector: "",
   },
 });
-
-const allDataAtom = selectorFamily<Action[], string[]>({
-  key: "AllData",
-  get:
-    (ids: string[]) =>
-    ({ get }) => {
-      return ids
-        .map((id) => get(dataAtom(id)))
-        .filter((data): data is Action => Boolean(data));
-    },
-});
-
-export const useDataAtom = (actionId: string) =>
-  useRecoilState(dataAtom(actionId));
-
-export const useDeleteData = (actionId: string) => {
-  return useResetRecoilState(dataAtom(actionId));
-};
-
-export const useAllDataAtom = (...ids: string[]) => {
-  return useRecoilValue(allDataAtom(ids));
-};

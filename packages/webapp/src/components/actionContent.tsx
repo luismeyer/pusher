@@ -1,18 +1,19 @@
+import { InputNumber } from "antd";
 import { useMemo } from "react";
+import { useRecoilState } from "recoil";
 
-import { useDataAtom } from "@/state/data";
+import { dataAtom } from "@/state/data";
 import styles from "@/styles/action.module.css";
 import { InfoCircleOutlined } from "@ant-design/icons";
 
 import { TextInput } from "./textInput";
-import { InputNumber } from "antd";
 
 type ActionContentProps = {
   id: string;
 };
 
 export const ActionContent: React.FC<ActionContentProps> = ({ id }) => {
-  const [data, setData] = useDataAtom(id);
+  const [data, setData] = useRecoilState(dataAtom(id));
 
   const inputs = useMemo(() => {
     let components: JSX.Element[] = [];

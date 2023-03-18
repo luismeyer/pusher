@@ -1,4 +1,4 @@
-import { atom, useRecoilState } from "recoil";
+import { atom } from "recoil";
 import { v4 } from "uuid";
 
 import { Flow } from "@pusher/shared";
@@ -16,5 +16,3 @@ export const flowAtom = atom<FlowData>({
   key: "Flow",
   default: defaultFlow,
 });
-
-export const useFlowAtom = () => useRecoilState(flowAtom);

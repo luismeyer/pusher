@@ -1,97 +1,127 @@
 import { useCallback, useState } from "react";
 import {
   atom,
+  selector,
   useRecoilState,
   useRecoilValue,
   useResetRecoilState,
+  useSetRecoilState,
 } from "recoil";
 import { v4 } from "uuid";
 
-import { Action as Data } from "@pusher/shared";
+import { Action, isNavigationAction } from "@pusher/shared";
 
-import { useDataAtom, useDeleteData } from "./data";
+import { dataAtom } from "./data";
 import { localStorageEffect } from "./localStorage";
 import { positionAtom } from "./position";
+import {
+  firstParentSelector,
+  parentActionSelector,
+  relationAtom,
+} from "./relation";
 import { sizeAtom } from "./size";
 
-export type Action = {
-  id: string;
-
-  nextAction?: string;
-
-  trueNextAction?: string;
-  falseNextAction?: string;
-};
-
-export type ActionStore = Record<string, Action>;
-
-export const actionsAtom = atom<ActionStore>({
+export const actionIdsAtom = atom<string[]>({
   key: "ActionsAtom",
-  default: {},
+  default: [],
   effects: [localStorageEffect],
 });
 
 export const useDeleteAction = (id: string) => {
-  const [actions, setActions] = useRecoilState(actionsAtom);
-
-  const deleteData = useDeleteData(id);
+  const [actions, setActions] = useRecoilState(actionIdsAtom);
 
   const resetSize = useResetRecoilState(sizeAtom(id));
   const resetPosition = useResetRecoilState(positionAtom(id));
 
+  const parent = useRecoilValue(parentActionSelector(id));
+  const resetParentRelation = useResetRecoilState(relationAtom(parent ?? ""));
+
+  const resetRelation = useResetRecoilState(relationAtom(id));
+
+  const resetData = useResetRecoilState(dataAtom(id));
+
   return useCallback(() => {
-    let { [id]: deleted, ...newActions } = actions;
+    let newActions = actions.filter((actionId) => actionId !== id);
 
-    const prevAction = Object.values(newActions).find(
-      (action) => action.nextAction === id
-    );
-
-    if (prevAction) {
-      newActions = {
-        ...newActions,
-
-        [prevAction.id]: { ...prevAction, nextAction: undefined },
-      };
+    if (parent) {
+      resetParentRelation();
     }
 
     setActions(newActions);
 
-    deleteData();
-
     resetPosition();
 
     resetSize();
-  }, [actions, deleteData, id, resetPosition, resetSize, setActions]);
+
+    resetData();
+
+    resetRelation();
+  }, [
+    actions,
+    id,
+    parent,
+    resetData,
+    resetParentRelation,
+    resetPosition,
+    resetRelation,
+    resetSize,
+    setActions,
+  ]);
 };
 
 export const useAddAction = () => {
-  const [actions, setActions] = useRecoilState(actionsAtom);
+  const setActions = useSetRecoilState(actionIdsAtom);
 
   const generateId = useCallback(() => v4(), []);
 
-  const [newId, setNewId] = useState(generateId);
+  const [id, setId] = useState(generateId);
 
-  const [_data, setData] = useDataAtom(newId);
+  const setData = useSetRecoilState(dataAtom(id));
 
   const addAction = useCallback(
-    (data: Data) => {
-      setActions({ ...actions, [newId]: { id: newId } });
+    (data: Action) => {
+      setActions((pre) => [...pre, id]);
 
       setData(data);
 
-      setNewId(generateId);
+      setId(generateId);
     },
-    [actions, generateId, newId, setActions, setData]
+    [generateId, id, setActions, setData]
   );
 
-  return addAction;
+  return { id, addAction };
 };
 
-export const useActionsAtom = () => {
-  const actionsStore = useRecoilValue(actionsAtom);
+export const actionTreeSelector = selector({
+  key: "ActionTree",
+  get: ({ get }) => {
+    const actionIds = get(actionIdsAtom);
 
-  return {
-    actionsStore,
-    actions: Object.values(actionsStore),
-  };
-};
+    const firstAction = get(firstParentSelector(actionIds[0] ?? ""));
+
+    const transformActions = (id: string): Action => {
+      const data = get(dataAtom(id));
+
+      if (!data) {
+        throw new Error("Data not found " + id);
+      }
+
+      const relation = get(relationAtom(id));
+
+      const nextAction = relation.nextAction
+        ? transformActions(relation.nextAction)
+        : undefined;
+
+      if (isNavigationAction(data)) {
+        return {
+          ...data,
+          nextAction,
+        };
+      }
+
+      return data;
+    };
+
+    return transformActions(firstAction);
+  },
+});

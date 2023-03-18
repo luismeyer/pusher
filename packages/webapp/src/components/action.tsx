@@ -1,9 +1,12 @@
 import { Button, Card, theme } from "antd";
 import React, { useCallback, useEffect, useMemo, useRef } from "react";
+import { useRecoilState, useRecoilValue } from "recoil";
 
-import { useConnectingAtom } from "@/state/connecting";
-import { usePositionAtom } from "@/state/position";
-import { useSizeAtom } from "@/state/size";
+import { useConnect } from "@/hooks/useConnect";
+import { useDeleteAction } from "@/state/actions";
+import { dragIdAtom } from "@/state/drag";
+import { positionAtom } from "@/state/position";
+import { sizeAtom } from "@/state/size";
 import styles from "@/styles/action.module.css";
 import {
   ApiOutlined,
@@ -11,10 +14,6 @@ import {
   DisconnectOutlined,
 } from "@ant-design/icons";
 
-import { useConnection } from "../hooks/useConnection";
-import { useDeleteAction } from "../state/actions";
-import { useActionAtom } from "../state/actionSelector";
-import { useDragIdAtom } from "../state/drag";
 import { ActionContent } from "./actionContent";
 import { ActionHeader } from "./actionHeadline";
 
@@ -25,25 +24,23 @@ type ActionProps = {
 export const Action: React.FC<ActionProps> = ({ id }) => {
   const deleteAction = useDeleteAction(id);
 
-  const [action, setAction] = useActionAtom(id);
+  const [size, setSize] = useRecoilState(sizeAtom(id));
 
-  const [{ actionA }] = useConnectingAtom();
-
-  const [size, setSize] = useSizeAtom(id);
-
-  const [position] = usePositionAtom(id);
+  const position = useRecoilValue(positionAtom(id));
 
   const ref = useRef<HTMLDivElement>(null);
 
-  const [dragId, setDragId] = useDragIdAtom();
+  const [dragId, setDragId] = useRecoilState(dragIdAtom);
 
   const {
     connectPreviousAction,
     handleConnectionClick,
     allowConnection,
-    previousAction,
     isConnecting,
-  } = useConnection(id);
+    relation: { nextAction },
+    parentAction,
+    connectStart,
+  } = useConnect(id);
 
   // effect saves the element height in the atom
   useEffect(() => {
@@ -54,7 +51,7 @@ export const Action: React.FC<ActionProps> = ({ id }) => {
     if (size.width !== ref.current?.clientWidth) {
       setSize((pre) => ({ ...pre, width: ref.current?.clientWidth ?? 0 }));
     }
-  }, [ref, setAction, setSize, size.height, size.width]);
+  }, [ref, setSize, size.height, size.width]);
 
   const {
     token: { colorPrimary, colorSuccess },
@@ -102,21 +99,21 @@ export const Action: React.FC<ActionProps> = ({ id }) => {
   }, [allowConnection, isConnecting]);
 
   const borderColor = useMemo(() => {
-    if (action.nextAction || previousAction) {
+    if (nextAction || parentAction) {
       return colorPrimary;
     }
 
-    if (isConnecting && actionA !== id) {
+    if (isConnecting && connectStart !== id) {
       return colorSuccess;
     }
   }, [
-    action.nextAction,
-    actionA,
+    nextAction,
+    parentAction,
+    isConnecting,
+    connectStart,
+    id,
     colorPrimary,
     colorSuccess,
-    id,
-    isConnecting,
-    previousAction,
   ]);
 
   return (
@@ -145,12 +142,10 @@ export const Action: React.FC<ActionProps> = ({ id }) => {
               <Button
                 type="dashed"
                 shape="round"
-                danger={Boolean(action.nextAction) || actionA === id}
+                danger={Boolean(nextAction) || connectStart === id}
                 disabled={isConnecting}
                 onClick={handleConnectionClick}
-                icon={
-                  action.nextAction ? <DisconnectOutlined /> : <ApiOutlined />
-                }
+                icon={nextAction ? <DisconnectOutlined /> : <ApiOutlined />}
               />
 
               <Button

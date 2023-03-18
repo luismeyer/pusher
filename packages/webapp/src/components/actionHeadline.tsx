@@ -1,5 +1,9 @@
-import { useActionIndexAtom } from "@/state/actionIndexSelector";
-import { useDataAtom } from "@/state/data";
+import { Typography } from "antd";
+import { useRecoilValue } from "recoil";
+
+import { dataAtom } from "@/state/data";
+import { actionIndexSelector } from "@/state/relation";
+import styles from "@/styles/action.module.css";
 import { Action } from "@pusher/shared";
 
 type ActionHeaderProps = {
@@ -19,13 +23,17 @@ const TypeLabels: Record<Action["type"], string> = {
 };
 
 export const ActionHeader: React.FC<ActionHeaderProps> = ({ id }) => {
-  const index = useActionIndexAtom(id);
+  const index = useRecoilValue(actionIndexSelector(id));
 
-  const [data] = useDataAtom(id);
+  const data = useRecoilValue(dataAtom(id));
 
   return (
-    <h3>
-      {index}. {TypeLabels[data.type]}
-    </h3>
+    <div className={styles.headlineContainer}>
+      <h3>
+        {index}. {TypeLabels[data.type]}
+      </h3>
+
+      <span className={styles.subHeadline}>{id}</span>
+    </div>
   );
 };

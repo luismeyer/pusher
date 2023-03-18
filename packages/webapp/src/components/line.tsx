@@ -1,6 +1,7 @@
-import React, { forwardRef, useCallback, useEffect, useState } from "react";
-import { Line as Points } from "@/state/lineSelector";
 import { theme } from "antd";
+import React, { forwardRef, useCallback, useEffect, useState } from "react";
+
+import { Line as Points } from "@/state/line";
 
 type LineProps = {
   points: Points;

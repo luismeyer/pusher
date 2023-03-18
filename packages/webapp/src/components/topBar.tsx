@@ -1,56 +1,17 @@
 import { Button, Menu, MenuProps } from "antd";
 import { useCallback, useMemo } from "react";
+import { useRecoilState, useRecoilValue } from "recoil";
 
-import { useAllDataAtom } from "@/state/data";
-import { Action, Flow, isNavigationAction } from "@pusher/shared";
-
-import { useActionsAtom } from "../state/actions";
-import { getFirstParentAction } from "../utils/action";
-import { useFlowAtom } from "../state/flow";
+import { actionTreeSelector } from "@/state/actions";
+import { flowAtom } from "@/state/flow";
+import { Flow } from "@pusher/shared";
 
 export const TopBar: React.FC = () => {
-  const { actionsStore, actions } = useActionsAtom();
+  const [flowData] = useRecoilState(flowAtom);
 
-  const datas = useAllDataAtom(...Object.keys(actionsStore));
-
-  const [flowData] = useFlowAtom();
-
-  const transformActions = useCallback(
-    (action: { id: string; nextAction?: string }): Action => {
-      const data = datas.find((data) => data.id === action.id);
-
-      if (!data) {
-        throw new Error("Data not found " + action.id);
-      }
-
-      const nextFrontendAction = actionsStore[action.nextAction ?? ""];
-
-      const nextAction = nextFrontendAction
-        ? transformActions(nextFrontendAction)
-        : undefined;
-
-      if (isNavigationAction(data)) {
-        return {
-          ...data,
-          nextAction,
-        };
-      }
-
-      return data;
-    },
-    [datas, actionsStore]
-  );
+  const actionTree = useRecoilValue(actionTreeSelector);
 
   const debugFlow = useCallback(async () => {
-    const firstAction = actions.find((action) => action.nextAction);
-
-    const { action } = getFirstParentAction(
-      actionsStore,
-      firstAction ?? actions[0]
-    );
-
-    const actionTree = transformActions(action);
-
     const flow: Flow = {
       ...flowData,
       actionTree,
@@ -65,7 +26,7 @@ export const TopBar: React.FC = () => {
     }).then((res) => res.json());
 
     console.log(response);
-  }, [actions, actionsStore, flowData, transformActions]);
+  }, [actionTree, flowData]);
 
   const items: MenuProps["items"] = useMemo(
     () => [

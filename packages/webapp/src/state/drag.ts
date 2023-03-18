@@ -1,8 +1,6 @@
-import { atom, useRecoilState } from "recoil";
+import { atom } from "recoil";
 
 export const dragIdAtom = atom<string | undefined>({
   key: "DragId",
   default: undefined,
 });
-
-export const useDragIdAtom = () => useRecoilState(dragIdAtom);

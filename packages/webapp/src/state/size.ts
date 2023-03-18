@@ -1,4 +1,5 @@
-import { atomFamily, useRecoilState } from "recoil";
+import { atomFamily } from "recoil";
+
 import { localStorageEffect } from "./localStorage";
 
 type SizeAndPosition = {
@@ -14,5 +15,3 @@ export const sizeAtom = atomFamily<SizeAndPosition, string>({
     height: 0,
   },
 });
-
-export const useSizeAtom = (id: string) => useRecoilState(sizeAtom(id));
