@@ -52,11 +52,11 @@ export const Canvas: React.FC<CanvasProps> = ({ zoom }) => {
         <Line
           ref={(ref) => ref && (lineRefs.current[index] = ref)}
           key={index}
-          points={line}
+          data={line}
         />
       ))}
 
-      {currentLine && <Line ref={currentLineRef} points={currentLine} />}
+      {currentLine && <Line ref={currentLineRef} data={currentLine} />}
     </div>
   );
 };

@@ -9,3 +9,10 @@ export const connectEndAtom = atom<string | undefined>({
   key: "ConnectEnd",
   default: undefined,
 });
+
+export type ConnectType = "default" | "true" | "false" | undefined;
+
+export const connectTypeAtom = atom<ConnectType>({
+  key: "ConnectType",
+  default: undefined,
+});

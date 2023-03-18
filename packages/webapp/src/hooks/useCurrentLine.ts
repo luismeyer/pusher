@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useRecoilState, useRecoilValue } from "recoil";
 
-import { connectStartAtom } from "@/state/connection";
+import { connectStartAtom, connectTypeAtom } from "@/state/connect";
 import { Line } from "@/state/line";
 import { positionAtom } from "@/state/position";
 import { sizeAtom } from "@/state/size";
@@ -19,6 +19,8 @@ export const useCurrentLine = (
   const currentLineRef = useRef<HTMLDivElement>(null);
   const [currentLine, setCurrentLine] = useState<Line | undefined>();
 
+  const lineType = useRecoilValue(connectTypeAtom);
+
   const updateCurrentLine: React.MouseEventHandler<HTMLDivElement> =
     useCallback(
       (event) => {
@@ -29,11 +31,20 @@ export const useCurrentLine = (
         setCurrentLine({
           ax: position.x + size.width / 2,
           ay: position.y + size.height / 2,
-          bx: event.pageX - (canvasRef.current?.offsetLeft ?? 0),
-          by: event.pageY - (canvasRef.current?.offsetTop ?? 0),
+          bx: event.clientX - (canvasRef.current?.offsetLeft ?? 0),
+          by: event.clientY - (canvasRef.current?.offsetTop ?? 0),
+          type: lineType,
         });
       },
-      [canvasRef, connectStart, position.x, position.y, size.height, size.width]
+      [
+        canvasRef,
+        connectStart,
+        lineType,
+        position.x,
+        position.y,
+        size.height,
+        size.width,
+      ]
     );
 
   const handleCanvasClick: React.MouseEventHandler<HTMLDivElement> =

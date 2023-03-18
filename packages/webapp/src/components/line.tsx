@@ -1,10 +1,16 @@
 import { theme } from "antd";
-import React, { forwardRef, useCallback, useEffect, useState } from "react";
+import React, {
+  forwardRef,
+  useCallback,
+  useEffect,
+  useMemo,
+  useState,
+} from "react";
 
-import { Line as Points } from "@/state/line";
+import { Line as LineData } from "@/state/line";
 
 type LineProps = {
-  points: Points;
+  data: LineData;
 };
 
 type Border = "bottomLeft" | "bottomRight" | "topLeft" | "topRight";
@@ -17,13 +23,13 @@ type State = {
   border: Border;
 };
 
-export const Line = forwardRef<HTMLDivElement, LineProps>(({ points }, ref) => {
+export const Line = forwardRef<HTMLDivElement, LineProps>(({ data }, ref) => {
   const {
-    token: { colorPrimary },
+    token: { colorPrimary, colorSuccess, colorError },
   } = theme.useToken();
 
   const calculateBorder = useCallback(
-    ({ ax, ay, bx, by }: Points, width: number, height: number) => {
+    ({ ax, ay, bx, by }: LineData, width: number, height: number) => {
       let border: Border = "bottomLeft";
 
       if (ax < bx) {
@@ -72,8 +78,8 @@ export const Line = forwardRef<HTMLDivElement, LineProps>(({ points }, ref) => {
   );
 
   const calculateState = useCallback(
-    (points: Points): State => {
-      const { ax, ay, bx, by } = points;
+    (line: LineData): State => {
+      const { ax, ay, bx, by } = line;
 
       const width = Math.abs(bx - ax);
       const height = Math.abs(by - ay);
@@ -83,16 +89,16 @@ export const Line = forwardRef<HTMLDivElement, LineProps>(({ points }, ref) => {
         height,
         x: Math.min(ax, bx),
         y: Math.min(ay, by),
-        border: calculateBorder(points, width, height),
+        border: calculateBorder(line, width, height),
       };
     },
     [calculateBorder]
   );
 
-  const [state, setState] = useState<State>(calculateState(points));
+  const [state, setState] = useState<State>(calculateState(data));
 
   useEffect(() => {
-    const newState = calculateState(points);
+    const newState = calculateState(data);
     const { width, height, x, y, border } = state;
 
     if (
@@ -106,9 +112,20 @@ export const Line = forwardRef<HTMLDivElement, LineProps>(({ points }, ref) => {
     }
 
     setState(newState);
-  }, [calculateState, points, state]);
+  }, [calculateState, data, state]);
 
-  const border = `2px dashed ${colorPrimary}`;
+  const color = useMemo(() => {
+    switch (data.type) {
+      case "default":
+        return colorPrimary;
+      case "false":
+        return colorError;
+      case "true":
+        return colorSuccess;
+    }
+  }, [colorError, colorPrimary, colorSuccess, data.type]);
+
+  const border = `2px dashed ${color}`;
 
   const borderTop =
     state.border === "topRight" || state.border === "topLeft"

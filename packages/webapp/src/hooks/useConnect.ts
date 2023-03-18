@@ -1,7 +1,11 @@
 import { useCallback, useEffect, useMemo } from "react";
 import { useRecoilState, useRecoilValue, useResetRecoilState } from "recoil";
 
-import { connectEndAtom, connectStartAtom } from "@/state/connection";
+import {
+  connectEndAtom,
+  connectStartAtom,
+  connectTypeAtom,
+} from "@/state/connect";
 import {
   areConnectedSelector,
   parentActionSelector,
@@ -16,7 +20,7 @@ export const useConnect = (id: string) => {
 
   const [relation, setRelation] = useRecoilState(relationAtom(id));
 
-  const resetRelation = useResetRecoilState(relationAtom(id));
+  const [connectType, setConnectType] = useRecoilState(connectTypeAtom);
 
   const hasTransitiveConnection = useRecoilValue(
     areConnectedSelector({ start: connectStart, end: id })
@@ -32,61 +36,49 @@ export const useConnect = (id: string) => {
     [connectStart, hasTransitiveConnection, id, parentAction]
   );
 
-  // runs in actionB to notifiy first action
+  // runs in connectEnd Action to notifiy connectStart Action
   const connectPreviousAction = useCallback(() => {
-    if (!allowConnect) {
-      throw new Error("trying unallowd connection");
-    }
-
     setConnectEnd(id);
-  }, [allowConnect, id, setConnectEnd]);
+  }, [id, setConnectEnd]);
 
-  const handleConnectClick = useCallback(() => {
-    // unconnect
-    if (relation.nextAction) {
-      resetRelation();
-      return;
-    }
-
-    // start connection
-    if (!connectStart) {
-      setConnectStart(id);
-      return;
-    }
-
-    // cancel connection
-    if (connectStart === id) {
-      setConnectStart(undefined);
-      return;
-    }
-  }, [connectStart, id, relation.nextAction, resetRelation, setConnectStart]);
-
-  // Effect runs when another action sets the actionB field
+  // Effect runs when another action sets the connectEnd atom
   // afterwards this first action can establish the connection
   useEffect(() => {
     if (connectStart !== id || !connectEnd) {
       return;
     }
 
-    setRelation((prev) => ({ ...prev, nextAction: connectEnd }));
+    switch (connectType) {
+      case "default":
+        setRelation((prev) => ({ ...prev, nextAction: connectEnd }));
+        break;
+      case "true":
+        setRelation((prev) => ({ ...prev, trueNextAction: connectEnd }));
+        break;
+      case "false":
+        setRelation((prev) => ({ ...prev, falseNextAction: connectEnd }));
+        break;
+    }
+
     setConnectStart(undefined);
     setConnectEnd(undefined);
+    setConnectType(undefined);
   }, [
     connectEnd,
     connectStart,
+    connectType,
     id,
     setConnectEnd,
     setConnectStart,
+    setConnectType,
     setRelation,
   ]);
 
   return {
     connectPreviousAction,
-    handleConnectionClick: handleConnectClick,
-    allowConnection: allowConnect,
+    allowConnect,
     relation,
     parentAction,
     isConnecting: Boolean(connectStart && !connectEnd),
-    connectStart,
   };
 };

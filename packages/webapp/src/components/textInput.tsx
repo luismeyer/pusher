@@ -1,5 +1,5 @@
 import { Input, Select } from "antd";
-import React, { useCallback, useEffect, useMemo, useRef } from "react";
+import React, { useCallback, useMemo } from "react";
 
 type TextInputProps = {
   addonBeforeOptions?: { value: string }[];

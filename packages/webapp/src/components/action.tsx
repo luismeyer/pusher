@@ -1,29 +1,22 @@
-import { Button, Card, theme } from "antd";
+import { Card, theme } from "antd";
 import React, { useCallback, useEffect, useMemo, useRef } from "react";
 import { useRecoilState, useRecoilValue } from "recoil";
 
 import { useConnect } from "@/hooks/useConnect";
-import { useDeleteAction } from "@/state/actions";
 import { dragIdAtom } from "@/state/drag";
 import { positionAtom } from "@/state/position";
 import { sizeAtom } from "@/state/size";
 import styles from "@/styles/action.module.css";
-import {
-  ApiOutlined,
-  DeleteOutlined,
-  DisconnectOutlined,
-} from "@ant-design/icons";
 
 import { ActionContent } from "./actionContent";
 import { ActionHeader } from "./actionHeadline";
+import { ActionButtons } from "./actionButton";
 
 type ActionProps = {
   id: string;
 };
 
 export const Action: React.FC<ActionProps> = ({ id }) => {
-  const deleteAction = useDeleteAction(id);
-
   const [size, setSize] = useRecoilState(sizeAtom(id));
 
   const position = useRecoilValue(positionAtom(id));
@@ -34,15 +27,13 @@ export const Action: React.FC<ActionProps> = ({ id }) => {
 
   const {
     connectPreviousAction,
-    handleConnectionClick,
-    allowConnection,
+    allowConnect,
     isConnecting,
     relation: { nextAction },
     parentAction,
-    connectStart,
   } = useConnect(id);
 
-  // effect saves the element height in the atom
+  // saves the element height in the atom
   useEffect(() => {
     if (size.height !== ref.current?.clientHeight) {
       setSize((pre) => ({ ...pre, height: ref.current?.clientHeight ?? 0 }));
@@ -54,16 +45,12 @@ export const Action: React.FC<ActionProps> = ({ id }) => {
   }, [ref, setSize, size.height, size.width]);
 
   const {
-    token: { colorPrimary, colorSuccess },
+    token: { colorPrimary },
   } = theme.useToken();
-
-  const handleDeleteClick = useCallback(() => {
-    deleteAction();
-  }, [deleteAction]);
 
   const handleMouseDown: React.MouseEventHandler<HTMLDivElement> =
     useCallback(() => {
-      if (allowConnection) {
+      if (allowConnect) {
         connectPreviousAction();
         return;
       }
@@ -72,7 +59,7 @@ export const Action: React.FC<ActionProps> = ({ id }) => {
       if (!isConnecting) {
         setDragId(id);
       }
-    }, [allowConnection, connectPreviousAction, id, isConnecting, setDragId]);
+    }, [allowConnect, connectPreviousAction, id, isConnecting, setDragId]);
 
   // stop drag
   const handleMouseUp: React.MouseEventHandler<HTMLDivElement> =
@@ -85,36 +72,24 @@ export const Action: React.FC<ActionProps> = ({ id }) => {
     }, [dragId, setDragId]);
 
   const cursor = useMemo(() => {
-    if (allowConnection) {
+    if (allowConnect) {
       return "pointer";
     }
 
-    if (isConnecting && !allowConnection) {
+    if (isConnecting && !allowConnect) {
       return "not-allowed";
     }
 
     if (!isConnecting) {
       return "move";
     }
-  }, [allowConnection, isConnecting]);
+  }, [allowConnect, isConnecting]);
 
   const borderColor = useMemo(() => {
     if (nextAction || parentAction) {
       return colorPrimary;
     }
-
-    if (isConnecting && connectStart !== id) {
-      return colorSuccess;
-    }
-  }, [
-    nextAction,
-    parentAction,
-    isConnecting,
-    connectStart,
-    id,
-    colorPrimary,
-    colorSuccess,
-  ]);
+  }, [nextAction, parentAction, colorPrimary]);
 
   return (
     <div
@@ -138,25 +113,7 @@ export const Action: React.FC<ActionProps> = ({ id }) => {
           <div className={styles.header}>
             <ActionHeader id={id} />
 
-            <div className={styles.buttons}>
-              <Button
-                type="dashed"
-                shape="round"
-                danger={Boolean(nextAction) || connectStart === id}
-                disabled={isConnecting}
-                onClick={handleConnectionClick}
-                icon={nextAction ? <DisconnectOutlined /> : <ApiOutlined />}
-              />
-
-              <Button
-                type="dashed"
-                shape="round"
-                danger
-                disabled={isConnecting}
-                icon={<DeleteOutlined />}
-                onClick={handleDeleteClick}
-              />
-            </div>
+            <ActionButtons id={id} disabled={isConnecting} />
           </div>
         }
       >

@@ -9,7 +9,7 @@ import {
 } from "recoil";
 import { v4 } from "uuid";
 
-import { Action, isNavigationAction } from "@pusher/shared";
+import { Action, isDecisionAction, isNavigationAction } from "@pusher/shared";
 
 import { dataAtom } from "./data";
 import { localStorageEffect } from "./localStorage";
@@ -108,14 +108,30 @@ export const actionTreeSelector = selector({
 
       const relation = get(relationAtom(id));
 
-      const nextAction = relation.nextAction
-        ? transformActions(relation.nextAction)
-        : undefined;
-
       if (isNavigationAction(data)) {
+        const nextAction = relation.nextAction
+          ? transformActions(relation.nextAction)
+          : undefined;
+
         return {
           ...data,
           nextAction,
+        };
+      }
+
+      if (isDecisionAction(data)) {
+        const trueNextAction = relation.trueNextAction
+          ? transformActions(relation.trueNextAction)
+          : undefined;
+
+        const falseNextAction = relation.falseNextAction
+          ? transformActions(relation.falseNextAction)
+          : undefined;
+
+        return {
+          ...data,
+          trueNextAction,
+          falseNextAction,
         };
       }
 

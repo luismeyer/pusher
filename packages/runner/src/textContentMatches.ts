@@ -5,11 +5,16 @@ export const textContentMatches = async (
   selector: string,
   text: string
 ) => {
-  const element = await page.waitForSelector(selector);
-  const elementText = await page.evaluate(
-    (element) => element?.textContent,
-    element
-  );
+  try {
+    const element = await page.waitForSelector(selector);
 
-  return elementText?.includes(text);
+    const elementText = await page.evaluate(
+      (element) => element?.textContent,
+      element
+    );
+
+    return elementText?.includes(text);
+  } catch {
+    return false;
+  }
 };

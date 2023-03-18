@@ -1,6 +1,7 @@
 import { selector } from "recoil";
 
 import { actionIdsAtom } from "./actions";
+import { ConnectType } from "./connect";
 import { positionAtom } from "./position";
 import { relationAtom } from "./relation";
 import { sizeAtom } from "./size";
@@ -10,6 +11,7 @@ export type Line = {
   ay: number;
   bx: number;
   by: number;
+  type: ConnectType;
 };
 
 export const lineSelector = selector({
@@ -17,29 +19,48 @@ export const lineSelector = selector({
   get: ({ get }): Line[] => {
     const actionIds = get(actionIdsAtom);
 
-    const actionLines = actionIds
-      .map((actionId) => {
-        const { nextAction } = get(relationAtom(actionId));
+    const createLine = (
+      id: string,
+      nextId: string,
+      type: ConnectType
+    ): Line => {
+      const position = get(positionAtom(id));
+      const size = get(sizeAtom(id));
 
-        if (!nextAction) {
-          return;
+      const nextPosition = get(positionAtom(nextId));
+      const nextSize = get(sizeAtom(nextId));
+
+      return {
+        ax: position.x + size.width / 2,
+        ay: position.y + size.height / 2,
+        bx: nextPosition.x + nextSize.width / 2,
+        by: nextPosition.y + nextSize.height / 2,
+        type,
+      };
+    };
+
+    return actionIds
+      .map((actionId) => {
+        const { nextAction, falseNextAction, trueNextAction } = get(
+          relationAtom(actionId)
+        );
+
+        let lines: Line[] = [];
+
+        if (nextAction) {
+          lines = [...lines, createLine(actionId, nextAction, "default")];
         }
 
-        const position = get(positionAtom(actionId));
-        const size = get(sizeAtom(actionId));
+        if (falseNextAction) {
+          lines = [...lines, createLine(actionId, falseNextAction, "false")];
+        }
 
-        const nextPosition = get(positionAtom(nextAction));
-        const nextSize = get(sizeAtom(nextAction));
+        if (trueNextAction) {
+          lines = [...lines, createLine(actionId, trueNextAction, "true")];
+        }
 
-        return {
-          ax: position.x + size.width / 2,
-          ay: position.y + size.height / 2,
-          bx: nextPosition.x + nextSize.width / 2,
-          by: nextPosition.y + nextSize.height / 2,
-        };
+        return lines;
       })
-      .filter((action): action is Line => Boolean(action));
-
-    return [...actionLines];
+      .reduce((acc, lines) => [...acc, ...lines], []);
   },
 });
