@@ -46,7 +46,7 @@ export class AwsStack extends Stack {
 
     const { bucketName, tableName, intervalIndexName } = Environment;
 
-    new Bucket(this, bucketName, {
+    const bucket = new Bucket(this, bucketName, {
       bucketName,
       publicReadAccess: true,
       removalPolicy: RemovalPolicy.DESTROY,
@@ -71,7 +71,7 @@ export class AwsStack extends Stack {
       },
     });
 
-    createFunction(this, RunnerFunction);
+    const runnerLambda = createFunction(this, RunnerFunction);
 
     SchedulerFunctions.forEach((functionOptions) => {
       const scheduleLambda = createFunction(this, functionOptions);
@@ -85,6 +85,13 @@ export class AwsStack extends Stack {
       });
 
       eventRule.addTarget(new LambdaFunction(scheduleLambda));
+
+      table.grantReadData(scheduleLambda);
+      runnerLambda.grantInvoke(scheduleLambda);
     });
+
+    bucket.grantPut(runnerLambda);
+
+    table.grantReadWriteData(runnerLambda);
   }
 }

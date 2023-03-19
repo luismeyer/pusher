@@ -14,7 +14,7 @@
     "dev": "lerna run dev --parallel",
     "build": "lerna run build",
     "synth": "lerna run synth",
-    "deploy:aws": "lerna run deploy --scope=aws",
+    "deploy:aws": "lerna run deploy --scope=@pusher/aws",
     "deploy:vercel": "npx vercel deploy",
     "setup": "node scripts/setup.mjs"
   },
