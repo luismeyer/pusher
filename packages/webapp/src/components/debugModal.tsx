@@ -28,7 +28,6 @@ export const DebugModal: React.FC<DebugModalProps> = ({
   const [loading, setLoadig] = useState(false);
 
   const debugFlow = useCallback(async () => {
-    setVideo(undefined);
     setOpen(true);
     setLoadig(true);
 
@@ -43,8 +42,12 @@ export const DebugModal: React.FC<DebugModalProps> = ({
       method: "POST",
     }).then((res) => res.json());
 
-    if (response.type === "debug") {
+    if (response.type === "debug" && !video) {
       setVideo(response.videoUrl);
+    }
+
+    if (response.type === "debug" && video) {
+      videoRef.current?.load();
     }
 
     if (response.type === "error") {
@@ -53,7 +56,7 @@ export const DebugModal: React.FC<DebugModalProps> = ({
     }
 
     setLoadig(false);
-  }, [actionTree, flowData, setOpen]);
+  }, [actionTree, flowData, setOpen, video]);
 
   // handle open updates
   useEffect(() => {

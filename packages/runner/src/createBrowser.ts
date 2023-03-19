@@ -15,5 +15,6 @@ export const createBrowser = async () => {
     defaultViewport: chromium.defaultViewport,
     executablePath,
     ignoreHTTPSErrors: true,
+    headless: true,
   });
 };
