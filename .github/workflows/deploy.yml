@@ -1,0 +1,52 @@
+name: Deploy
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    permissions: write-all
+    env:
+      CI: true
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Setup node
+        uses: actions/setup-node@v3
+        with:
+          node-version: 16.x
+          cache: "npm"
+
+      - name: Install
+        run: npm install
+
+      - name: Build
+        run: npm run build
+
+      - name: Deploy AWS
+        env:  
+          TELEGRAM_TOKEN: ${{ secrets.TELEGRAM_TOKEN }}
+          BUCKET_NAME: ${{ secrets.AZURE_CREDENTIALS }}
+          TABLE_NAME: ${{ secrets.AZURE_CREDENTIALS }}
+          RUNNER_FUNCTION_NAME: ${{ secrets.AZURE_CREDENTIALS }}
+          INTERVAL_INDEX_NAME: ${{ secrets.AZURE_CREDENTIALS }}
+          REGION: ${{ secrets.REGION }}
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        run: npm run deploy:aws
+
+      - name: Deploy Vercel
+        run: npm run deploy:vercel -- --prod --yes --token=${{ secrets.VERCEL_TOKEN }}
+
+      - name: Setup
+        env: 
+          BUCKET_NAME: ${{ secrets.AZURE_CREDENTIALS }}
+          MAC_FFMPEG_URL: ${{ vars.AZURE_CREDENTIALS }}
+          LINUX_FFMPEG_URL: ${{ vars.LINUX_FFMPEG_URL }}
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        run: npm run setup

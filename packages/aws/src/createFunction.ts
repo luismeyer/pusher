@@ -7,8 +7,8 @@ export type FunctionOptions = {
   folderPath: string;
   fileName: string;
   handlerFunctionName: string;
-  timeoutMins: number;
-  memorySize: number;
+  timeoutMins?: number;
+  memorySize?: number;
   environment: Record<string, string>;
 };
 
@@ -28,11 +28,12 @@ export const createFunction = (stack: Stack, options: FunctionOptions) => {
     `.${handlerFunctionName}`
   );
 
-  new Function(stack, functionName, {
+  return new Function(stack, functionName, {
     runtime: Runtime.NODEJS_18_X,
+    functionName,
     handler,
     code: Code.fromAsset(folderPath),
-    timeout: Duration.minutes(timeoutMins),
+    timeout: timeoutMins ? Duration.minutes(timeoutMins) : undefined,
     memorySize,
     environment,
   });

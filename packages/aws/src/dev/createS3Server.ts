@@ -1,4 +1,4 @@
-import { existsSync, mkdirSync, readFileSync } from "fs";
+import { existsSync, readFileSync } from "fs";
 import { resolve } from "path";
 import S3rver from "s3rver";
 
@@ -11,8 +11,13 @@ import { Environment } from "../readEnv";
 
 const directory = "/tmp/s3rver_test_directory";
 
+const bucketName = process.env.BUCKET_NAME;
+if (!bucketName) {
+  throw new Error("BUCKET_NAME Env variable is not set");
+}
+
 const uploadFFMPEG = async (endpoint: string) => {
-  const ffmpegData = readFileSync(resolve(__dirname, "../../ffmpeg"));
+  const ffmpegData = readFileSync(resolve(__dirname, "/tmp/ffmpeg"));
 
   const client = new S3Client({
     forcePathStyle: true,

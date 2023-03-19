@@ -1,0 +1,12 @@
+export TELEGRAM_TOKEN=secret
+
+export BUCKET_NAME=secret
+export TABLE_NAME=secret
+export RUNNER_FUNCTION_NAME=secret
+export INTERVAL_INDEX_NAME=secret
+
+export MAC_FFMPEG_URL=https://evermeet.cx/ffmpeg/ffmpeg-6.0.zip
+export LINUX_FFMPEG_URL=https://johnvansickle.com/ffmpeg/releases/ffmpeg-release-amd64-static.tar.xz
+
+export REGION=eu-central-1
+export IS_LOCAL=true

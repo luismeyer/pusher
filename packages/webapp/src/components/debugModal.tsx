@@ -38,9 +38,9 @@ export const DebugModal: React.FC<DebugModalProps> = ({
 
     const body = encodeURIComponent(JSON.stringify(flow));
 
-    const response: RunnerResult = await fetch(`/api/debug?flow=${body}`, {
-      method: "POST",
-    }).then((res) => res.json());
+    const response: RunnerResult = await fetch(`/api/debug?flow=${body}`).then(
+      (res) => res.json()
+    );
 
     if (response.type === "debug" && !video) {
       setVideo(response.videoUrl);
@@ -87,7 +87,7 @@ export const DebugModal: React.FC<DebugModalProps> = ({
       width={windowSize.width * 0.8}
     >
       <Spin
-        spinning={!video}
+        spinning={loading}
         indicator={<LoadingOutlined style={{ fontSize: 48 }} spin />}
       >
         <video ref={videoRef} className={styles.video} src={video} controls />

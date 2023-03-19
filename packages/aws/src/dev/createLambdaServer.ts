@@ -35,7 +35,7 @@ export const createLambdaServer = () => {
         mode: LambdaMode.Persistent,
         lambdaPath: join(folderPath, fileName),
         lambdaHandler: handlerFunctionName,
-        lambdaTimeout: timeoutMins * 60 * 1000,
+        lambdaTimeout: timeoutMins ? timeoutMins * 60 * 1000 : undefined,
         environment: {
           IS_LOCAL: "true",
           ...environment,
