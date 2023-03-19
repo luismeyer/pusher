@@ -37,7 +37,7 @@ jobs:
           REGION: ${{ secrets.REGION }}
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-        run: npm run deploy:aws
+        run: npm run deploy:aws -- -- --require-approval=never
 
       - name: Deploy Vercel
         run: npm run deploy:vercel -- --prod --yes --token=${{ secrets.VERCEL_TOKEN }}
