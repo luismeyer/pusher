@@ -1,7 +1,7 @@
-import { Flow } from "@pusher/shared";
+import { Flow, RunnerResult } from "@pusher/shared";
 
 import { createBrowser } from "./createBrowser";
-import { startRecorder } from "./createRecorder";
+import { startRecorder, StopRecorderFunction } from "./createRecorder";
 import { executeFlow } from "./executeFlow";
 import { increaseFails } from "./increaseFails";
 import { uploadFileToS3 } from "./uploadFileToS3";
@@ -14,27 +14,42 @@ type Payload = {
 export const handler = async ({
   flow,
   debug,
-}: Payload): Promise<string | boolean> => {
+}: Payload): Promise<RunnerResult> => {
   const browser = await createBrowser();
   const page = await browser.newPage();
 
-  const stopRecorder = debug && (await startRecorder(page));
+  let stopRecorder: StopRecorderFunction | undefined;
 
-  let result: string | boolean = true;
+  if (debug) {
+    stopRecorder = await startRecorder(page);
+  }
 
-  await executeFlow(page, flow).catch(async (error) => {
-    console.info(`Error in ${flow.id}:`, error);
+  let result: RunnerResult = { type: "error", message: "Unknown error" };
 
-    if (!debug) {
-      await increaseFails(flow);
-    }
+  await executeFlow(page, flow)
+    .then(() => {
+      result = { type: "success" };
+    })
+    .catch(async (error: Error) => {
+      console.info(`Error in ${flow.id}:`, error.message);
 
-    result = false;
-  });
+      if (!debug) {
+        await increaseFails(flow);
+      }
+
+      result = { type: "error", message: error.message };
+    });
 
   if (stopRecorder) {
     const videoPath = await stopRecorder();
-    result = await uploadFileToS3(videoPath);
+
+    if (videoPath) {
+      const videoUrl = await uploadFileToS3(videoPath, flow.id);
+
+      if (videoUrl) {
+        result = { type: "debug", videoUrl };
+      }
+    }
   }
 
   await browser.close();

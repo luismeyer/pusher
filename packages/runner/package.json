@@ -7,8 +7,7 @@
   "author": "",
   "scripts": {
     "build": "esbuild src/index.ts --bundle --outfile=dist/index.js --platform=node --external:'./lib-cov/fluent-ffmpeg'",
-    "watch": "npm run build -- --watch",
-    "dev": "esbuild src/dev.ts --bundle --outfile=dist/dev.js --platform=node --external:'./lib-cov/fluent-ffmpeg' --watch",
+    "dev": "npm run build -- --watch",
     "ts": "tsc --build"
   },
   "dependencies": {

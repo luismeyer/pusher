@@ -1,21 +1,11 @@
-import {
-  Button,
-  Input,
-  InputNumber,
-  Modal,
-  Radio,
-  Spin,
-  Switch,
-  theme,
-} from "antd";
-import { useCallback, useState } from "react";
-import { useRecoilState, useRecoilValue } from "recoil";
+import { Button, Input, InputNumber, Radio, Switch, theme } from "antd";
+import { useRecoilState } from "recoil";
 
-import { actionTreeSelector } from "@/state/actions";
 import { flowAtom } from "@/state/flow";
 import styles from "@/styles/topbar.module.css";
-import { LoadingOutlined } from "@ant-design/icons";
-import { Flow } from "@pusher/shared";
+
+import { DebugModal } from "./debugModal";
+import { useState } from "react";
 
 export const TopBar: React.FC = () => {
   const {
@@ -24,29 +14,7 @@ export const TopBar: React.FC = () => {
 
   const [flowData, setFlowData] = useRecoilState(flowAtom);
 
-  const actionTree = useRecoilValue(actionTreeSelector);
-
-  const [video, setVideo] = useState<string | undefined>();
-
   const [isModalOpen, setIsModalOpen] = useState(false);
-
-  const debugFlow = useCallback(async () => {
-    setVideo(undefined);
-    setIsModalOpen(true);
-
-    const flow: Flow = {
-      ...flowData,
-      actionTree,
-    };
-
-    const body = encodeURIComponent(JSON.stringify(flow));
-
-    const { response } = await fetch(`/api/debug?flow=${body}`, {
-      method: "POST",
-    }).then((res) => res.json());
-
-    setVideo(response);
-  }, [actionTree, flowData]);
 
   return (
     <>
@@ -105,7 +73,7 @@ export const TopBar: React.FC = () => {
             }
           />
 
-          <Button type="default" onClick={debugFlow}>
+          <Button type="default" onClick={() => setIsModalOpen(true)}>
             Test
           </Button>
 
@@ -115,19 +83,11 @@ export const TopBar: React.FC = () => {
         </div>
       </div>
 
-      <Modal
-        title="Debug Flow"
+      <DebugModal
+        flowData={flowData}
         open={isModalOpen}
-        cancelButtonProps={{ style: { display: "none" } }}
-        onOk={() => setIsModalOpen(false)}
-      >
-        <Spin
-          spinning={!video}
-          indicator={<LoadingOutlined style={{ fontSize: 48 }} spin />}
-        >
-          <video className={styles.video} src={video} controls />
-        </Spin>
-      </Modal>
+        setOpen={setIsModalOpen}
+      />
     </>
   );
 };
