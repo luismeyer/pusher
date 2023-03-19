@@ -2,6 +2,7 @@ import { createBucketUrl } from "@pusher/shared";
 import { existsSync, writeFileSync } from "fs";
 import { Page } from "puppeteer-core";
 import { PuppeteerScreenRecorder } from "puppeteer-screen-recorder";
+import fetch from "node-fetch";
 
 const outputPath = "/tmp/output.mp4";
 

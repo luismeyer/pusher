@@ -4,6 +4,7 @@ import decompressTarxz from "decompress-tarxz";
 import decompressUnzip from "decompress-unzip";
 import { existsSync, writeFileSync } from "fs";
 import { resolve } from "path";
+import fetch from "node-fetch";
 
 const { BUCKET_NAME, IS_LOCAL, LINUX_FFMPEG_URL, MAC_FFMPEG_URL } = process.env;
 
