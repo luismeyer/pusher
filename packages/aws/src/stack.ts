@@ -81,7 +81,10 @@ export class AwsStack extends Stack {
       const hour = INTERVAL.replace("h", "");
 
       const eventRule = new Rule(this, `scheduleRule${INTERVAL}`, {
-        schedule: Schedule.cron({ minute: "0", hour }),
+        schedule: Schedule.cron({
+          minute: "0",
+          hour: `*/${hour}`,
+        }),
       });
 
       eventRule.addTarget(new LambdaFunction(scheduleLambda));

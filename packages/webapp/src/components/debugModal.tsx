@@ -84,7 +84,7 @@ export const DebugModal: React.FC<DebugModalProps> = ({
       okButtonProps={{ disabled: loading }}
       onOk={debugFlow}
       okText="Debug"
-      width={windowSize.width * 0.8}
+      width={windowSize.width * 0.5}
     >
       <Spin
         spinning={loading}
