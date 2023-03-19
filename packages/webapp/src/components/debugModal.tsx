@@ -1,14 +1,13 @@
-import { Modal, Spin } from "antd";
+import { Modal, Spin, Typography } from "antd";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useRecoilValue } from "recoil";
 
+import { useWindowSize } from "@/hooks/useWindowSize";
 import { actionTreeSelector } from "@/state/actions";
 import { FlowData } from "@/state/flow";
 import styles from "@/styles/topbar.module.css";
 import { LoadingOutlined } from "@ant-design/icons";
 import { Flow, RunnerResult } from "@pusher/shared";
-
-import { useWindowSize } from "../hooks/useWindowSize";
 
 type DebugModalProps = {
   flowData: FlowData;
@@ -27,6 +26,8 @@ export const DebugModal: React.FC<DebugModalProps> = ({
 
   const [loading, setLoadig] = useState(false);
 
+  const [error, setError] = useState<string | undefined>();
+
   const debugFlow = useCallback(async () => {
     setOpen(true);
     setLoadig(true);
@@ -44,15 +45,16 @@ export const DebugModal: React.FC<DebugModalProps> = ({
 
     if (response.type === "debug" && !video) {
       setVideo(response.videoUrl);
+      setError(undefined);
     }
 
     if (response.type === "debug" && video) {
       videoRef.current?.load();
+      setError(undefined);
     }
 
     if (response.type === "error") {
-      console.error(response.message);
-      setOpen(false);
+      setError(response.message);
     }
 
     setLoadig(false);
@@ -60,14 +62,14 @@ export const DebugModal: React.FC<DebugModalProps> = ({
 
   // handle open updates
   useEffect(() => {
-    if (open && !video && !loading) {
+    if (open && !video && !loading && !error) {
       debugFlow();
     }
 
     if (!open) {
       videoRef.current?.pause();
     }
-  }, [debugFlow, loading, open, video]);
+  }, [debugFlow, error, loading, open, video]);
 
   const windowSize = useWindowSize();
 
@@ -75,7 +77,6 @@ export const DebugModal: React.FC<DebugModalProps> = ({
 
   return (
     <Modal
-      className={styles.modal}
       title="Debug Flow"
       open={open}
       cancelButtonProps={{ disabled: loading }}
@@ -85,12 +86,20 @@ export const DebugModal: React.FC<DebugModalProps> = ({
       onOk={debugFlow}
       okText="Debug"
       width={windowSize.width * 0.5}
+      style={{ minWidth: 500 }}
     >
       <Spin
         spinning={loading}
         indicator={<LoadingOutlined style={{ fontSize: 48 }} spin />}
       >
         <video ref={videoRef} className={styles.video} src={video} controls />
+
+        {error && (
+          <Typography.Text type="danger">
+            <b>Error: </b>
+            {error}
+          </Typography.Text>
+        )}
       </Spin>
     </Modal>
   );

@@ -1,6 +1,7 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 import type {} from "aws-lambda";
 import { callRunner } from "@/api/callRunner";
+import { validateFlow } from "@/api/validateFlow";
 import { Flow, RunnerResult } from "@pusher/shared";
 
 interface Request extends NextApiRequest {
@@ -26,13 +27,15 @@ export default async function handler(
 
   try {
     flowPayload = JSON.parse(decodedFlow);
-  } catch (e) {
-    res.status(404).json({ type: "error", message: "Flow is not json" });
-    return;
-  }
 
-  if (typeof flowPayload !== "object") {
-    res.status(404).json({ type: "error", message: "Flow is not an object" });
+    validateFlow(flowPayload);
+  } catch (e) {
+    if (e instanceof Error) {
+      res.status(404).json({ type: "error", message: e.message });
+      return;
+    }
+
+    res.status(404).json({ type: "error", message: "Flow parsing error" });
     return;
   }
 
