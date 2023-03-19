@@ -20,7 +20,7 @@ const getUrl = () => {
   const linuxUrl = LINUX_FFMPEG_URL;
   const macUrl = MAC_FFMPEG_URL;
 
-  return process.platform === "darwin" ? macUrl : linuxUrl;
+  return IS_LOCAL ? macUrl : linuxUrl;
 };
 
 const uploadToS3 = async (data) => {
@@ -65,7 +65,11 @@ const fetchArchive = async () => {
   }).then(async (files) => {
     console.log("decompress done!");
 
-    const file = files.find((file) => file.path === "ffmpeg");
+    const file = files.find(({ path }) => path.endsWith("ffmpeg"));
+
+    if (!file) {
+      throw new Error("Missing ffmpeg file");
+    }
 
     if (file && !IS_LOCAL && BUCKET_NAME) {
       console.info("Uploading ffmpeg to S3");
