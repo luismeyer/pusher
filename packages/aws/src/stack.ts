@@ -1,5 +1,5 @@
 import { Flow } from "@pusher/shared";
-import { RemovalPolicy, Stack, StackProps } from "aws-cdk-lib";
+import { CfnOutput, RemovalPolicy, Stack, StackProps } from "aws-cdk-lib";
 import {
   AttributeType,
   BillingMode,
@@ -8,6 +8,7 @@ import {
 } from "aws-cdk-lib/aws-dynamodb";
 import { Rule, Schedule } from "aws-cdk-lib/aws-events";
 import { LambdaFunction } from "aws-cdk-lib/aws-events-targets";
+import { HttpMethod } from "aws-cdk-lib/aws-lambda";
 import { Bucket } from "aws-cdk-lib/aws-s3";
 import { Construct } from "constructs";
 import { resolve } from "path";
@@ -26,6 +27,18 @@ export const RunnerFunction: FunctionOptions = {
     TELEGRAM_TOKEN: Environment.telegramToken,
     BUCKET_NAME: Environment.bucketName,
     TABLE_NAME: Environment.tableName,
+  },
+};
+
+export const ApiFunction: FunctionOptions = {
+  functionName: "pusher-api",
+  folderPath: resolve(__dirname, "../../api/dist"),
+  fileName: "index.js",
+  handlerFunctionName: "handler",
+  timeoutMins: 15,
+  environment: {
+    TABLE_NAME: Environment.tableName,
+    RUNNER_FUNCTION_NAME: Environment.runnerFunctionName,
   },
 };
 
@@ -93,6 +106,18 @@ export class AwsStack extends Stack {
     });
 
     const runnerLambda = createFunction(this, RunnerFunction);
+
+    const apiLambda = createFunction(this, ApiFunction);
+    const apiUrl = apiLambda.addFunctionUrl({
+      cors: {
+        allowedOrigins: ["*"],
+        allowedMethods: [HttpMethod.ALL],
+      },
+    });
+
+    new CfnOutput(this, "ApiUrl", { value: apiUrl.url });
+
+    runnerLambda.grantInvoke(apiLambda);
 
     SchedulerFunctions.forEach((functionOptions) => {
       const scheduleLambda = createFunction(this, functionOptions);
