@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "description": "",
   "scripts": {
-    "build": "esbuild src/index.ts --bundle --outfile=dist/index.js",
+    "build": "esbuild src/index.ts --bundle --outfile=dist/index.js --platform=node",
     "dev": "npm run build -- --watch",
     "ts": "tsc --build"
   },
