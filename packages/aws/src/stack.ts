@@ -114,6 +114,7 @@ export class AwsStack extends Stack {
 
     new CfnOutput(this, "ApiUrl", { value: apiUrl.url });
 
+    table.grantReadWriteData(apiLambda);
     runnerLambda.grantInvoke(apiLambda);
 
     SchedulerFunctions.forEach((functionOptions) => {
@@ -137,7 +138,6 @@ export class AwsStack extends Stack {
     });
 
     bucket.grantPut(runnerLambda);
-
     table.grantReadWriteData(runnerLambda);
   }
 }
