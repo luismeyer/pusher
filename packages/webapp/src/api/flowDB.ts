@@ -1,4 +1,4 @@
-import { createUpdateItem, DDBClient } from "duenamodb";
+import { createGetItem, createPutItem, DDBClient } from "duenamodb";
 
 import { Flow } from "@pusher/shared";
 
@@ -14,10 +14,6 @@ if (!TABLE_NAME) {
   throw new Error("Missing Env Variable: TABLE_NAME");
 }
 
-const updateFlow = createUpdateItem<Flow>(TABLE_NAME, "id");
+export const saveFlow = createPutItem<Flow>(TABLE_NAME);
 
-export const increaseFails = (flow: Flow) => {
-  const fails = flow.fails + 1;
-
-  return updateFlow({ ...flow, fails }, { updateKeys: ["fails"] });
-};
+export const getFlow = createGetItem<Flow, string>(TABLE_NAME, "id");

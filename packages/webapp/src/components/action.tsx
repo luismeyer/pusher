@@ -11,6 +11,7 @@ import styles from "@/styles/action.module.css";
 import { ActionContent } from "./actionContent";
 import { ActionHeader } from "./actionHeadline";
 import { ActionButtons } from "./actionButton";
+import { useActionCleanup } from "../hooks/useActionCleanup";
 
 type ActionProps = {
   id: string;
@@ -24,6 +25,8 @@ export const Action: React.FC<ActionProps> = ({ id }) => {
   const ref = useRef<HTMLDivElement>(null);
 
   const [dragId, setDragId] = useRecoilState(dragIdAtom);
+
+  useActionCleanup(id);
 
   const {
     connectPreviousAction,

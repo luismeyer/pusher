@@ -10,6 +10,10 @@ if (!RUNNER_FUNCTION_NAME) {
 const client = new LambdaClient({
   region: "eu-central-1",
   endpoint: process.env.IS_LOCAL ? "http://localhost:3002" : undefined,
+  credentials: {
+    accessKeyId: process.env.AWS_ACCESS_KEY_ID ?? "",
+    secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY ?? "",
+  },
 });
 
 type Payload = {

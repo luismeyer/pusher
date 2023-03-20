@@ -1,11 +1,12 @@
 import { Button, Input, InputNumber, Radio, Switch, theme } from "antd";
+import { useState } from "react";
 import { useRecoilState } from "recoil";
 
 import { flowAtom } from "@/state/flow";
 import styles from "@/styles/topbar.module.css";
 
 import { DebugModal } from "./debugModal";
-import { useState } from "react";
+import { SubmitModal } from "./submitModal";
 
 export const TopBar: React.FC = () => {
   const {
@@ -14,7 +15,8 @@ export const TopBar: React.FC = () => {
 
   const [flowData, setFlowData] = useRecoilState(flowAtom);
 
-  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isDebugOpen, setIsDebugOpen] = useState(false);
+  const [isSubmitOpen, setIsSubmitOpen] = useState(false);
 
   return (
     <>
@@ -73,21 +75,19 @@ export const TopBar: React.FC = () => {
             }
           />
 
-          <Button type="default" onClick={() => setIsModalOpen(true)}>
+          <Button type="default" onClick={() => setIsDebugOpen(true)}>
             Test
           </Button>
 
-          <Button type="primary" onClick={console.log}>
+          <Button type="primary" onClick={() => setIsSubmitOpen(true)}>
             Submit
           </Button>
         </div>
       </div>
 
-      <DebugModal
-        flowData={flowData}
-        open={isModalOpen}
-        setOpen={setIsModalOpen}
-      />
+      <DebugModal open={isDebugOpen} setOpen={setIsDebugOpen} />
+
+      <SubmitModal open={isSubmitOpen} setOpen={setIsSubmitOpen} />
     </>
   );
 };

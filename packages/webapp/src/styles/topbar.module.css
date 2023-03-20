@@ -38,3 +38,8 @@
 .video {
   width: 100%;
 }
+
+.submitContent {
+  display: grid;
+  gap: 12px;
+}

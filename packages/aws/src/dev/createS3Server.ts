@@ -43,7 +43,7 @@ const uploadFFMPEG = async (endpoint: string) => {
   );
 };
 
-export const createS3Server = () => {
+export const createS3Server = async () => {
   const s3Port = 3001;
   const s3Host = "localhost";
 
@@ -54,13 +54,12 @@ export const createS3Server = () => {
     directory,
   });
 
-  s3Server
-    .run()
-    .then(() => {
-      const endpoint = `http://${s3Host}:${s3Port}`;
-      console.info(`S3rver running on ${endpoint}`);
+  await s3Server.run();
 
-      return endpoint;
-    })
-    .then((endpoint) => uploadFFMPEG(endpoint));
+  const endpoint = `http://${s3Host}:${s3Port}`;
+  console.info(`S3rver running on ${endpoint}`);
+
+  await uploadFFMPEG(endpoint);
+
+  return () => s3Server.close();
 };

@@ -1,42 +1,46 @@
-import type { NextApiRequest, NextApiResponse } from "next";
-import type {} from "aws-lambda";
 import { callRunner } from "@/api/callRunner";
 import { validateFlow } from "@/api/validateFlow";
-import { Flow, RunnerResult } from "@pusher/shared";
+import { Flow } from "@pusher/shared";
+import { NextResponse } from "next/server";
 
-interface Request extends NextApiRequest {
-  query: {
-    flow?: string;
-  };
-}
+export const config = {
+  // needs to be edge because the request take longer
+  // than 10s (the max timeout for vercel function)
+  runtime: "edge",
+  regions: ["fra1"],
+};
 
-export default async function handler(
-  req: Request,
-  res: NextApiResponse<RunnerResult>
-) {
-  let { flow } = req.query;
+export default async function handler(req: Request) {
+  const { searchParams } = new URL(req.url);
+  const flow = searchParams.get("flow");
 
   if (!flow) {
-    res.status(404).json({ type: "error", message: "Missing flow" });
-    return;
+    return NextResponse.json(
+      { type: "error", message: "Missing flow" },
+      { status: 200 }
+    );
   }
-
-  const decodedFlow = decodeURIComponent(flow);
 
   let flowPayload: Flow;
 
   try {
+    const decodedFlow = decodeURIComponent(flow);
+
     flowPayload = JSON.parse(decodedFlow);
 
     validateFlow(flowPayload);
   } catch (e) {
     if (e instanceof Error) {
-      res.status(404).json({ type: "error", message: e.message });
-      return;
+      return NextResponse.json(
+        { type: "error", message: e.message },
+        { status: 404 }
+      );
     }
 
-    res.status(404).json({ type: "error", message: "Flow parsing error" });
-    return;
+    return NextResponse.json(
+      { type: "error", message: "Flow parsing error" },
+      { status: 404 }
+    );
   }
 
   const result = await callRunner(flowPayload);
@@ -44,9 +48,11 @@ export default async function handler(
   if (result.Payload) {
     const response = Buffer.from(result.Payload).toString("utf8");
 
-    res.status(200).json(JSON.parse(response));
-    return;
+    return NextResponse.json(JSON.parse(response), { status: 200 });
   }
 
-  res.status(200).json({ type: "error", message: "Could not parse payload" });
+  return NextResponse.json(
+    { type: "error", message: "Could not parse payload" },
+    { status: 200 }
+  );
 }

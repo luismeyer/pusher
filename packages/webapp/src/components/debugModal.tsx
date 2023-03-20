@@ -3,45 +3,38 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import { useRecoilValue } from "recoil";
 
 import { useWindowSize } from "@/hooks/useWindowSize";
-import { actionTreeSelector } from "@/state/actions";
-import { FlowData } from "@/state/flow";
+import { flowParamsSelector } from "@/state/flow";
 import styles from "@/styles/topbar.module.css";
 import { LoadingOutlined } from "@ant-design/icons";
-import { Flow, RunnerResult } from "@pusher/shared";
+import { RunnerResult } from "@pusher/shared";
 
 type DebugModalProps = {
-  flowData: FlowData;
   open: boolean;
   setOpen: (open: boolean) => void;
 };
 
-export const DebugModal: React.FC<DebugModalProps> = ({
-  flowData,
-  setOpen,
-  open,
-}) => {
-  const actionTree = useRecoilValue(actionTreeSelector);
-
+export const DebugModal: React.FC<DebugModalProps> = ({ setOpen, open }) => {
   const [video, setVideo] = useState<string | undefined>();
 
   const [loading, setLoadig] = useState(false);
 
   const [error, setError] = useState<string | undefined>();
 
+  const flowParams = useRecoilValue(flowParamsSelector);
+
   const debugFlow = useCallback(async () => {
     setOpen(true);
     setLoadig(true);
 
-    const flow: Flow = {
-      ...flowData,
-      actionTree,
-    };
+    if (!flowParams) {
+      setError("Your flow has no actions");
+      setLoadig(false);
+      return;
+    }
 
-    const body = encodeURIComponent(JSON.stringify(flow));
+    const url = `/api/debug?${flowParams}`;
 
-    const response: RunnerResult = await fetch(`/api/debug?flow=${body}`).then(
-      (res) => res.json()
-    );
+    const response: RunnerResult = await fetch(url).then((res) => res.json());
 
     if (response.type === "debug" && !video) {
       setVideo(response.videoUrl);
@@ -58,7 +51,7 @@ export const DebugModal: React.FC<DebugModalProps> = ({
     }
 
     setLoadig(false);
-  }, [actionTree, flowData, setOpen, video]);
+  }, [flowParams, setOpen, video]);
 
   // handle open updates
   useEffect(() => {

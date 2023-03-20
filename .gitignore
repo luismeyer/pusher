@@ -45,7 +45,6 @@ output.mp4
 *ffmpeg*
 
 !jest.config.js
-*.d.ts
 node_modules
 
 # CDK asset staging directory
@@ -53,3 +52,5 @@ node_modules
 cdk.out
 
 .vscode
+
+dynamodblocal

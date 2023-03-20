@@ -1,6 +1,11 @@
 import { Flow } from "@pusher/shared";
 import { RemovalPolicy, Stack, StackProps } from "aws-cdk-lib";
-import { AttributeType, BillingMode, Table } from "aws-cdk-lib/aws-dynamodb";
+import {
+  AttributeType,
+  BillingMode,
+  ProjectionType,
+  Table,
+} from "aws-cdk-lib/aws-dynamodb";
 import { Rule, Schedule } from "aws-cdk-lib/aws-events";
 import { LambdaFunction } from "aws-cdk-lib/aws-events-targets";
 import { Bucket } from "aws-cdk-lib/aws-s3";
@@ -36,9 +41,17 @@ const SchedulerFunctions = Intervals.map(
       INTERVAL_INDEX_NAME: Environment.intervalIndexName,
       INTERVAL: interval,
       TABLE_NAME: Environment.tableName,
+      RUNNER_FUNCTION_NAME: Environment.runnerFunctionName,
     },
   })
 );
+
+export const TableOptions = {
+  partitionKeyName: "id",
+  partitionKeyType: AttributeType.STRING,
+  intervalIndexKeyName: "interval",
+  intervalIndexKeyType: AttributeType.STRING,
+};
 
 export class AwsStack extends Stack {
   constructor(scope: Construct, id: string, props?: StackProps) {
@@ -53,11 +66,18 @@ export class AwsStack extends Stack {
       autoDeleteObjects: true,
     });
 
+    const {
+      partitionKeyName,
+      partitionKeyType,
+      intervalIndexKeyName,
+      intervalIndexKeyType,
+    } = TableOptions;
+
     const table = new Table(this, tableName, {
       tableName,
       partitionKey: {
-        name: "id",
-        type: AttributeType.STRING,
+        name: partitionKeyName,
+        type: partitionKeyType,
       },
       billingMode: BillingMode.PAY_PER_REQUEST,
       removalPolicy: RemovalPolicy.DESTROY,
@@ -65,9 +85,10 @@ export class AwsStack extends Stack {
 
     table.addGlobalSecondaryIndex({
       indexName: intervalIndexName,
+      projectionType: ProjectionType.ALL,
       partitionKey: {
-        name: "interval",
-        type: AttributeType.STRING,
+        name: intervalIndexKeyName,
+        type: intervalIndexKeyType,
       },
     });
 

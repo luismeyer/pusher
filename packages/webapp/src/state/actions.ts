@@ -13,13 +13,12 @@ import { Action, isDecisionAction, isNavigationAction } from "@pusher/shared";
 
 import { dataAtom } from "./data";
 import { localStorageEffect } from "./localStorage";
-import { positionAtom } from "./position";
+
 import {
   firstParentSelector,
   parentActionSelector,
   relationAtom,
 } from "./relation";
-import { sizeAtom } from "./size";
 
 export const actionIdsAtom = atom<string[]>({
   key: "ActionsAtom",
@@ -30,15 +29,8 @@ export const actionIdsAtom = atom<string[]>({
 export const useDeleteAction = (id: string) => {
   const [actions, setActions] = useRecoilState(actionIdsAtom);
 
-  const resetSize = useResetRecoilState(sizeAtom(id));
-  const resetPosition = useResetRecoilState(positionAtom(id));
-
   const parent = useRecoilValue(parentActionSelector(id));
   const resetParentRelation = useResetRecoilState(relationAtom(parent ?? ""));
-
-  const resetRelation = useResetRecoilState(relationAtom(id));
-
-  const resetData = useResetRecoilState(dataAtom(id));
 
   return useCallback(() => {
     let newActions = actions.filter((actionId) => actionId !== id);
@@ -48,25 +40,7 @@ export const useDeleteAction = (id: string) => {
     }
 
     setActions(newActions);
-
-    resetPosition();
-
-    resetSize();
-
-    resetData();
-
-    resetRelation();
-  }, [
-    actions,
-    id,
-    parent,
-    resetData,
-    resetParentRelation,
-    resetPosition,
-    resetRelation,
-    resetSize,
-    setActions,
-  ]);
+  }, [actions, id, parent, resetParentRelation, setActions]);
 };
 
 export const useAddAction = () => {
@@ -95,9 +69,13 @@ export const useAddAction = () => {
 export const actionTreeSelector = selector({
   key: "ActionTree",
   get: ({ get }) => {
-    const actionIds = get(actionIdsAtom);
+    const [actionId] = get(actionIdsAtom);
 
-    const firstAction = get(firstParentSelector(actionIds[0] ?? ""));
+    if (!actionId) {
+      return undefined;
+    }
+
+    const firstAction = get(firstParentSelector(actionId));
 
     const transformActions = (id: string): Action => {
       const data = get(dataAtom(id));

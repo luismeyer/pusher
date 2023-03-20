@@ -7,7 +7,7 @@ import { RunnerResult } from "@pusher/shared";
 
 import { RunnerFunction } from "../stack";
 
-export const createLambdaServer = () => {
+export const createLambdaServer = async () => {
   const lambdaPort = 3002;
   const lambdaHost = "localhost";
 
@@ -16,31 +16,32 @@ export const createLambdaServer = () => {
     port: lambdaPort,
   });
 
+  const {
+    fileName,
+    folderPath,
+    handlerFunctionName,
+    timeoutMins,
+    environment,
+  } = RunnerFunction;
+
+  const lambda = new Lambda({
+    mode: LambdaMode.Persistent,
+    lambdaPath: join(folderPath, fileName),
+    lambdaHandler: handlerFunctionName,
+    lambdaTimeout: timeoutMins ? timeoutMins * 60 * 1000 : undefined,
+    autoReload: true,
+    environment: {
+      IS_LOCAL: "true",
+      ...environment,
+    },
+  });
+
   lambdaServer.route({
     handler: async (request: Request<{ Payload: Buffer }>, h) => {
       const { payload } = request;
 
       const event =
         payload.length > 0 ? JSON.parse(payload.toString("utf8")) : {};
-
-      const {
-        fileName,
-        folderPath,
-        handlerFunctionName,
-        timeoutMins,
-        environment,
-      } = RunnerFunction;
-
-      const lambda = new Lambda({
-        mode: LambdaMode.Persistent,
-        lambdaPath: join(folderPath, fileName),
-        lambdaHandler: handlerFunctionName,
-        lambdaTimeout: timeoutMins ? timeoutMins * 60 * 1000 : undefined,
-        environment: {
-          IS_LOCAL: "true",
-          ...environment,
-        },
-      });
 
       try {
         const result = await lambda.execute<RunnerResult>(event);
@@ -85,9 +86,12 @@ export const createLambdaServer = () => {
     path: "/2015-03-31/functions/{functionName}/invocations",
   });
 
-  lambdaServer
-    .start()
-    .then(() =>
-      console.info(`Lambda running on http://${lambdaHost}:${lambdaPort}`)
-    );
+  await lambdaServer.start();
+
+  console.info(`Lambda running on http://${lambdaHost}:${lambdaPort}`);
+
+  return async () => {
+    await lambdaServer.stop();
+    lambda.stop();
+  };
 };

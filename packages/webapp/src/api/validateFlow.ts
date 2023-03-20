@@ -13,21 +13,16 @@ const isValidUrl = (string: string) => {
 
 const validateAction = (action: DeepPartial<Action>): action is Action => {
   Object.entries(action).forEach(([key, value]) => {
-    console.log({ action, value, key });
-    if ("pageUrl" in action) {
-      console.log({ page: action.pageUrl });
-    }
-
     if ("pageUrl" in action && !isValidUrl(action.pageUrl ?? "")) {
       throw new Error(`Invalid pageUrl in action: ${action.id}`);
     }
 
     if (typeof value === "string" && !value.length) {
-      throw new Error(`Missing ${key} value in action: ${action.id}`);
+      throw new Error(`Missing ${key} in action: ${action.id}`);
     }
 
     if (typeof value === "number" && !value) {
-      throw new Error(`Missing ${key} value in action: ${action.id}`);
+      throw new Error(`Missing ${key} in action: ${action.id}`);
     }
 
     if (typeof value === "object") {
@@ -55,7 +50,11 @@ export const validateFlow = (flow: DeepPartial<Flow>): flow is Flow => {
     throw new Error("Wrong interval");
   }
 
-  if (!flow.actionTree || flow.actionTree.type !== "openPage") {
+  if (!flow.actionTree) {
+    throw new Error("Flow has no actions");
+  }
+
+  if (flow.actionTree.type !== "openPage") {
     throw new Error("Start action has to be openPage");
   }
 
