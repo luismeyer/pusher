@@ -5,6 +5,7 @@ import { useState } from "react";
 
 import { SideBar } from "@/components/sideBar";
 import { MinusOutlined, PlusOutlined } from "@ant-design/icons";
+import { useLoadFlow } from "../hooks/useLoadFlow";
 
 const Canvas = dynamic(
   import("@/components/canvas").then((i) => i.Canvas),
@@ -24,6 +25,8 @@ export default function Console() {
   } = theme.useToken();
 
   const [zoom, setZoom] = useState(1);
+
+  const flowLoading = useLoadFlow();
 
   return (
     <>
@@ -47,7 +50,7 @@ export default function Console() {
 
             <Layout style={{ padding: "24px" }}>
               <Content style={{ background: colorBgContainer }}>
-                <Canvas zoom={zoom} />
+                {!flowLoading && <Canvas zoom={zoom} />}
 
                 <FloatButton.Group
                   shape="square"

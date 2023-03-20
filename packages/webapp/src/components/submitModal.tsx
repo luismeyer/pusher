@@ -45,7 +45,7 @@ export const SubmitModal: React.FC<SubmitModalProps> = ({ setOpen, open }) => {
   const flowUrl = useMemo(() => {
     const origin = typeof window !== "undefined" ? window.location.origin : "";
 
-    return `${origin}${router.route}?${flowData.id}`;
+    return `${origin}${router.route}?id=${flowData.id}`;
   }, [flowData.id, router.route]);
 
   return (

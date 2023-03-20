@@ -2,6 +2,7 @@ import { useCallback, useState } from "react";
 import {
   atom,
   selector,
+  useRecoilCallback,
   useRecoilState,
   useRecoilValue,
   useResetRecoilState,
@@ -19,6 +20,8 @@ import {
   parentActionSelector,
   relationAtom,
 } from "./relation";
+import { positionAtom } from "./position";
+import { sizeAtom } from "./size";
 
 export const actionIdsAtom = atom<string[]>({
   key: "ActionsAtom",
@@ -32,15 +35,26 @@ export const useDeleteAction = (id: string) => {
   const parent = useRecoilValue(parentActionSelector(id));
   const resetParentRelation = useResetRecoilState(relationAtom(parent ?? ""));
 
-  return useCallback(() => {
-    let newActions = actions.filter((actionId) => actionId !== id);
+  const resetData = useResetRecoilState(dataAtom(id));
 
-    if (parent) {
-      resetParentRelation();
-    }
+  return useRecoilCallback(
+    ({ reset }) =>
+      async () => {
+        let newActions = actions.filter((actionId) => actionId !== id);
 
-    setActions(newActions);
-  }, [actions, id, parent, resetParentRelation, setActions]);
+        if (parent) {
+          resetParentRelation();
+        }
+
+        setActions(newActions);
+
+        reset(sizeAtom(id));
+        reset(positionAtom(id));
+        reset(relationAtom(id));
+        reset(dataAtom(id));
+      },
+    [actions, id, parent, resetParentRelation, setActions]
+  );
 };
 
 export const useAddAction = () => {

@@ -1,30 +1,27 @@
 import { Card, theme } from "antd";
-import React, { useCallback, useEffect, useMemo, useRef } from "react";
+import React, { useEffect, useMemo, useRef } from "react";
 import { useRecoilCallback, useRecoilState, useRecoilValue } from "recoil";
 
 import { useConnect } from "@/hooks/useConnect";
+import { useSizeSync } from "@/hooks/useSizeSync";
 import { dragIdAtom } from "@/state/drag";
 import { positionAtom } from "@/state/position";
-import { sizeAtom } from "@/state/size";
 import styles from "@/styles/action.module.css";
 
+import { ActionButtons } from "./actionButton";
 import { ActionContent } from "./actionContent";
 import { ActionHeader } from "./actionHeadline";
-import { ActionButtons } from "./actionButton";
-import { useActionCleanup } from "../hooks/useActionCleanup";
 
 type ActionProps = {
   id: string;
 };
 
 export const Action: React.FC<ActionProps> = ({ id }) => {
-  const [size, setSize] = useRecoilState(sizeAtom(id));
-
   const position = useRecoilValue(positionAtom(id));
 
   const ref = useRef<HTMLDivElement>(null);
 
-  useActionCleanup(id);
+  useSizeSync(id, ref);
 
   const {
     connectPreviousAction,
@@ -33,17 +30,6 @@ export const Action: React.FC<ActionProps> = ({ id }) => {
     relation: { nextAction },
     parentAction,
   } = useConnect(id);
-
-  // saves the element height in the atom
-  useEffect(() => {
-    if (size.height !== ref.current?.clientHeight) {
-      setSize((pre) => ({ ...pre, height: ref.current?.clientHeight ?? 0 }));
-    }
-
-    if (size.width !== ref.current?.clientWidth) {
-      setSize((pre) => ({ ...pre, width: ref.current?.clientWidth ?? 0 }));
-    }
-  }, [ref, setSize, size.height, size.width]);
 
   const {
     token: { colorPrimary },
@@ -110,12 +96,7 @@ export const Action: React.FC<ActionProps> = ({ id }) => {
       onMouseUp={handleMouseUp}
       className={styles.container}
       key={id}
-      style={{
-        top: position.y,
-        left: position.x,
-        // zIndex: dragId === id ? "100" : "initial",
-        cursor,
-      }}
+      style={{ top: position.y, left: position.x, cursor }}
     >
       <Card
         style={{ transition: "border-color 0.5s", borderColor }}
