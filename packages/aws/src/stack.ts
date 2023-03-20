@@ -110,10 +110,6 @@ export class AwsStack extends Stack {
     const apiLambda = createFunction(this, ApiFunction);
     const apiUrl = apiLambda.addFunctionUrl({
       authType: FunctionUrlAuthType.NONE,
-      cors: {
-        allowedOrigins: ["*"],
-        allowedMethods: [HttpMethod.ALL],
-      },
     });
 
     new CfnOutput(this, "ApiUrl", { value: apiUrl.url });
