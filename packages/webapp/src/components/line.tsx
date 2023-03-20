@@ -1,13 +1,8 @@
 import { theme } from "antd";
-import React, {
-  forwardRef,
-  useCallback,
-  useEffect,
-  useMemo,
-  useState,
-} from "react";
+import React, { useCallback, useEffect, useMemo, useState } from "react";
 
 import { Line as LineData } from "@/state/line";
+import { useCancelConnect } from "../hooks/useCancelConnect";
 
 type LineProps = {
   data: LineData;
@@ -23,7 +18,7 @@ type State = {
   border: Border;
 };
 
-export const Line = forwardRef<HTMLDivElement, LineProps>(({ data }, ref) => {
+export const Line: React.FC<LineProps> = ({ data }) => {
   const {
     token: { colorPrimary, colorSuccess, colorError },
   } = theme.useToken();
@@ -147,9 +142,11 @@ export const Line = forwardRef<HTMLDivElement, LineProps>(({ data }, ref) => {
       ? border
       : undefined;
 
+  const cancelConnect = useCancelConnect();
+
   return (
     <div
-      ref={ref}
+      onClick={cancelConnect}
       style={{
         position: "absolute",
         transformOrigin: "top left",
@@ -167,6 +164,4 @@ export const Line = forwardRef<HTMLDivElement, LineProps>(({ data }, ref) => {
       }}
     />
   );
-});
-
-Line.displayName = "Line";
+};

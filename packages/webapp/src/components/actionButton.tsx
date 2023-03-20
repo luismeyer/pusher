@@ -1,4 +1,5 @@
 import { Button, Dropdown } from "antd";
+import { MenuClickEventHandler } from "rc-menu/lib/interface";
 import React, { useCallback, useMemo } from "react";
 import {
   useRecoilState,
@@ -27,6 +28,9 @@ type ActionButtonsProps = {
   id: string;
   disabled?: boolean;
 };
+
+type ButtonClickHandler = React.MouseEventHandler<HTMLAnchorElement> &
+  React.MouseEventHandler<HTMLButtonElement>;
 
 export const ActionButtons: React.FC<ActionButtonsProps> = ({
   id,
@@ -63,54 +67,60 @@ export const ActionButtons: React.FC<ActionButtonsProps> = ({
     [connectStart, id, setConnectStart, setConnectType]
   );
 
-  const handleConnectClickTrue = useCallback(() => {
-    if (trueNextAction && falseNextAction) {
-      setRelation((pre) => ({ ...pre, trueNextAction: undefined }));
-      return;
-    }
+  const handleConnectClickTrue: MenuClickEventHandler = useCallback(
+    (info) => {
+      // prevent click on canvas or line
+      info.domEvent.stopPropagation();
 
-    if (trueNextAction) {
-      resetRelation();
-      return;
-    }
+      if (trueNextAction && falseNextAction) {
+        setRelation((pre) => ({ ...pre, trueNextAction: undefined }));
+        return;
+      }
 
-    startConnect("true");
-  }, [
-    falseNextAction,
-    resetRelation,
-    setRelation,
-    startConnect,
-    trueNextAction,
-  ]);
+      if (trueNextAction) {
+        resetRelation();
+        return;
+      }
 
-  const handleConnectClickFalse = useCallback(() => {
-    if (falseNextAction && trueNextAction) {
-      setRelation((pre) => ({ ...pre, falseNextAction: undefined }));
-      return;
-    }
+      startConnect("true");
+    },
+    [falseNextAction, resetRelation, setRelation, startConnect, trueNextAction]
+  );
 
-    if (falseNextAction) {
-      resetRelation();
-      return;
-    }
+  const handleConnectClickFalse: MenuClickEventHandler = useCallback(
+    (info) => {
+      // prevent click on canvas or line
+      info.domEvent.stopPropagation();
 
-    startConnect("false");
-  }, [
-    falseNextAction,
-    resetRelation,
-    setRelation,
-    startConnect,
-    trueNextAction,
-  ]);
+      if (falseNextAction && trueNextAction) {
+        setRelation((pre) => ({ ...pre, falseNextAction: undefined }));
+        return;
+      }
 
-  const handleConnectClick = useCallback(() => {
-    if (nextAction) {
-      resetRelation();
-      return;
-    }
+      if (falseNextAction) {
+        resetRelation();
+        return;
+      }
 
-    startConnect("default");
-  }, [nextAction, resetRelation, startConnect]);
+      startConnect("false");
+    },
+    [falseNextAction, resetRelation, setRelation, startConnect, trueNextAction]
+  );
+
+  const handleConnectClick: ButtonClickHandler = useCallback(
+    (event) => {
+      // prevent click on canvas or line
+      event.stopPropagation();
+
+      if (nextAction) {
+        resetRelation();
+        return;
+      }
+
+      startConnect("default");
+    },
+    [nextAction, resetRelation, startConnect]
+  );
 
   const decisionAction = useMemo(() => isDecisionAction(data), [data]);
 

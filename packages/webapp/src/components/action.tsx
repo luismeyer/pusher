@@ -1,6 +1,6 @@
 import { Card, theme } from "antd";
 import React, { useCallback, useEffect, useMemo, useRef } from "react";
-import { useRecoilState, useRecoilValue } from "recoil";
+import { useRecoilCallback, useRecoilState, useRecoilValue } from "recoil";
 
 import { useConnect } from "@/hooks/useConnect";
 import { dragIdAtom } from "@/state/drag";
@@ -23,8 +23,6 @@ export const Action: React.FC<ActionProps> = ({ id }) => {
   const position = useRecoilValue(positionAtom(id));
 
   const ref = useRef<HTMLDivElement>(null);
-
-  const [dragId, setDragId] = useRecoilState(dragIdAtom);
 
   useActionCleanup(id);
 
@@ -51,28 +49,39 @@ export const Action: React.FC<ActionProps> = ({ id }) => {
     token: { colorPrimary },
   } = theme.useToken();
 
+  // start drag or connect
   const handleMouseDown: React.MouseEventHandler<HTMLDivElement> =
-    useCallback(() => {
-      if (allowConnect) {
-        connectPreviousAction();
-        return;
-      }
+    useRecoilCallback(
+      ({ set }) =>
+        () => {
+          if (allowConnect) {
+            connectPreviousAction();
+            return;
+          }
 
-      // start drag
-      if (!isConnecting) {
-        setDragId(id);
-      }
-    }, [allowConnect, connectPreviousAction, id, isConnecting, setDragId]);
+          // start drag
+          if (!isConnecting) {
+            set(dragIdAtom, id);
+          }
+        },
+      [allowConnect, connectPreviousAction, id, isConnecting]
+    );
 
   // stop drag
   const handleMouseUp: React.MouseEventHandler<HTMLDivElement> =
-    useCallback(() => {
-      if (!dragId) {
-        return;
-      }
+    useRecoilCallback(
+      ({ snapshot, set }) =>
+        async () => {
+          const dragId = await snapshot.getPromise(dragIdAtom);
 
-      setDragId(undefined);
-    }, [dragId, setDragId]);
+          if (!dragId) {
+            return;
+          }
+
+          set(dragIdAtom, undefined);
+        },
+      []
+    );
 
   const cursor = useMemo(() => {
     if (allowConnect) {
@@ -104,7 +113,7 @@ export const Action: React.FC<ActionProps> = ({ id }) => {
       style={{
         top: position.y,
         left: position.x,
-        zIndex: dragId === id ? "100" : "initial",
+        // zIndex: dragId === id ? "100" : "initial",
         cursor,
       }}
     >

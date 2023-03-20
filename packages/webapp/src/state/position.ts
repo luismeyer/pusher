@@ -2,12 +2,12 @@ import { atomFamily } from "recoil";
 
 import { localStorageEffect } from "./localStorage";
 
-type SizeAndPosition = {
+type Position = {
   x: number;
   y: number;
 };
 
-export const positionAtom = atomFamily<SizeAndPosition, string>({
+export const positionAtom = atomFamily<Position, string>({
   key: "Position",
   effects: [localStorageEffect],
   default: {

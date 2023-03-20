@@ -27,14 +27,14 @@ export const useConnect = (id: string) => {
   );
 
   // should the action allow a connecting click
-  const allowConnect = useMemo(
-    () =>
+  const allowConnect = useMemo(() => {
+    return (
       connectStart &&
       connectStart !== id &&
       !parentAction &&
-      !hasTransitiveConnection,
-    [connectStart, hasTransitiveConnection, id, parentAction]
-  );
+      !hasTransitiveConnection
+    );
+  }, [connectStart, hasTransitiveConnection, id, parentAction]);
 
   // runs in connectEnd Action to notifiy connectStart Action
   const connectPreviousAction = useCallback(() => {

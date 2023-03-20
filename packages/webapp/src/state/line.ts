@@ -1,6 +1,5 @@
-import { selector } from "recoil";
+import { atom, selector, selectorFamily } from "recoil";
 
-import { actionIdsAtom } from "./actions";
 import { ConnectType } from "./connect";
 import { positionAtom } from "./position";
 import { relationAtom } from "./relation";
@@ -14,53 +13,54 @@ export type Line = {
   type: ConnectType;
 };
 
-export const lineSelector = selector({
+export const currentLineAtom = atom<Line | undefined>({
+  key: "CurrentLine",
+  default: undefined,
+});
+
+export const lineSelector = selectorFamily({
   key: `LineSelector`,
-  get: ({ get }): Line[] => {
-    const actionIds = get(actionIdsAtom);
+  get:
+    (id: string) =>
+    ({ get }): Line[] => {
+      const createLine = (
+        id: string,
+        nextId: string,
+        type: ConnectType
+      ): Line => {
+        const position = get(positionAtom(id));
+        const size = get(sizeAtom(id));
 
-    const createLine = (
-      id: string,
-      nextId: string,
-      type: ConnectType
-    ): Line => {
-      const position = get(positionAtom(id));
-      const size = get(sizeAtom(id));
+        const nextPosition = get(positionAtom(nextId));
+        const nextSize = get(sizeAtom(nextId));
 
-      const nextPosition = get(positionAtom(nextId));
-      const nextSize = get(sizeAtom(nextId));
-
-      return {
-        ax: position.x + size.width / 2,
-        ay: position.y + size.height / 2,
-        bx: nextPosition.x + nextSize.width / 2,
-        by: nextPosition.y + nextSize.height / 2,
-        type,
+        return {
+          ax: position.x + size.width / 2,
+          ay: position.y + size.height / 2,
+          bx: nextPosition.x + nextSize.width / 2,
+          by: nextPosition.y + nextSize.height / 2,
+          type,
+        };
       };
-    };
 
-    return actionIds
-      .map((actionId) => {
-        const { nextAction, falseNextAction, trueNextAction } = get(
-          relationAtom(actionId)
-        );
+      const { nextAction, falseNextAction, trueNextAction } = get(
+        relationAtom(id)
+      );
 
-        let lines: Line[] = [];
+      let lines: Line[] = [];
 
-        if (nextAction) {
-          lines = [...lines, createLine(actionId, nextAction, "default")];
-        }
+      if (nextAction) {
+        lines = [...lines, createLine(id, nextAction, "default")];
+      }
 
-        if (falseNextAction) {
-          lines = [...lines, createLine(actionId, falseNextAction, "false")];
-        }
+      if (falseNextAction) {
+        lines = [...lines, createLine(id, falseNextAction, "false")];
+      }
 
-        if (trueNextAction) {
-          lines = [...lines, createLine(actionId, trueNextAction, "true")];
-        }
+      if (trueNextAction) {
+        lines = [...lines, createLine(id, trueNextAction, "true")];
+      }
 
-        return lines;
-      })
-      .reduce((acc, lines) => [...acc, ...lines], []);
-  },
+      return lines;
+    },
 });
