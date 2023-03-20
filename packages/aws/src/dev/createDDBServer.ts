@@ -25,7 +25,7 @@ export const createDDBServer = async () => {
   console.log(`Dynamodb running on ${endpoint}`);
 
   // wait for DynamoDB to start
-  await new Promise((resolve) => setTimeout(resolve, 1000));
+  await new Promise((resolve) => setTimeout(resolve, 5000));
 
   const client = new DynamoDBClient({
     region: process.env.REGION ?? "eu-central-1",

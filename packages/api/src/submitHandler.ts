@@ -1,21 +1,14 @@
-import { NextApiHandler } from "next";
+import { RequestHandler } from "express";
 
-import { validateFlow } from "@/api/validateFlow";
-import { Flow } from "@pusher/shared";
-import { saveFlow } from "../../api/flowDB";
+import { Flow, SubmitResponse } from "@pusher/shared";
 
-type ErrorResponse = {
-  type: "error";
-  message: string;
-};
+import { saveFlow } from "./flowDB";
+import { validateFlow } from "./validateFlow";
 
-type SuccessResponse = {
-  type: "success";
-};
-
-export type SubmitResponse = ErrorResponse | SuccessResponse;
-
-const handler: NextApiHandler<SubmitResponse> = async (req, res) => {
+export const submitHandler: RequestHandler<SubmitResponse> = async (
+  req,
+  res
+) => {
   const { flow } = req.query;
 
   if (typeof flow !== "string") {
@@ -46,5 +39,3 @@ const handler: NextApiHandler<SubmitResponse> = async (req, res) => {
 
   return res.status(200).json({ type: "success" });
 };
-
-export default handler;

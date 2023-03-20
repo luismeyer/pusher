@@ -1,13 +1,13 @@
 import { message, Modal, Typography } from "antd";
-import { useCallback, useMemo, useRef } from "react";
+import Link from "next/link";
+import { useRouter } from "next/router";
+import { useCallback, useMemo } from "react";
 import { useRecoilValue } from "recoil";
 
 import { flowAtom, flowParamsSelector } from "@/state/flow";
 import styles from "@/styles/topbar.module.css";
-
-import { SubmitResponse } from "../pages/api/submit";
-import { useRouter } from "next/router";
-import Link from "next/link";
+import { fetchApi } from "@/utils/fetchApi";
+import { SubmitResponse } from "@pusher/shared";
 
 type SubmitModalProps = {
   open: boolean;
@@ -29,9 +29,7 @@ export const SubmitModal: React.FC<SubmitModalProps> = ({ setOpen, open }) => {
       return;
     }
 
-    const url = `/api/submit?${flowParams}`;
-
-    const response: SubmitResponse = await fetch(url).then((res) => res.json());
+    const response: SubmitResponse = await fetchApi("submit", flowParams);
 
     if (response.type === "success") {
       messageApi.open({ type: "success", content: "Uploaded you flow!" });

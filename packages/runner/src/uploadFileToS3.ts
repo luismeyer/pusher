@@ -8,7 +8,7 @@ if (!BUCKET_NAME) {
   throw new Error("BUCKET_NAME is not defined");
 }
 
-const region = "eu-central-1";
+const region = process.env.REGION ?? "eu-central-1";
 
 const localConfig: S3ClientConfig = {
   forcePathStyle: true,

@@ -8,7 +8,7 @@ import {
 } from "aws-cdk-lib/aws-dynamodb";
 import { Rule, Schedule } from "aws-cdk-lib/aws-events";
 import { LambdaFunction } from "aws-cdk-lib/aws-events-targets";
-import { HttpMethod } from "aws-cdk-lib/aws-lambda";
+import { FunctionUrlAuthType, HttpMethod } from "aws-cdk-lib/aws-lambda";
 import { Bucket } from "aws-cdk-lib/aws-s3";
 import { Construct } from "constructs";
 import { resolve } from "path";
@@ -109,6 +109,7 @@ export class AwsStack extends Stack {
 
     const apiLambda = createFunction(this, ApiFunction);
     const apiUrl = apiLambda.addFunctionUrl({
+      authType: FunctionUrlAuthType.NONE,
       cors: {
         allowedOrigins: ["*"],
         allowedMethods: [HttpMethod.ALL],

@@ -2,6 +2,10 @@ import { createUpdateItem, DDBClient } from "duenamodb";
 
 import { Flow } from "@pusher/shared";
 
+DDBClient.params = {
+  region: process.env.REGION ?? "eu-central-1",
+};
+
 if (process.env.IS_LOCAL) {
   DDBClient.params = {
     region: "localhost",

@@ -7,7 +7,10 @@ if (!RUNNER_FUNCTION_NAME) {
   throw new Error("Missing Env Var: RUNNER_FUNCTION_NAME");
 }
 
-const client = new LambdaClient({ region: "eu-central-1" });
+const client = new LambdaClient({
+  region: process.env.REGION ?? "eu-central-1",
+  endpoint: process.env.IS_LOCAL ? "http://localhost:3002" : undefined,
+});
 
 export const callRunner = (flow: Flow) => {
   const command = new InvokeCommand({

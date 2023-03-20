@@ -1,5 +1,6 @@
-import { DeepPartial } from "@/utils/deepPartial";
 import { Action, Flow } from "@pusher/shared";
+
+import { DeepPartial } from "./deepPartial";
 
 const isValidUrl = (string: string) => {
   try {

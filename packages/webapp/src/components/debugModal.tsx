@@ -5,6 +5,7 @@ import { useRecoilValue } from "recoil";
 import { useWindowSize } from "@/hooks/useWindowSize";
 import { flowParamsSelector } from "@/state/flow";
 import styles from "@/styles/topbar.module.css";
+import { fetchApi } from "@/utils/fetchApi";
 import { LoadingOutlined } from "@ant-design/icons";
 import { RunnerResult } from "@pusher/shared";
 
@@ -32,9 +33,7 @@ export const DebugModal: React.FC<DebugModalProps> = ({ setOpen, open }) => {
       return;
     }
 
-    const url = `/api/debug?${flowParams}`;
-
-    const response: RunnerResult = await fetch(url).then((res) => res.json());
+    const response: RunnerResult = await fetchApi("debug", flowParams);
 
     if (response.type === "debug" && !video) {
       setVideo(response.videoUrl);

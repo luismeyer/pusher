@@ -1,10 +1,11 @@
-import { NextApiHandler } from "next";
+import { RequestHandler } from "express";
 
-import { callRunner } from "@/api/callRunner";
-import { validateFlow } from "@/api/validateFlow";
 import { Flow, RunnerResult } from "@pusher/shared";
 
-const handler: NextApiHandler<RunnerResult> = async (req, res) => {
+import { callRunner } from "./callRunner";
+import { validateFlow } from "./validateFlow";
+
+export const debugHandler: RequestHandler<RunnerResult> = async (req, res) => {
   let { flow } = req.query;
 
   if (!flow) {
@@ -47,5 +48,3 @@ const handler: NextApiHandler<RunnerResult> = async (req, res) => {
 
   res.status(200).json({ type: "error", message: "Could not parse payload" });
 };
-
-export default handler;
