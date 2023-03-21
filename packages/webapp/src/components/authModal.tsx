@@ -1,11 +1,11 @@
-import { Input, message, Modal } from "antd";
+import { Input, App, Modal, Space } from "antd";
 
 import React, { useCallback, useEffect, useState } from "react";
 import { clearToken, loadToken, storeToken } from "../utils/auth";
 import { fetchApi } from "../utils/fetchApi";
 
 export const AuthModal: React.FC = () => {
-  const [messageApi, contextHolder] = message.useMessage();
+  const { message } = App.useApp();
 
   const [open, setOpen] = useState<boolean>(false);
 
@@ -23,7 +23,7 @@ export const AuthModal: React.FC = () => {
 
       return isValidToken().then((valid) => {
         if (!valid) {
-          messageApi.open({ type: "error", content: "Wrong Token" });
+          message.open({ type: "error", content: "Wrong Token" });
 
           clearToken();
         }
@@ -31,7 +31,7 @@ export const AuthModal: React.FC = () => {
         setOpen(!valid);
       });
     },
-    [isValidToken, messageApi]
+    [isValidToken, message]
   );
 
   useEffect(() => {
@@ -46,28 +46,28 @@ export const AuthModal: React.FC = () => {
   }, [isValidToken, testToken]);
 
   return (
-    <>
-      {contextHolder}
-
-      <Modal
-        open={open}
-        title="Login"
-        centered
-        cancelButtonProps={{ style: { display: "none" } }}
-        okText="Submit"
-        onOk={() => testToken(token ?? "")}
-      >
-        <p style={{ marginBottom: 12 }}>
+    <Modal
+      open={open}
+      title="Login"
+      centered
+      cancelButtonProps={{ style: { display: "none" } }}
+      okText="Submit"
+      onOk={() => testToken(token ?? "")}
+    >
+      <Space direction="vertical">
+        <p>
           Because Pusher is still under development the Console is only
           available for certain users
         </p>
 
         <Input
+          type="password"
+          autoComplete="password"
           placeholder="Your PHR Token"
           value={token}
           onChange={(e) => setToken(e.target.value)}
         />
-      </Modal>
-    </>
+      </Space>
+    </Modal>
   );
 };

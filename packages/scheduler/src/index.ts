@@ -1,6 +1,7 @@
+import { isInterval } from "@pusher/shared";
+
 import { callRunner } from "./callRunner";
 import { flowsByInterval } from "./flowsByInterval";
-import { isInterval } from "./isInterval";
 
 const { INTERVAL } = process.env;
 

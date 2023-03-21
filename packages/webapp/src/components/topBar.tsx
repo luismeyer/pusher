@@ -1,13 +1,15 @@
-import { Button, Input, InputNumber, Radio, Switch } from "antd";
+import { Button, Input, InputNumber, Radio, Segmented, Switch } from "antd";
 import { useMemo, useState } from "react";
 import { useRecoilState } from "recoil";
 
 import { flowAtom } from "@/state/flow";
 import styles from "@/styles/topbar.module.css";
+import { isInterval } from "@pusher/shared";
 
 import { DebugModal } from "./debugModal";
-import { SubmitModal } from "./submitModal";
+import { ExecutionsDrawer } from "./executionsDrawer";
 import { LoadFlowModal } from "./loadFlowModel";
+import { SubmitModal } from "./submitModal";
 
 export const TopBar: React.FC = () => {
   const [flowData, setFlowData] = useRecoilState(flowAtom);
@@ -15,6 +17,7 @@ export const TopBar: React.FC = () => {
   const [isDebugOpen, setIsDebugOpen] = useState(false);
   const [isSubmitOpen, setIsSubmitOpen] = useState(false);
   const [isLoadFlowOpen, setIsLoadFlowOpen] = useState(false);
+  const [isExecutionsOpen, setIsExecutionsOpen] = useState(false);
 
   const failsStatus = useMemo((): "error" | "warning" | undefined => {
     if (flowData.fails >= 3) {
@@ -31,7 +34,7 @@ export const TopBar: React.FC = () => {
       <div className={styles.container}>
         <div className={styles.left}>
           <div className={`${styles.item} ${styles.itemName}`}>
-            <span>Flow Name</span>
+            <span>Name</span>
             <Input
               placeholder="Name"
               value={flowData.name}
@@ -54,16 +57,17 @@ export const TopBar: React.FC = () => {
 
           <div className={`${styles.item} ${styles.itemInterval}`}>
             <span>Interval</span>
-            <Radio.Group
-              buttonStyle="solid"
+            <Segmented
+              options={["6h", "12h"]}
               value={flowData.interval}
-              onChange={(e) =>
-                setFlowData((pre) => ({ ...pre, interval: e.target.value }))
-              }
-            >
-              <Radio.Button value="6h">6h</Radio.Button>
-              <Radio.Button value="12h">12h</Radio.Button>
-            </Radio.Group>
+              onChange={(e) => {
+                const value = e.toString();
+
+                if (isInterval(value)) {
+                  setFlowData((pre) => ({ ...pre, interval: value }));
+                }
+              }}
+            />
           </div>
 
           <div>
@@ -77,7 +81,11 @@ export const TopBar: React.FC = () => {
           </div>
 
           <div className={styles.itemExec}>
-            <Button type="default" block>
+            <Button
+              type="default"
+              block
+              onClick={() => setIsExecutionsOpen(true)}
+            >
               Flow executions
             </Button>
           </div>
@@ -113,6 +121,8 @@ export const TopBar: React.FC = () => {
       <DebugModal open={isDebugOpen} setOpen={setIsDebugOpen} />
 
       <SubmitModal open={isSubmitOpen} setOpen={setIsSubmitOpen} />
+
+      <ExecutionsDrawer open={isExecutionsOpen} setOpen={setIsExecutionsOpen} />
     </>
   );
 };

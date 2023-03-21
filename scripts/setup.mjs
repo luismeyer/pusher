@@ -1,13 +1,17 @@
 import {
+  HeadObjectCommand,
   PutObjectCommand,
   S3Client,
-  HeadObjectCommand,
 } from "@aws-sdk/client-s3";
 import decompress from "decompress";
 import decompressTarxz from "decompress-tarxz";
 import decompressUnzip from "decompress-unzip";
 import { existsSync, writeFileSync } from "fs";
 import fetch from "node-fetch";
+import { dirname, resolve } from "path";
+import { fileURLToPath } from "url";
+
+const __dirname = dirname(fileURLToPath(import.meta.url));
 
 const { BUCKET_NAME, IS_LOCAL, LINUX_FFMPEG_URL, MAC_FFMPEG_URL } = process.env;
 
@@ -20,6 +24,8 @@ if (!MAC_FFMPEG_URL) {
 }
 
 const url = IS_LOCAL ? MAC_FFMPEG_URL : LINUX_FFMPEG_URL;
+
+const tmpPath = resolve(__dirname, "../tmp/");
 
 const client = new S3Client({
   region: "eu-central-1",
@@ -85,7 +91,7 @@ const decompressArchive = async (archivePath) => {
 
   console.info("Decompressing ffmpeg archive");
 
-  return decompress(archivePath, "/tmp", { plugins }).then(async (files) => {
+  return decompress(archivePath, tmpPath, { plugins }).then(async (files) => {
     console.log("Decompress done!");
 
     const file = files.find(({ path }) => path.endsWith("ffmpeg"));
@@ -118,7 +124,7 @@ const runCi = async () => {
 };
 
 const runLocal = async () => {
-  const path = "/tmp/ffmpeg";
+  const path = resolve(tmpPath, "ffmpeg");
 
   if (existsSync(path)) {
     console.log("ffmpeg File already exists");
@@ -127,9 +133,9 @@ const runLocal = async () => {
 
   const file = await loadFFMPEG();
 
-  writeFileSync("/tmp/ffmpeg", file.data);
+  writeFileSync(path, file.data);
 
-  console.info("Done! ffmpeg file written to /tmp/ffmpeg");
+  console.info(`Done! ffmpeg file written to ${path}`);
 };
 
 const main = async () => {

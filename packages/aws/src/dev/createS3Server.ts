@@ -17,7 +17,7 @@ if (!bucketName) {
 }
 
 const uploadFFMPEG = async (endpoint: string) => {
-  const ffmpegData = readFileSync("/tmp/ffmpeg");
+  const ffmpegData = readFileSync(resolve(__dirname, "../../../../tmp/ffmpeg"));
 
   const client = new S3Client({
     forcePathStyle: true,

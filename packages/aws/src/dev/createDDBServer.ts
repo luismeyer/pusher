@@ -9,14 +9,23 @@ import {
 import { Environment } from "../readEnv";
 import { TableOptions } from "../stack";
 import { existsSync, mkdirSync } from "fs";
+import { resolve } from "path";
+
+const tmpPath = resolve(__dirname, "../../../../tmp");
 
 export const createDDBServer = async () => {
   const ddbPort = 3003;
-  const ddbPath = "/tmp/dynamodb-pusher";
+  const ddbPath = resolve(tmpPath, "dynamodb");
 
   if (!existsSync(ddbPath)) {
     mkdirSync(ddbPath);
   }
+
+  DynamoDbLocal.configureInstaller({
+    installPath: resolve(tmpPath, "dynamodb-bin"),
+    downloadUrl:
+      "https://s3.eu-central-1.amazonaws.com/dynamodb-local-frankfurt/dynamodb_local_latest.tar.gz",
+  });
 
   await DynamoDbLocal.launch(ddbPort, ddbPath, ["-sharedDb"]);
 

@@ -34,6 +34,9 @@ export type Execution = {
   variables: Record<string, string>;
 };
 
+export const isInterval = (text: string): text is Flow["interval"] =>
+  text === "6h" || text === "12h";
+
 export type Flow = {
   name: string;
   id: string;
