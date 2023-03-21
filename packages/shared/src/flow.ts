@@ -23,6 +23,8 @@ export const isSelectorAction = (action: Action): action is SelectorAction =>
 
 export type BaseAction = {
   id: string;
+  x?: number;
+  y?: number;
 };
 
 export type Action = DecisionAction | NavigationAction | OutputAction;

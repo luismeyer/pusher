@@ -99,6 +99,7 @@ export const actionTreeSelector = selector({
       }
 
       const relation = get(relationAtom(id));
+      const position = get(positionAtom(id));
 
       if (isNavigationAction(data)) {
         const nextAction = relation.nextAction
@@ -107,6 +108,7 @@ export const actionTreeSelector = selector({
 
         return {
           ...data,
+          ...position,
           nextAction,
         };
       }
@@ -122,6 +124,7 @@ export const actionTreeSelector = selector({
 
         return {
           ...data,
+          ...position,
           trueNextAction,
           falseNextAction,
         };

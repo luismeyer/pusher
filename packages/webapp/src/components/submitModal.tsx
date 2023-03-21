@@ -1,4 +1,4 @@
-import { message, Modal, Typography } from "antd";
+import { Button, message, Modal, Typography } from "antd";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { useCallback, useMemo } from "react";
@@ -88,10 +88,8 @@ export const SubmitModal: React.FC<SubmitModalProps> = ({ setOpen, open }) => {
           )}
 
           <Typography.Text>
-            Save this Link to edit your Flow later:{" "}
-            <Link href={flowUrl} target="_blank">
-              Link to your Flow
-            </Link>
+            Save you Flow id to edit your Flow later on:{" "}
+            <Typography.Text type="warning">{flowData.id}</Typography.Text>
           </Typography.Text>
         </div>
       </Modal>

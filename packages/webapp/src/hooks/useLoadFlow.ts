@@ -14,13 +14,12 @@ import {
   isNavigationAction,
   LoadResponse,
 } from "@pusher/shared";
+import { positionAtom } from "../state/position";
 
 export const useLoadFlow = () => {
   const [loading, setLoading] = useState(false);
 
   const router = useRouter();
-
-  const hasData = useRef(false);
 
   const storeAction = useRecoilCallback(({ set }) => async (action: Action) => {
     let actionData = action;
@@ -59,6 +58,11 @@ export const useLoadFlow = () => {
       }
     }
 
+    set(positionAtom(action.id), {
+      x: actionData.x ?? 0,
+      y: actionData.y ?? 0,
+    });
+
     set(dataAtom(action.id), actionData);
 
     set(actionIdsAtom, (pre) => [...pre, action.id]);
@@ -70,44 +74,32 @@ export const useLoadFlow = () => {
     await storeAction(flow.actionTree);
   });
 
-  const loadData = useCallback(
+  const loadFlow = useCallback(
     async (id: string) => {
+      if (!router.isReady || loading) {
+        return;
+      }
+
+      setLoading(true);
+
       const response = await fetchApi<LoadResponse>(
         "load",
         new URLSearchParams({ id: id })
       );
-
-      hasData.current = true;
 
       if (response.type === "success") {
         await storeFlow(response.flow);
       }
 
       setLoading(false);
+
+      return response;
     },
-    [storeFlow]
+    [loading, router.isReady, storeFlow]
   );
 
-  useEffect(() => {
-    if (!router.isReady || loading || hasData.current) {
-      return;
-    }
-
-    const { id } = router.query;
-
-    if (typeof id !== "string") {
-      router.push("/console");
-
-      hasData.current = true;
-      setLoading(false);
-
-      return;
-    }
-
-    setLoading(true);
-
-    loadData(id);
-  }, [loadData, loading, router]);
-
-  return loading;
+  return {
+    loading,
+    loadFlow,
+  };
 };

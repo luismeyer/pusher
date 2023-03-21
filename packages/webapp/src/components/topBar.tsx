@@ -7,60 +7,68 @@ import styles from "@/styles/topbar.module.css";
 
 import { DebugModal } from "./debugModal";
 import { SubmitModal } from "./submitModal";
+import { LoadFlowModal } from "./loadFlowModel";
 
 export const TopBar: React.FC = () => {
-  const {
-    token: { colorPrimary },
-  } = theme.useToken();
-
   const [flowData, setFlowData] = useRecoilState(flowAtom);
 
   const [isDebugOpen, setIsDebugOpen] = useState(false);
   const [isSubmitOpen, setIsSubmitOpen] = useState(false);
+  const [isLoadFlowOpen, setIsLoadFlowOpen] = useState(false);
 
   return (
     <>
       <div className={styles.container}>
-        <div>
-          <h1 style={{ color: colorPrimary }} className={styles.headline}>
-            Pusher Console
-          </h1>
+        <div className={styles.left}>
+          <div className={`${styles.item} ${styles.itemName}`}>
+            <span>Flow Name</span>
+            <Input
+              placeholder="Name"
+              value={flowData.name}
+              onChange={(e) =>
+                setFlowData((pre) => ({ ...pre, name: e.target.value }))
+              }
+            />
+          </div>
 
-          <div className={styles.config}>
-            <div className={styles.item}>
-              <span>Fails</span>
-              <InputNumber
-                value={flowData.fails}
-                onChange={(update) =>
-                  setFlowData((pre) => ({ ...pre, fails: update ?? 0 }))
-                }
-              />
-            </div>
+          <div className={`${styles.item} ${styles.itemFails}`}>
+            <span>Fails</span>
+            <InputNumber
+              value={flowData.fails}
+              onChange={(update) =>
+                setFlowData((pre) => ({ ...pre, fails: update ?? 0 }))
+              }
+            />
+          </div>
 
-            <div className={styles.item}>
-              <span>Interval</span>
-              <Radio.Group
-                buttonStyle="solid"
-                value={flowData.interval}
-                onChange={(e) =>
-                  setFlowData((pre) => ({ ...pre, interval: e.target.value }))
-                }
-              >
-                <Radio.Button value="6h">6h</Radio.Button>
-                <Radio.Button value="12h">12h</Radio.Button>
-              </Radio.Group>
-            </div>
+          <div className={`${styles.item} ${styles.itemInterval}`}>
+            <span>Interval</span>
+            <Radio.Group
+              buttonStyle="solid"
+              value={flowData.interval}
+              onChange={(e) =>
+                setFlowData((pre) => ({ ...pre, interval: e.target.value }))
+              }
+            >
+              <Radio.Button value="6h">6h</Radio.Button>
+              <Radio.Button value="12h">12h</Radio.Button>
+            </Radio.Group>
+          </div>
 
-            <div className={styles.item}>
-              <span>Flow Name</span>
-              <Input
-                placeholder="Name"
-                value={flowData.name}
-                onChange={(e) =>
-                  setFlowData((pre) => ({ ...pre, name: e.target.value }))
-                }
-              />
-            </div>
+          <div>
+            <Button
+              type="default"
+              block
+              onClick={() => setIsLoadFlowOpen(true)}
+            >
+              Load Flow
+            </Button>
+          </div>
+
+          <div className={styles.itemExec}>
+            <Button type="default" block onClick={() => setIsSubmitOpen(true)}>
+              Flow executions
+            </Button>
           </div>
         </div>
 
@@ -84,6 +92,8 @@ export const TopBar: React.FC = () => {
           </Button>
         </div>
       </div>
+
+      <LoadFlowModal open={isLoadFlowOpen} setOpen={setIsLoadFlowOpen} />
 
       <DebugModal open={isDebugOpen} setOpen={setIsDebugOpen} />
 

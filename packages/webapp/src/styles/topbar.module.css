@@ -13,16 +13,34 @@
   font-size: 24px;
 }
 
-.config {
-  display: flex;
-  justify-content: space-between;
+.left {
+  display: grid;
+  grid-template-columns: auto auto auto;
   align-items: center;
-  gap: 12px;
+  gap: 10px;
 }
 
 .item {
-  display: grid;
+  display: flex;
   flex-direction: column;
+}
+
+.itemName {
+  grid-row: 1;
+}
+
+.itemFails {
+  grid-row: 1;
+  grid-column: 2;
+}
+
+.itemInterval {
+  grid-row: 1;
+  grid-column: 3;
+}
+
+.itemExec {
+  grid-column: 2/4;
 }
 
 .buttons {

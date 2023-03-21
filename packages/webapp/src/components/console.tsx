@@ -18,11 +18,7 @@ const TopBar = dynamic(
 
 const { Header, Sider, Content } = Layout;
 
-type ConsoleProps = {
-  loading: boolean;
-};
-
-export const Console: React.FC<ConsoleProps> = ({ loading }) => {
+export const Console: React.FC = () => {
   const {
     token: { colorBgContainer },
   } = theme.useToken();
@@ -51,7 +47,7 @@ export const Console: React.FC<ConsoleProps> = ({ loading }) => {
 
             <Layout style={{ padding: "24px" }}>
               <Content style={{ background: colorBgContainer }}>
-                {!loading && <Canvas zoom={zoom} />}
+                <Canvas zoom={zoom} />
 
                 <FloatButton.Group
                   shape="square"
