@@ -48,6 +48,8 @@ const existsInS3 = async () => {
 
     return true;
   } catch (e) {
+    console.info("ffmpeg not found in S3", e);
+
     return false;
   }
 };

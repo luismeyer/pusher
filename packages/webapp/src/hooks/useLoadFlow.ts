@@ -1,5 +1,5 @@
 import { useRouter } from "next/router";
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useRef, useState } from "react";
 import { useRecoilCallback } from "recoil";
 
 import { actionIdsAtom } from "@/state/actions";
@@ -20,6 +20,12 @@ export const useLoadFlow = () => {
   const [loading, setLoading] = useState(false);
 
   const router = useRouter();
+
+  // this ref is a workaround. When setting the actionsIds inside
+  // of the storeAction callback, the atom is wrongly updated and
+  // misses the first action id. Also we can ensure this way that
+  // all actions are setup before they are rendered
+  const actionIds = useRef<string[]>([]);
 
   const storeAction = useRecoilCallback(({ set }) => async (action: Action) => {
     let actionData = action;
@@ -65,13 +71,15 @@ export const useLoadFlow = () => {
 
     set(dataAtom(action.id), actionData);
 
-    set(actionIdsAtom, (pre) => [...pre, action.id]);
+    actionIds.current = [...actionIds.current, action.id];
   });
 
   const storeFlow = useRecoilCallback(({ set }) => async (flow: Flow) => {
     set(flowAtom, flow);
 
     await storeAction(flow.actionTree);
+
+    set(actionIdsAtom, actionIds.current);
   });
 
   const loadFlow = useCallback(
@@ -87,7 +95,7 @@ export const useLoadFlow = () => {
         new URLSearchParams({ id: id })
       );
 
-      if (response.type === "success") {
+      if (response?.type === "success") {
         await storeFlow(response.flow);
       }
 

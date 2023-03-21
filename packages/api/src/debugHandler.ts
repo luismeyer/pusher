@@ -5,7 +5,10 @@ import { Flow, RunnerResult } from "@pusher/shared";
 import { callRunner } from "./callRunner";
 import { validateFlow } from "./validateFlow";
 
-export const debugHandler: RequestHandler<RunnerResult> = async (req, res) => {
+export const debugHandler: RequestHandler<unknown, RunnerResult> = async (
+  req,
+  res
+) => {
   let { flow } = req.query;
 
   if (!flow) {

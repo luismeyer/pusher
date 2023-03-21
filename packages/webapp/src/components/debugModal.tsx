@@ -37,20 +37,20 @@ export const DebugModal: React.FC<DebugModalProps> = ({ setOpen, open }) => {
       return;
     }
 
-    const response: RunnerResult = await fetchApi("debug", flowParams);
+    const response = await fetchApi<RunnerResult>("debug", flowParams);
 
-    if (response.type === "debug" && !video) {
+    if (response?.type === "debug" && !video) {
       setVideo(response.videoUrl);
       setError(undefined);
     }
 
-    if (response.type === "debug" && video) {
+    if (response?.type === "debug" && video) {
       videoRef.current?.load();
       setError(undefined);
     }
 
-    if (response.type === "error") {
-      setError(response.message);
+    if (!response || response.type === "error") {
+      setError(response?.message ?? "Something went wrong");
     }
 
     setLoadig(false);

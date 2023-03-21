@@ -1,7 +1,9 @@
-import { CloudDownloadOutlined, LoadingOutlined } from "@ant-design/icons";
-import { Input, Modal, Typography } from "antd";
+import { Button, Input, message, Modal } from "antd";
 import { useCallback, useState } from "react";
-import { useLoadFlow } from "../hooks/useLoadFlow";
+
+import { useLoadFlow } from "@/hooks/useLoadFlow";
+import styles from "@/styles/topbar.module.css";
+import { CloudDownloadOutlined, LoadingOutlined } from "@ant-design/icons";
 
 type LoadFlowModalProps = {
   open: boolean;
@@ -14,53 +16,65 @@ export const LoadFlowModal: React.FC<LoadFlowModalProps> = ({
   open,
   setOpen,
 }) => {
+  const [messageApi, contextHolder] = message.useMessage();
+
   const { loading, loadFlow } = useLoadFlow();
 
-  const [id, setId] = useState<string | undefined>(defaultId);
+  const [id, setId] = useState<string | undefined>();
 
-  const [error, setError] = useState<string | undefined>();
+  const load = useCallback(
+    async (flowId: string) => {
+      const res = await loadFlow(flowId);
 
-  const load = useCallback(async () => {
-    if (!id) {
-      return;
-    }
+      if (!res || res.type === "error") {
+        messageApi.open({
+          type: "error",
+          content: res?.message ?? "Something went wrong",
+        });
 
-    const res = await loadFlow(id);
+        return;
+      }
 
-    if (!res || res.type === "error") {
-      setError(res?.message ?? "Something went wrong");
-      return;
-    }
+      if (res.type === "success") {
+        setOpen(false);
+      }
+    },
+    [loadFlow, messageApi, setOpen]
+  );
 
-    if (res.type === "success") {
-      setOpen(false);
-    }
-  }, [id, loadFlow, setOpen]);
+  const reload = useCallback(async () => {
+    setId(defaultId);
+
+    await load(defaultId);
+  }, [defaultId, load]);
 
   return (
-    <Modal
-      title="Load your Flow"
-      open={open}
-      onCancel={() => setOpen(false)}
-      cancelText="Cancel"
-      okButtonProps={{
-        disabled: !id || loading,
-        icon: loading ? <LoadingOutlined /> : <CloudDownloadOutlined />,
-      }}
-      onOk={load}
-      okText="Load"
-    >
-      <Typography.Text>
-        Enter the flow id to load the flow into the editor.
-      </Typography.Text>
+    <>
+      {contextHolder}
 
-      <Input
-        placeholder="Flow Id"
-        value={id}
-        onChange={(e) => setId(e.target.value)}
-      />
+      <Modal
+        title="Load your Flow"
+        open={open}
+        onCancel={() => setOpen(false)}
+        cancelButtonProps={{ disabled: loading }}
+        cancelText="Cancel"
+        okButtonProps={{
+          disabled: !id || loading,
+          icon: loading ? <LoadingOutlined /> : <CloudDownloadOutlined />,
+        }}
+        onOk={() => id && load(id)}
+        okText="Load"
+      >
+        <div className={styles.loadInputs}>
+          <Button onClick={reload}>Reload current Flow</Button>
 
-      <Typography.Text type="danger">{error}</Typography.Text>
-    </Modal>
+          <Input
+            placeholder="Flow Id"
+            value={id}
+            onChange={(e) => setId(e.target.value)}
+          />
+        </div>
+      </Modal>
+    </>
   );
 };

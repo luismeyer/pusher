@@ -4,7 +4,10 @@ import { LoadResponse } from "@pusher/shared";
 
 import { getFlow } from "./flowDB";
 
-export const loadHandler: RequestHandler<LoadResponse> = async (req, res) => {
+export const loadHandler: RequestHandler<unknown, LoadResponse> = async (
+  req,
+  res
+) => {
   const { id } = req.query;
 
   if (typeof id !== "string") {

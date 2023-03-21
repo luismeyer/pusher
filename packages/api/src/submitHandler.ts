@@ -5,7 +5,7 @@ import { Flow, SubmitResponse } from "@pusher/shared";
 import { saveFlow } from "./flowDB";
 import { validateFlow } from "./validateFlow";
 
-export const submitHandler: RequestHandler<SubmitResponse> = async (
+export const submitHandler: RequestHandler<unknown, SubmitResponse> = async (
   req,
   res
 ) => {

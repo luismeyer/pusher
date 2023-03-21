@@ -23,10 +23,16 @@ if (!intervalIndexName) {
   throw new Error("INTERVAL_INDEX_NAME Env variable is not set");
 }
 
+const pusherAuthToken = process.env.PUSHER_AUTH_TOKEN;
+if (!pusherAuthToken) {
+  throw new Error("PUSHER_AUTH_TOKEN Env variable is not set");
+}
+
 export const Environment = {
   bucketName,
   tableName,
   runnerFunctionName,
   telegramToken,
   intervalIndexName,
+  pusherAuthToken,
 };

@@ -37,6 +37,7 @@ export const ApiFunction: FunctionOptions = {
   handlerFunctionName: "handler",
   timeoutMins: 15,
   environment: {
+    PUSHER_AUTH_TOKEN: Environment.pusherAuthToken,
     TABLE_NAME: Environment.tableName,
     RUNNER_FUNCTION_NAME: Environment.runnerFunctionName,
   },

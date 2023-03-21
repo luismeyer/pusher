@@ -1,5 +1,4 @@
-import { Button, message, Modal, Typography } from "antd";
-import Link from "next/link";
+import { message, Modal, Typography } from "antd";
 import { useRouter } from "next/router";
 import { useCallback, useMemo } from "react";
 import { useRecoilCallback, useRecoilValue } from "recoil";
@@ -33,24 +32,19 @@ export const SubmitModal: React.FC<SubmitModalProps> = ({ setOpen, open }) => {
       return;
     }
 
-    const response: SubmitResponse = await fetchApi("submit", flowParams);
+    const response = await fetchApi<SubmitResponse>("submit", flowParams);
 
-    if (response.type === "success") {
+    if (response?.type === "success") {
       messageApi.open({ type: "success", content: "Uploaded you flow!" });
     }
 
-    if (response.type === "error") {
-      messageApi.open({ type: "error", content: response.message });
+    if (!response || response.type === "error") {
+      messageApi.open({
+        type: "error",
+        content: response?.message ?? "Something went wrong",
+      });
     }
   }, [getFlowParams, messageApi, setOpen]);
-
-  const router = useRouter();
-
-  const flowUrl = useMemo(() => {
-    const origin = typeof window !== "undefined" ? window.location.origin : "";
-
-    return `${origin}${router.route}?id=${flowData.id}`;
-  }, [flowData.id, router.route]);
 
   return (
     <>
