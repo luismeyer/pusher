@@ -6,15 +6,17 @@ import { useLoadFlow } from "../hooks/useLoadFlow";
 type LoadFlowModalProps = {
   open: boolean;
   setOpen: (open: boolean) => void;
+  defaultId: string;
 };
 
 export const LoadFlowModal: React.FC<LoadFlowModalProps> = ({
+  defaultId,
   open,
   setOpen,
 }) => {
   const { loading, loadFlow } = useLoadFlow();
 
-  const [id, setId] = useState<string | undefined>();
+  const [id, setId] = useState<string | undefined>(defaultId);
 
   const [error, setError] = useState<string | undefined>();
 
@@ -46,13 +48,17 @@ export const LoadFlowModal: React.FC<LoadFlowModalProps> = ({
         icon: loading ? <LoadingOutlined /> : <CloudDownloadOutlined />,
       }}
       onOk={load}
-      okText="Submit"
+      okText="Load"
     >
       <Typography.Text>
         Enter the flow id to load the flow into the editor.
       </Typography.Text>
 
-      <Input placeholder="Flow Id" onChange={(e) => setId(e.target.value)} />
+      <Input
+        placeholder="Flow Id"
+        value={id}
+        onChange={(e) => setId(e.target.value)}
+      />
 
       <Typography.Text type="danger">{error}</Typography.Text>
     </Modal>

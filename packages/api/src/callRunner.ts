@@ -1,5 +1,5 @@
 import { InvokeCommand, LambdaClient } from "@aws-sdk/client-lambda";
-import { Flow } from "@pusher/shared";
+import { Flow, RunnerPayload } from "@pusher/shared";
 
 const { RUNNER_FUNCTION_NAME } = process.env;
 
@@ -12,13 +12,8 @@ const client = new LambdaClient({
   endpoint: process.env.IS_LOCAL ? "http://localhost:3002" : undefined,
 });
 
-type Payload = {
-  flow: Flow;
-  debug: boolean;
-};
-
 export const callRunner = (flow: Flow) => {
-  const payload: Payload = {
+  const payload: RunnerPayload = {
     flow,
     debug: true,
   };

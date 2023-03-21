@@ -1,4 +1,4 @@
-import { Flow, RunnerResult } from "@pusher/shared";
+import { RunnerPayload, RunnerResult } from "@pusher/shared";
 
 import { createBrowser } from "./createBrowser";
 import { startRecorder, StopRecorderFunction } from "./createRecorder";
@@ -6,15 +6,10 @@ import { executeFlow } from "./executeFlow";
 import { increaseFails } from "./increaseFails";
 import { uploadFileToS3 } from "./uploadFileToS3";
 
-type Payload = {
-  flow: Flow;
-  debug: boolean;
-};
-
 export const handler = async ({
   flow,
   debug,
-}: Payload): Promise<RunnerResult> => {
+}: RunnerPayload): Promise<RunnerResult> => {
   const browser = await createBrowser();
   const page = await browser.newPage();
 

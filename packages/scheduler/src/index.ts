@@ -19,5 +19,11 @@ export const handler = async () => {
     ({ fails, disabled }) => !disabled && fails < 3
   );
 
+  console.info(
+    `Runnable flows for ${INTERVAL} interval: ${runnableFlows.length}`
+  );
+
   await Promise.all(runnableFlows.map(callRunner));
+
+  return true;
 };

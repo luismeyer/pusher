@@ -1,5 +1,5 @@
-import { Button, Input, InputNumber, Radio, Switch, theme } from "antd";
-import { useState } from "react";
+import { Button, Input, InputNumber, Radio, Switch } from "antd";
+import { useMemo, useState } from "react";
 import { useRecoilState } from "recoil";
 
 import { flowAtom } from "@/state/flow";
@@ -15,6 +15,16 @@ export const TopBar: React.FC = () => {
   const [isDebugOpen, setIsDebugOpen] = useState(false);
   const [isSubmitOpen, setIsSubmitOpen] = useState(false);
   const [isLoadFlowOpen, setIsLoadFlowOpen] = useState(false);
+
+  const failsStatus = useMemo((): "error" | "warning" | undefined => {
+    if (flowData.fails >= 3) {
+      return "error";
+    }
+
+    if (flowData.fails > 0) {
+      return "warning";
+    }
+  }, [flowData.fails]);
 
   return (
     <>
@@ -35,6 +45,7 @@ export const TopBar: React.FC = () => {
             <span>Fails</span>
             <InputNumber
               value={flowData.fails}
+              status={failsStatus}
               onChange={(update) =>
                 setFlowData((pre) => ({ ...pre, fails: update ?? 0 }))
               }
@@ -66,7 +77,7 @@ export const TopBar: React.FC = () => {
           </div>
 
           <div className={styles.itemExec}>
-            <Button type="default" block onClick={() => setIsSubmitOpen(true)}>
+            <Button type="default" block>
               Flow executions
             </Button>
           </div>
@@ -93,7 +104,11 @@ export const TopBar: React.FC = () => {
         </div>
       </div>
 
-      <LoadFlowModal open={isLoadFlowOpen} setOpen={setIsLoadFlowOpen} />
+      <LoadFlowModal
+        defaultId={flowData.id}
+        open={isLoadFlowOpen}
+        setOpen={setIsLoadFlowOpen}
+      />
 
       <DebugModal open={isDebugOpen} setOpen={setIsDebugOpen} />
 

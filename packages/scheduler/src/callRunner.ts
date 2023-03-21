@@ -1,5 +1,5 @@
 import { InvokeCommand, LambdaClient } from "@aws-sdk/client-lambda";
-import { Flow } from "@pusher/shared";
+import { Flow, RunnerPayload } from "@pusher/shared";
 
 const { RUNNER_FUNCTION_NAME } = process.env;
 
@@ -13,10 +13,15 @@ const client = new LambdaClient({
 });
 
 export const callRunner = (flow: Flow) => {
+  const payload: RunnerPayload = {
+    flow,
+    debug: false,
+  };
+
   const command = new InvokeCommand({
     FunctionName: RUNNER_FUNCTION_NAME,
     InvocationType: "Event",
-    Payload: Buffer.from(JSON.stringify(flow)),
+    Payload: Buffer.from(JSON.stringify(payload)),
   });
 
   return client.send(command);

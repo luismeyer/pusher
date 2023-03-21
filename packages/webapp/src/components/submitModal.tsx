@@ -88,8 +88,10 @@ export const SubmitModal: React.FC<SubmitModalProps> = ({ setOpen, open }) => {
           )}
 
           <Typography.Text>
-            Save you Flow id to edit your Flow later on:{" "}
-            <Typography.Text type="warning">{flowData.id}</Typography.Text>
+            Save you Flow id to edit it later:
+            <p>
+              <Typography.Text type="warning">{flowData.id}</Typography.Text>
+            </p>
           </Typography.Text>
         </div>
       </Modal>

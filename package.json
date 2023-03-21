@@ -12,6 +12,7 @@
     "watch": "lerna run watch --parallel",
     "ts": "lerna run ts",
     "dev": "lerna run dev --parallel",
+    "dev:scheduler": "lerna run dev:scheduler --scope=@pusher/aws",
     "build": "lerna run build",
     "synth": "lerna run synth",
     "deploy:aws": "lerna run deploy --scope=@pusher/aws",

@@ -130,7 +130,10 @@ export const actionTreeSelector = selector({
         };
       }
 
-      return data;
+      return {
+        ...data,
+        ...position,
+      };
     };
 
     return transformActions(firstAction);

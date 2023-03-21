@@ -44,7 +44,7 @@ export const ApiFunction: FunctionOptions = {
 
 const Intervals: Flow["interval"][] = ["6h", "12h"];
 
-const SchedulerFunctions = Intervals.map(
+export const SchedulerFunctions = Intervals.map(
   (interval): FunctionOptions => ({
     functionName: `pusher-scheduler-${interval}`,
     folderPath: resolve(__dirname, "../../scheduler/dist"),

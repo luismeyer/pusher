@@ -3,8 +3,6 @@ import { Lambda, LambdaMode } from "runl";
 
 import { Request, Server } from "@hapi/hapi";
 
-import { RunnerResult } from "@pusher/shared";
-
 import { RunnerFunction } from "../stack";
 
 export const createLambdaServer = async () => {
@@ -38,13 +36,22 @@ export const createLambdaServer = async () => {
 
   lambdaServer.route({
     handler: async (request: Request<{ Payload: Buffer }>, h) => {
-      const { payload } = request;
+      const { payload, headers } = request;
+
+      const invocationType = headers["x-amz-invocation-type"];
 
       const event =
         payload.length > 0 ? JSON.parse(payload.toString("utf8")) : {};
 
       try {
-        const result = await lambda.execute<RunnerResult>(event);
+        const resultPromise = lambda.execute(event);
+
+        // Don't await async lambda invocations
+        if (invocationType === "Event") {
+          return h.response(JSON.stringify({ StatusCode: 202 })).code(202);
+        }
+
+        const result = await resultPromise;
 
         return h.response(JSON.stringify(result)).code(200);
       } catch (error) {

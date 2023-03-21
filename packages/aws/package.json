@@ -8,7 +8,8 @@
     "ts": "tsc --build",
     "synth": "npx cdk synth",
     "deploy": "npx cdk deploy",
-    "dev": "ts-node src/dev/index.ts"
+    "dev": "ts-node src/dev/index.ts",
+    "dev:scheduler": "ts-node src/dev/invokeScheduler.ts"
   },
   "dependencies": {
     "aws-cdk-lib": "2.69.0",

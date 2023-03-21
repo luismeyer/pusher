@@ -1,3 +1,5 @@
+import { Flow } from "./flow";
+
 export type RunnerSuccessResult = {
   type: "success";
 };
@@ -16,3 +18,8 @@ export type RunnerResult =
   | RunnerSuccessResult
   | RunnerErrorResult
   | RunnerDebugResult;
+
+export type RunnerPayload = {
+  flow: Flow;
+  debug: boolean;
+};
