@@ -1,4 +1,8 @@
-import { PutObjectCommand, S3Client } from "@aws-sdk/client-s3";
+import {
+  PutObjectCommand,
+  S3Client,
+  HeadObjectCommand,
+} from "@aws-sdk/client-s3";
 import decompress from "decompress";
 import decompressTarxz from "decompress-tarxz";
 import decompressUnzip from "decompress-unzip";
@@ -46,6 +50,7 @@ const existsInS3 = async () => {
       })
     );
 
+    console.info("ffmpeg exists in S3");
     return true;
   } catch (e) {
     console.info("ffmpeg not found in S3", e);
