@@ -1,6 +1,6 @@
 import { Modal, Spin, Typography } from "antd";
 import { useCallback, useEffect, useRef, useState } from "react";
-import { useRecoilValue } from "recoil";
+import { useRecoilCallback } from "recoil";
 
 import { useWindowSize } from "@/hooks/useWindowSize";
 import { flowParamsSelector } from "@/state/flow";
@@ -21,11 +21,15 @@ export const DebugModal: React.FC<DebugModalProps> = ({ setOpen, open }) => {
 
   const [error, setError] = useState<string | undefined>();
 
-  const flowParams = useRecoilValue(flowParamsSelector);
+  const getFlowParams = useRecoilCallback(({ snapshot }) => async () => {
+    return await snapshot.getPromise(flowParamsSelector);
+  });
 
   const debugFlow = useCallback(async () => {
     setOpen(true);
     setLoadig(true);
+
+    const flowParams = await getFlowParams();
 
     if (!flowParams) {
       setError("Your flow has no actions");
@@ -50,7 +54,7 @@ export const DebugModal: React.FC<DebugModalProps> = ({ setOpen, open }) => {
     }
 
     setLoadig(false);
-  }, [flowParams, setOpen, video]);
+  }, [getFlowParams, setOpen, video]);
 
   // handle open updates
   useEffect(() => {

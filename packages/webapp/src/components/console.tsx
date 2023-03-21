@@ -5,7 +5,6 @@ import { useState } from "react";
 
 import { SideBar } from "@/components/sideBar";
 import { MinusOutlined, PlusOutlined } from "@ant-design/icons";
-import { useLoadFlow } from "../hooks/useLoadFlow";
 
 const Canvas = dynamic(
   import("@/components/canvas").then((i) => i.Canvas),
@@ -19,14 +18,16 @@ const TopBar = dynamic(
 
 const { Header, Sider, Content } = Layout;
 
-export default function Console() {
+type ConsoleProps = {
+  loading: boolean;
+};
+
+export const Console: React.FC<ConsoleProps> = ({ loading }) => {
   const {
     token: { colorBgContainer },
   } = theme.useToken();
 
   const [zoom, setZoom] = useState(1);
-
-  const flowLoading = useLoadFlow();
 
   return (
     <>
@@ -50,7 +51,7 @@ export default function Console() {
 
             <Layout style={{ padding: "24px" }}>
               <Content style={{ background: colorBgContainer }}>
-                {!flowLoading && <Canvas zoom={zoom} />}
+                {!loading && <Canvas zoom={zoom} />}
 
                 <FloatButton.Group
                   shape="square"
@@ -72,4 +73,4 @@ export default function Console() {
       </main>
     </>
   );
-}
+};

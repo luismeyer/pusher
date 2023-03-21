@@ -1,5 +1,6 @@
 import { useRecoilCallback } from "recoil";
-import { connectStartAtom } from "../state/connect";
+
+import { connectStartAtom } from "@/state/connect";
 
 export const useCancelConnect = () => {
   const cancelConnect = useRecoilCallback(

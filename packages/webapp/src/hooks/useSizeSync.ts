@@ -1,6 +1,7 @@
 import { RefObject, useEffect } from "react";
 import { useRecoilState } from "recoil";
-import { sizeAtom } from "../state/size";
+
+import { sizeAtom } from "@/state/size";
 
 export const useSizeSync = (id: string, ref: RefObject<HTMLElement>) => {
   const [size, setSize] = useRecoilState(sizeAtom(id));

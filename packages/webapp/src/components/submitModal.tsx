@@ -2,7 +2,7 @@ import { message, Modal, Typography } from "antd";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { useCallback, useMemo } from "react";
-import { useRecoilValue } from "recoil";
+import { useRecoilCallback, useRecoilValue } from "recoil";
 
 import { flowAtom, flowParamsSelector } from "@/state/flow";
 import styles from "@/styles/topbar.module.css";
@@ -19,10 +19,14 @@ export const SubmitModal: React.FC<SubmitModalProps> = ({ setOpen, open }) => {
 
   const flowData = useRecoilValue(flowAtom);
 
-  const flowParams = useRecoilValue(flowParamsSelector);
+  const getFlowParams = useRecoilCallback(({ snapshot }) => async () => {
+    return await snapshot.getPromise(flowParamsSelector);
+  });
 
   const submitFlow = useCallback(async () => {
     setOpen(false);
+
+    const flowParams = await getFlowParams();
 
     if (!flowParams) {
       messageApi.open({ type: "error", content: "Your flow has no actions" });
@@ -38,7 +42,7 @@ export const SubmitModal: React.FC<SubmitModalProps> = ({ setOpen, open }) => {
     if (response.type === "error") {
       messageApi.open({ type: "error", content: response.message });
     }
-  }, [flowParams, messageApi, setOpen]);
+  }, [getFlowParams, messageApi, setOpen]);
 
   const router = useRouter();
 
