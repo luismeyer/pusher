@@ -1,9 +1,10 @@
 import { atom, selector } from "recoil";
 import { v4 } from "uuid";
 
-import { Flow } from "@pusher/shared";
-import { localStorageEffect } from "./localStorage";
+import { Execution, Flow } from "@pusher/shared";
+
 import { actionTreeSelector } from "./actions";
+import { localStorageEffect } from "./localStorage";
 
 export type FlowData = Omit<Flow, "actionTree">;
 
@@ -41,5 +42,33 @@ export const flowParamsSelector = selector({
     params.set("flow", encodeURIComponent(JSON.stringify(flow)));
 
     return params;
+  },
+});
+
+export const executionsSelector = selector({
+  key: "Executions",
+  get: ({ get }) => {
+    const flowData = get(flowAtom);
+
+    return flowData.executions ?? [];
+  },
+  set: ({ set }, executions) => {
+    set(flowAtom, (flowData) => ({
+      ...flowData,
+      executions: executions as Execution[],
+    }));
+  },
+});
+
+export const defaultVariables = selector({
+  key: "DefaultVariables",
+  get: ({ get }) => {
+    const executions = get(executionsSelector);
+
+    if (!executions?.length) {
+      return [];
+    }
+
+    return Object.keys(executions[0].variables ?? {}) ?? [];
   },
 });

@@ -1,4 +1,4 @@
-import { Button, Input, message, Modal } from "antd";
+import { Button, Input, App, Modal } from "antd";
 import { useCallback, useState } from "react";
 
 import { useLoadFlow } from "@/hooks/useLoadFlow";
@@ -16,7 +16,7 @@ export const LoadFlowModal: React.FC<LoadFlowModalProps> = ({
   open,
   setOpen,
 }) => {
-  const [messageApi, contextHolder] = message.useMessage();
+  const { message } = App.useApp();
 
   const { loading, loadFlow } = useLoadFlow();
 
@@ -27,7 +27,7 @@ export const LoadFlowModal: React.FC<LoadFlowModalProps> = ({
       const res = await loadFlow(flowId);
 
       if (!res || res.type === "error") {
-        messageApi.open({
+        message.open({
           type: "error",
           content: res?.message ?? "Something went wrong",
         });
@@ -39,7 +39,7 @@ export const LoadFlowModal: React.FC<LoadFlowModalProps> = ({
         setOpen(false);
       }
     },
-    [loadFlow, messageApi, setOpen]
+    [loadFlow, message, setOpen]
   );
 
   const reload = useCallback(async () => {
@@ -49,32 +49,28 @@ export const LoadFlowModal: React.FC<LoadFlowModalProps> = ({
   }, [defaultId, load]);
 
   return (
-    <>
-      {contextHolder}
+    <Modal
+      title="Load your Flow"
+      open={open}
+      onCancel={() => setOpen(false)}
+      cancelButtonProps={{ disabled: loading }}
+      cancelText="Cancel"
+      okButtonProps={{
+        disabled: !id || loading,
+        icon: loading ? <LoadingOutlined /> : <CloudDownloadOutlined />,
+      }}
+      onOk={() => id && load(id)}
+      okText="Load"
+    >
+      <div className={styles.loadInputs}>
+        <Button onClick={reload}>Reload current Flow</Button>
 
-      <Modal
-        title="Load your Flow"
-        open={open}
-        onCancel={() => setOpen(false)}
-        cancelButtonProps={{ disabled: loading }}
-        cancelText="Cancel"
-        okButtonProps={{
-          disabled: !id || loading,
-          icon: loading ? <LoadingOutlined /> : <CloudDownloadOutlined />,
-        }}
-        onOk={() => id && load(id)}
-        okText="Load"
-      >
-        <div className={styles.loadInputs}>
-          <Button onClick={reload}>Reload current Flow</Button>
-
-          <Input
-            placeholder="Flow Id"
-            value={id}
-            onChange={(e) => setId(e.target.value)}
-          />
-        </div>
-      </Modal>
-    </>
+        <Input
+          placeholder="Flow Id"
+          value={id}
+          onChange={(e) => setId(e.target.value)}
+        />
+      </div>
+    </Modal>
   );
 };

@@ -66,3 +66,17 @@
   display: flex;
   gap: 12px;
 }
+
+.drawerButton {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 50px;
+}
+
+.executionItem {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}

@@ -1,5 +1,9 @@
-import { Input, Select } from "antd";
+import { Input, Select, Tooltip } from "antd";
 import React, { useCallback, useMemo } from "react";
+import { useRecoilValue } from "recoil";
+
+import { defaultVariables } from "@/state/flow";
+import { WarningOutlined } from "@ant-design/icons";
 
 type TextInputProps = {
   addonBeforeOptions?: { value: string }[];
@@ -14,6 +18,8 @@ export const TextInput: React.FC<TextInputProps> = ({
   onChange,
   value: fullValue,
 }) => {
+  const variables = useRecoilValue(defaultVariables);
+
   const { prefix, value } = useMemo(() => {
     const prefixInValue = addonBeforeOptions?.find(({ value }) =>
       fullValue.startsWith(value)
@@ -54,9 +60,38 @@ export const TextInput: React.FC<TextInputProps> = ({
     );
   }, [addonBeforeOptions, handleInputChange, prefix]);
 
+  const variableName = useMemo(() => {
+    const regex = /{{(.*)}}/;
+
+    const [_match, variableName] = value.match(regex) ?? [];
+
+    return variableName ? variableName.trim() : undefined;
+  }, [value]);
+
+  const error = useMemo(() => {
+    if (!variableName) {
+      return;
+    }
+
+    return !variables.includes(variableName.trim());
+  }, [variableName, variables]);
+
   return (
     <Input
+      status={error ? "error" : undefined}
       addonBefore={addonBefore}
+      suffix={
+        error ? (
+          <Tooltip
+            title={error ? `Wrong variable: "${variableName}"` : undefined}
+          >
+            <WarningOutlined />{" "}
+          </Tooltip>
+        ) : (
+          // render empty div to keep the input focused
+          <div />
+        )
+      }
       placeholder={placeholder}
       value={value}
       onChange={(e) => handleInputChange({ value: e.target.value })}

@@ -17,42 +17,50 @@ import { timeout } from "./timeout";
 import { type } from "./type";
 import { waitFor } from "./waitFor";
 
-const createSelector = (
+const replaceVariables = (
   action: Action,
   variables?: Record<string, string>
-): string => {
-  if (!isSelectorAction(action)) {
-    return "";
-  }
-
+): Action => {
   if (!variables) {
-    return action.selector;
+    return action;
   }
 
-  // find {{variableName}} in the selector
-  const [_match, variableName] = action.selector.match(/{{(.*)}}/) ?? [];
+  return Object.entries(action).reduce<Action>((acc, [key, value]) => {
+    const raw = { ...acc, [key]: value };
 
-  if (!variableName) {
-    return action.selector;
-  }
+    if (typeof value !== "string") {
+      return raw;
+    }
 
-  const override = variables[variableName];
+    const regex = /{{(.*)}}/;
 
-  if (!override) {
-    throw new Error("Missing variable: " + variableName);
-  }
+    const [_match, variableName] = value.match(regex) ?? [];
 
-  return action.selector.replace(`{{${variableName}}}`, override);
+    if (!variableName) {
+      return raw;
+    }
+
+    const { [variableName.trim()]: override } = variables;
+
+    if (!override) {
+      return raw;
+    }
+
+    return {
+      ...acc,
+      [key]: value.replace(regex, override),
+    };
+  }, {} as Action);
 };
 
 export const executeActions = async (
   page: Page,
-  action: Action,
+  rawAction: Action,
   variables?: Record<string, string>
 ): Promise<boolean> => {
   let decision = undefined;
 
-  const selector = createSelector(action, variables);
+  const action = replaceVariables(rawAction, variables);
 
   switch (action.type) {
     case "openPage":
@@ -60,11 +68,11 @@ export const executeActions = async (
       break;
 
     case "type":
-      await type(page, selector, action.text);
+      await type(page, action.selector, action.text);
       break;
 
     case "click":
-      await click(page, selector);
+      await click(page, action.selector);
       break;
 
     case "scrollToBottom":
@@ -72,7 +80,7 @@ export const executeActions = async (
       break;
 
     case "waitFor":
-      await waitFor(page, selector);
+      await waitFor(page, action.selector);
       break;
 
     case "timeout":
@@ -80,7 +88,7 @@ export const executeActions = async (
       break;
 
     case "exists":
-      decision = await exists(page, selector);
+      decision = await exists(page, action.selector);
       break;
 
     case "textContentMatches":

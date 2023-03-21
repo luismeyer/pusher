@@ -3,6 +3,10 @@ import { Action, Flow } from "@pusher/shared";
 import { DeepPartial } from "./deepPartial";
 
 const isValidUrl = (string: string) => {
+  if (string.includes("{{")) {
+    return true;
+  }
+
   try {
     new URL(string);
 
