@@ -4,7 +4,7 @@ import { useRecoilCallback, useRecoilValue } from "recoil";
 
 import { flowAtom, flowParamsSelector } from "@/state/flow";
 import styles from "@/styles/topbar.module.css";
-import { fetchApi } from "@/utils/fetchApi";
+import { useFetchApi } from "@/hooks/useFetchApi";
 import { SubmitResponse } from "@pusher/shared";
 
 type SubmitModalProps = {
@@ -20,6 +20,8 @@ export const SubmitModal: React.FC<SubmitModalProps> = ({ setOpen, open }) => {
   const getFlowParams = useRecoilCallback(({ snapshot }) => async () => {
     return await snapshot.getPromise(flowParamsSelector);
   });
+
+  const fetchApi = useFetchApi();
 
   const submitFlow = useCallback(async () => {
     setOpen(false);
@@ -43,7 +45,7 @@ export const SubmitModal: React.FC<SubmitModalProps> = ({ setOpen, open }) => {
         content: response?.message ?? "Something went wrong",
       });
     }
-  }, [getFlowParams, message, setOpen]);
+  }, [fetchApi, getFlowParams, message, setOpen]);
 
   return (
     <Modal

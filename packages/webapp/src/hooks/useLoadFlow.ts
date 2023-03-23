@@ -6,7 +6,7 @@ import { actionIdsAtom } from "@/state/actions";
 import { dataAtom } from "@/state/data";
 import { flowAtom } from "@/state/flow";
 import { relationAtom } from "@/state/relation";
-import { fetchApi } from "@/utils/fetchApi";
+import { useFetchApi } from "@/hooks/useFetchApi";
 import {
   Action,
   Flow,
@@ -20,6 +20,8 @@ export const useLoadFlow = () => {
   const [loading, setLoading] = useState(false);
 
   const router = useRouter();
+
+  const fetchApi = useFetchApi();
 
   // this ref is a workaround. When setting the actionsIds inside
   // of the storeAction callback, the atom is wrongly updated and
@@ -103,7 +105,7 @@ export const useLoadFlow = () => {
 
       return response;
     },
-    [loading, router.isReady, storeFlow]
+    [fetchApi, loading, router.isReady, storeFlow]
   );
 
   return {

@@ -1,21 +1,25 @@
-import { Input, App, Modal, Space } from "antd";
+import { App, Input, Modal, Space } from "antd";
+import React, { useCallback, useState } from "react";
+import { useRecoilState } from "recoil";
 
-import React, { useCallback, useEffect, useState } from "react";
-import { clearToken, loadToken, storeToken } from "../utils/auth";
-import { fetchApi } from "../utils/fetchApi";
+import { authOpenAtom } from "@/state/auth";
+import { clearToken, storeToken } from "@/utils/auth";
+import { useFetchApi } from "@/hooks/useFetchApi";
 
 export const AuthModal: React.FC = () => {
   const { message } = App.useApp();
 
-  const [open, setOpen] = useState<boolean>(false);
+  const [open, setOpen] = useRecoilState(authOpenAtom);
 
   const [token, setToken] = useState<string | undefined>();
+
+  const fetchApi = useFetchApi();
 
   const isValidToken = useCallback(async () => {
     const response = await fetchApi("token");
 
     return Boolean(response);
-  }, []);
+  }, [fetchApi]);
 
   const testToken = useCallback(
     async (apiToken: string) => {
@@ -31,33 +35,23 @@ export const AuthModal: React.FC = () => {
         setOpen(!valid);
       });
     },
-    [isValidToken, message]
+    [isValidToken, message, setOpen]
   );
-
-  useEffect(() => {
-    const token = loadToken();
-
-    if (!token) {
-      setOpen(true);
-      return;
-    }
-
-    testToken(token);
-  }, [isValidToken, testToken]);
 
   return (
     <Modal
       open={open}
       title="Login"
       centered
-      cancelButtonProps={{ style: { display: "none" } }}
-      okText="Submit"
+      okText="Submit Token"
+      cancelText="Continue without Api"
       onOk={() => testToken(token ?? "")}
+      onCancel={() => setOpen(false)}
     >
       <Space direction="vertical">
         <p>
-          Because Pusher is still under development the Console is only
-          available for certain users
+          Because Pusher is still under development the Api is only available
+          for certain users. You can still use the Webapp though.
         </p>
 
         <Input

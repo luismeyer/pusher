@@ -5,7 +5,7 @@ import { useRecoilCallback } from "recoil";
 import { useWindowSize } from "@/hooks/useWindowSize";
 import { flowParamsSelector } from "@/state/flow";
 import styles from "@/styles/topbar.module.css";
-import { fetchApi } from "@/utils/fetchApi";
+import { useFetchApi } from "@/hooks/useFetchApi";
 import { LoadingOutlined } from "@ant-design/icons";
 import { RunnerResult } from "@pusher/shared";
 
@@ -25,6 +25,8 @@ export const DebugModal: React.FC<DebugModalProps> = ({ setOpen, open }) => {
     return await snapshot.getPromise(flowParamsSelector);
   });
 
+  const fetchApi = useFetchApi();
+
   const debugFlow = useCallback(async () => {
     setOpen(true);
     setLoadig(true);
@@ -39,6 +41,10 @@ export const DebugModal: React.FC<DebugModalProps> = ({ setOpen, open }) => {
 
     const response = await fetchApi<RunnerResult>("debug", flowParams);
 
+    if (!response) {
+      setOpen(false);
+    }
+
     if (response?.type === "debug" && !video) {
       setVideo(response.videoUrl);
       setError(undefined);
@@ -49,12 +55,12 @@ export const DebugModal: React.FC<DebugModalProps> = ({ setOpen, open }) => {
       setError(undefined);
     }
 
-    if (!response || response.type === "error") {
+    if (response?.type === "error") {
       setError(response?.message ?? "Something went wrong");
     }
 
     setLoadig(false);
-  }, [getFlowParams, setOpen, video]);
+  }, [fetchApi, getFlowParams, setOpen, video]);
 
   // handle open updates
   useEffect(() => {
