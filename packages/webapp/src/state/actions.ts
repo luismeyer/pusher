@@ -4,8 +4,6 @@ import {
   selector,
   useRecoilCallback,
   useRecoilState,
-  useRecoilValue,
-  useResetRecoilState,
   useSetRecoilState,
 } from "recoil";
 import { v4 } from "uuid";
@@ -29,31 +27,40 @@ export const actionIdsAtom = atom<string[]>({
   effects: [localStorageEffect],
 });
 
-export const useDeleteAction = (id: string) => {
-  const [actions, setActions] = useRecoilState(actionIdsAtom);
-
-  const parent = useRecoilValue(parentActionSelector(id));
-  const resetParentRelation = useResetRecoilState(relationAtom(parent ?? ""));
-
-  const resetData = useResetRecoilState(dataAtom(id));
-
+export const useResetAction = () => {
   return useRecoilCallback(
-    ({ reset }) =>
-      async () => {
-        let newActions = actions.filter((actionId) => actionId !== id);
-
+    ({ reset, snapshot }) =>
+      async (id: string) => {
+        const parent = await snapshot.getPromise(parentActionSelector(id));
         if (parent) {
-          resetParentRelation();
+          reset(relationAtom(parent));
         }
-
-        setActions(newActions);
 
         reset(sizeAtom(id));
         reset(positionAtom(id));
         reset(relationAtom(id));
         reset(dataAtom(id));
       },
-    [actions, id, parent, resetParentRelation, setActions]
+    [parent]
+  );
+};
+
+export const useDeleteAction = () => {
+  const resetAction = useResetAction();
+
+  return useRecoilCallback(
+    ({ snapshot, set }) =>
+      async (id: string) => {
+        const actionIds = await snapshot.getPromise(actionIdsAtom);
+
+        set(
+          actionIdsAtom,
+          actionIds.filter((actionId) => actionId !== id)
+        );
+
+        resetAction(id);
+      },
+    [parent]
   );
 };
 
