@@ -20,6 +20,8 @@ export const localStorageEffect: AtomEffect<any> = ({
   }
 
   onSet((newValue, _, isReset) => {
+    console.log(newValue, isReset);
+
     if (isReset) {
       localStorage.removeItem(key);
       return;

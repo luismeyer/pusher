@@ -36,7 +36,7 @@ export const ActionButtons: React.FC<ActionButtonsProps> = ({
   id,
   disabled,
 }) => {
-  const deleteAction = useDeleteAction(id);
+  const deleteAction = useDeleteAction();
 
   const [{ falseNextAction, nextAction, trueNextAction }, setRelation] =
     useRecoilState(relationAtom(id));
@@ -49,9 +49,9 @@ export const ActionButtons: React.FC<ActionButtonsProps> = ({
 
   const setConnectType = useSetRecoilState(connectTypeAtom);
 
-  const handleDeleteClick = useCallback(() => {
-    deleteAction();
-  }, [deleteAction]);
+  const handleDeleteClick = useCallback(async () => {
+    await deleteAction(id);
+  }, [deleteAction, id]);
 
   const startConnect = useCallback(
     (connectType: ConnectType) => {
