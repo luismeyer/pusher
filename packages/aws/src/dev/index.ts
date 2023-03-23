@@ -18,10 +18,10 @@ const main = async () => {
 
     isExiting = true;
 
-    console.log("stopping dev servers...");
+    console.info("stopping dev servers...");
 
     await stopS3();
-    await stopLambda();
+    stopLambda();
     stopDDB();
 
     process.exit(0);

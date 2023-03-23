@@ -1,4 +1,6 @@
 import DynamoDbLocal from "dynamodb-local";
+import { existsSync, mkdirSync } from "fs";
+import { resolve } from "path";
 
 import {
   CreateTableCommand,
@@ -8,8 +10,6 @@ import {
 
 import { Environment } from "../readEnv";
 import { TableOptions } from "../stack";
-import { existsSync, mkdirSync } from "fs";
-import { resolve } from "path";
 
 const tmpPath = resolve(__dirname, "../../../../tmp");
 
@@ -31,7 +31,7 @@ export const createDDBServer = async () => {
 
   const endpoint = `http://localhost:${ddbPort}`;
 
-  console.log(`Dynamodb running on ${endpoint}`);
+  console.info(`Dynamodb running on ${endpoint}`);
 
   // wait for DynamoDB to start
   await new Promise((resolve) => setTimeout(resolve, 5000));
@@ -52,7 +52,7 @@ export const createDDBServer = async () => {
     .then(({ TableNames }) => TableNames?.includes(tableName));
 
   if (!tableExists) {
-    console.log("Setting up DynamoDB...");
+    console.info("Setting up DynamoDB...");
 
     const {
       intervalIndexKeyName,
