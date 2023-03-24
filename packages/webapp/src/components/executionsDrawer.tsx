@@ -1,4 +1,4 @@
-import { Button, Drawer, List } from "antd";
+import { Button, Drawer, List, Row, Space } from "antd";
 import { useCallback } from "react";
 import { useRecoilState } from "recoil";
 
@@ -44,7 +44,13 @@ export const ExecutionsDrawer: React.FC<ExecutionsDrawerProps> = ({
         )}
       />
 
-      <div className={styles.drawerButton}>
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "center",
+          marginTop: 25,
+        }}
+      >
         <Button
           type="primary"
           onClick={addExecution}

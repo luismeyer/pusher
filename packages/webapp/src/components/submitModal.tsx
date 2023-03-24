@@ -1,4 +1,4 @@
-import { App, Modal, Typography } from "antd";
+import { App, Modal, Space, Typography } from "antd";
 import { useCallback } from "react";
 import { useRecoilCallback, useRecoilValue } from "recoil";
 
@@ -56,7 +56,7 @@ export const SubmitModal: React.FC<SubmitModalProps> = ({ setOpen, open }) => {
       onOk={submitFlow}
       okText="Submit"
     >
-      <div className={styles.submitContent}>
+      <Space direction="vertical" size="middle">
         {!flowData.disabled && (
           <Typography.Text>
             Submit your Flow to see it in action. It will be stored in our cloud
@@ -85,7 +85,7 @@ export const SubmitModal: React.FC<SubmitModalProps> = ({ setOpen, open }) => {
             <Typography.Text type="warning">{flowData.id}</Typography.Text>
           </p>
         </Typography.Text>
-      </div>
+      </Space>
     </Modal>
   );
 };

@@ -3,13 +3,12 @@ import {
   Col,
   Input,
   InputNumber,
-  Modal,
   Row,
   Segmented,
   Space,
   Switch,
 } from "antd";
-import { useCallback, useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 import { useRecoilState } from "recoil";
 
 import { flowAtom } from "@/state/flow";
@@ -43,7 +42,17 @@ export const TopBar: React.FC = () => {
 
   return (
     <>
-      <div className={styles.container}>
+      <div
+        style={{
+          color: "white",
+          lineHeight: "initial",
+          display: "flex",
+          justifyContent: "space-between",
+          gap: "10px",
+          alignItems: "center",
+          padding: "24px 0",
+        }}
+      >
         <Space direction="vertical">
           <Row gutter={[8, 8]}>
             <Col>
@@ -111,7 +120,7 @@ export const TopBar: React.FC = () => {
           <Row gutter={[8, 8]}>
             <Col span={24}>
               <Switch
-                className={styles.switch}
+                style={{ width: "100%" }}
                 checkedChildren="Enabled"
                 unCheckedChildren="Disabled"
                 checked={!flowData.disabled}

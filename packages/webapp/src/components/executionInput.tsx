@@ -53,7 +53,14 @@ export const ExecutionsInput: React.FC<ExecutionsInputProps> = ({
   );
 
   return (
-    <div className={styles.executionItem}>
+    <div
+      style={{
+        display: "flex",
+        flexDirection: "column",
+        width: "100%",
+        gap: 12,
+      }}
+    >
       <Row align="middle" gutter={10}>
         <Col>
           <h3>Execution {index + 1}</h3>

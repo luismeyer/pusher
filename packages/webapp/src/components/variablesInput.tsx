@@ -1,3 +1,4 @@
+import { DoubleRightOutlined } from "@ant-design/icons";
 import { Col, Input, InputRef, Row } from "antd";
 import { useCallback, useEffect, useRef, useState } from "react";
 
@@ -95,7 +96,9 @@ export const VariablesInput: React.FC<VariablesInputProps> = ({
             />
           </Col>
 
-          <Col> = </Col>
+          <Col>
+            <DoubleRightOutlined />
+          </Col>
 
           <Col span={11}>
             <Input
@@ -131,7 +134,9 @@ export const VariablesInput: React.FC<VariablesInputProps> = ({
           />
         </Col>
 
-        <Col> = </Col>
+        <Col>
+          <DoubleRightOutlined />
+        </Col>
 
         <Col span={11}>
           <Input

@@ -1,9 +1,13 @@
-import { Button, Input, App, Modal } from "antd";
+import { Button, Input, App, Modal, Space } from "antd";
 import { useCallback, useState } from "react";
 
 import { useLoadFlow } from "@/hooks/useLoadFlow";
 import styles from "@/styles/topbar.module.css";
-import { CloudDownloadOutlined, LoadingOutlined } from "@ant-design/icons";
+import {
+  CloudDownloadOutlined,
+  LoadingOutlined,
+  ReloadOutlined,
+} from "@ant-design/icons";
 
 type LoadFlowModalProps = {
   open: boolean;
@@ -26,16 +30,14 @@ export const LoadFlowModal: React.FC<LoadFlowModalProps> = ({
     async (flowId: string) => {
       const res = await loadFlow(flowId);
 
-      if (!res || res.type === "error") {
+      if (res?.type === "error") {
         message.open({
           type: "error",
-          content: res?.message ?? "Something went wrong",
+          content: res.message ?? "Something went wrong",
         });
-
-        return;
       }
 
-      if (res.type === "success") {
+      if (!res || res.type === "success") {
         setOpen(false);
       }
     },
@@ -53,24 +55,32 @@ export const LoadFlowModal: React.FC<LoadFlowModalProps> = ({
       title="Load your Flow"
       open={open}
       onCancel={() => setOpen(false)}
-      cancelButtonProps={{ disabled: loading }}
-      cancelText="Cancel"
-      okButtonProps={{
-        disabled: !id || loading,
-        icon: loading ? <LoadingOutlined /> : <CloudDownloadOutlined />,
-      }}
-      onOk={() => id && load(id)}
-      okText="Load"
-    >
-      <div className={styles.loadInputs}>
-        <Button onClick={reload}>Reload current Flow</Button>
+      footer={
+        <>
+          <Button disabled={loading} onClick={() => setOpen(false)}>
+            Cancel
+          </Button>
 
-        <Input
-          placeholder="Flow Id"
-          value={id}
-          onChange={(e) => setId(e.target.value)}
-        />
-      </div>
+          <Button disabled={loading} onClick={reload}>
+            Reload current Flow
+          </Button>
+
+          <Button
+            disabled={!id || loading}
+            icon={loading ? <LoadingOutlined /> : <CloudDownloadOutlined />}
+            type="primary"
+            onClick={() => id && load(id)}
+          >
+            Load
+          </Button>
+        </>
+      }
+    >
+      <Input
+        placeholder="Flow Id"
+        value={id}
+        onChange={(e) => setId(e.target.value)}
+      />
     </Modal>
   );
 };

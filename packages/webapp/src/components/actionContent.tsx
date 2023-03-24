@@ -1,4 +1,4 @@
-import { InputNumber } from "antd";
+import { Col, InputNumber, Row, Space } from "antd";
 import { useMemo } from "react";
 import { useRecoilState } from "recoil";
 
@@ -106,12 +106,13 @@ export const ActionContent: React.FC<ActionContentProps> = ({ id }) => {
   }, [data, setData]);
 
   return (
-    <div className={styles.content}>
+    <div style={{ display: "grid", gap: 8 }}>
       {inputs.length === 0 && (
-        <div className={styles.noContent}>
+        <Space direction="vertical" align="center" size={0}>
           <InfoCircleOutlined style={{ fontSize: 18, fontWeight: "bold" }} />
+
           <span>No Input needed here</span>
-        </div>
+        </Space>
       )}
 
       {inputs}

@@ -1,4 +1,4 @@
-import { Typography } from "antd";
+import { Space, Typography } from "antd";
 import { useRecoilValue } from "recoil";
 
 import { dataAtom } from "@/state/data";
@@ -28,12 +28,24 @@ export const ActionHeader: React.FC<ActionHeaderProps> = ({ id }) => {
   const data = useRecoilValue(dataAtom(id));
 
   return (
-    <div className={styles.headlineContainer}>
+    <div
+      style={{
+        display: "flex",
+        flexDirection: "column",
+      }}
+    >
       <h3>
         {index}. {TypeLabels[data.type]}
       </h3>
 
-      <span className={styles.subHeadline}>{id}</span>
+      <span
+        style={{
+          fontSize: "8px",
+          fontWeight: "lighter",
+        }}
+      >
+        {id}
+      </span>
     </div>
   );
 };

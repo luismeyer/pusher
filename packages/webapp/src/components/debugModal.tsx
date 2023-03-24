@@ -94,7 +94,7 @@ export const DebugModal: React.FC<DebugModalProps> = ({ setOpen, open }) => {
         spinning={loading}
         indicator={<LoadingOutlined style={{ fontSize: 48 }} spin />}
       >
-        <video ref={videoRef} className={styles.video} src={video} controls />
+        <video style={{ width: "100%" }} ref={videoRef} src={video} controls />
 
         {error && (
           <Typography.Text type="danger">

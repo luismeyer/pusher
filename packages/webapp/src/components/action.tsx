@@ -1,4 +1,4 @@
-import { Card, theme } from "antd";
+import { Card, Space, theme } from "antd";
 import React, { useEffect, useMemo, useRef } from "react";
 import { useRecoilCallback, useRecoilState, useRecoilValue } from "recoil";
 
@@ -91,23 +91,32 @@ export const Action: React.FC<ActionProps> = ({ id }) => {
 
   return (
     <div
+      key={id}
       ref={ref}
       onMouseDown={handleMouseDown}
       onMouseUp={handleMouseUp}
-      className={styles.container}
-      key={id}
-      style={{ top: position.y, left: position.x, cursor }}
+      className={styles.action}
+      style={{
+        position: "absolute",
+        borderRadius: 5,
+        top: position.y,
+        left: position.x,
+        cursor,
+      }}
     >
       <Card
-        style={{ transition: "border-color 0.5s", borderColor }}
+        style={{
+          transition: "border-color 0.5s",
+          zIndex: 2,
+          borderColor,
+        }}
         bordered={true}
-        className={styles.card}
         title={
-          <div className={styles.header}>
+          <Space align="center" size="large">
             <ActionHeader id={id} />
 
             <ActionButtons id={id} disabled={isConnecting} />
-          </div>
+          </Space>
         }
       >
         <ActionContent id={id} />

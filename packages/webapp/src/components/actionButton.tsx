@@ -1,4 +1,4 @@
-import { Button, Dropdown } from "antd";
+import { Button, Dropdown, Space } from "antd";
 import { MenuClickEventHandler } from "rc-menu/lib/interface";
 import React, { useCallback, useMemo } from "react";
 import {
@@ -125,7 +125,7 @@ export const ActionButtons: React.FC<ActionButtonsProps> = ({
   const decisionAction = useMemo(() => isDecisionAction(data), [data]);
 
   return (
-    <div className={styles.buttons}>
+    <Space size="small">
       {!decisionAction && (
         <Button
           type="dashed"
@@ -175,6 +175,6 @@ export const ActionButtons: React.FC<ActionButtonsProps> = ({
         icon={<DeleteOutlined />}
         onClick={handleDeleteClick}
       />
-    </div>
+    </Space>
   );
 };

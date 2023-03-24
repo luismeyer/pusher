@@ -25,11 +25,17 @@ export const Canvas: React.FC<CanvasProps> = ({ zoom }) => {
 
   return (
     <div
-      className={styles.canvas}
       ref={canvasRef}
       onMouseMove={handleDrag}
       onClick={cancelConnect}
-      style={{ zoom }}
+      style={{
+        zoom,
+        width: "100%",
+        height: "100%",
+        position: "relative",
+        overflow: "scroll",
+        padding: "50px",
+      }}
     >
       {actionIds.map((id) => (
         <Action key={id} id={id} />
