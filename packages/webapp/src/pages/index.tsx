@@ -1,8 +1,7 @@
-import { Button, Typography } from "antd";
 import Head from "next/head";
-import Link from "next/link";
 
-import styles from "@/styles/index.module.css";
+import { Stage } from "@/components/stage";
+import { HowItWorks } from "../components/howItWorks";
 
 export default function Home() {
   return (
@@ -14,18 +13,10 @@ export default function Home() {
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
-      <main>
-        <div className={styles.container}>
-          <Typography.Title className={styles.headline}>
-            Pusher
-          </Typography.Title>
+      <main style={{ padding: "0 0 200px 0" }}>
+        <Stage />
 
-          <Link href="./console">
-            <Button className={styles.navButton} type="primary">
-              Open Console
-            </Button>
-          </Link>
-        </div>
+        <HowItWorks />
       </main>
     </>
   );

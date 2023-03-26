@@ -76,7 +76,7 @@ const fetchArchive = async () => {
   const archivePath = "/tmp/" + archiveFilename;
 
   if (existsSync(archivePath)) {
-    console.log("Archive already exists");
+    console.info("Archive already exists");
     return archivePath;
   }
 
@@ -92,7 +92,7 @@ const decompressArchive = async (archivePath) => {
   console.info("Decompressing ffmpeg archive");
 
   return decompress(archivePath, tmpPath, { plugins }).then(async (files) => {
-    console.log("Decompress done!");
+    console.info("Decompress done!");
 
     const file = files.find(({ path }) => path.endsWith("ffmpeg"));
 
@@ -127,7 +127,7 @@ const runLocal = async () => {
   const path = resolve(tmpPath, "ffmpeg");
 
   if (existsSync(path)) {
-    console.log("ffmpeg File already exists");
+    console.info("ffmpeg File already exists");
     return;
   }
 
