@@ -8,6 +8,7 @@
     "deploy": "npx cdk deploy",
     "dev": "ts-node src/dev/index.ts",
     "dev:scheduler": "ts-node src/dev/invokeScheduler.ts",
+    "dev:cleaner": "ts-node src/dev/invokeCleaner.ts",
     "synth": "npx cdk synth",
     "ts": "tsc --build"
   },
