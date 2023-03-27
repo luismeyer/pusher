@@ -1,7 +1,13 @@
 import { Typography, Button, Badge } from "antd";
 import Image from "next/image";
 import Link from "next/link";
-import React, { useCallback, useEffect, useRef, useState } from "react";
+import React, {
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
 
 import bellImage from "../../public/bell.png";
 
@@ -92,12 +98,16 @@ export const Stage: React.FC = () => {
 
   const tiltAngle = 3;
 
+  const title = useMemo(() => `Create Push Notifications for ${text}`, [text]);
+
+  const height = "95vh";
+
   return (
     <>
       <div
         style={{
           width: "100vw",
-          height: "95vh",
+          height,
           background: "linear-gradient(200deg, #0b3b74, #072448)",
           position: "absolute",
           transform: `skewY(${tiltAngle}deg)`,
@@ -107,7 +117,7 @@ export const Stage: React.FC = () => {
 
       <div
         style={{
-          height: "100vh",
+          height,
           padding: "0 0 10vh 10vw",
           position: "relative",
         }}
@@ -124,6 +134,7 @@ export const Stage: React.FC = () => {
             <h1 style={{ color: "white" }}>Pusher</h1>
           </Badge>
         </div>
+
         <div
           style={{
             display: "grid",
@@ -141,7 +152,7 @@ export const Stage: React.FC = () => {
                 fontSize: "3.5vw",
               }}
             >
-              Create Push Notifications for {text}
+              {title}
               {cursor && <span>|</span>}
             </Typography.Title>
 
