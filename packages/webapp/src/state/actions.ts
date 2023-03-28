@@ -1,11 +1,5 @@
 import { useCallback, useState } from "react";
-import {
-  atom,
-  selector,
-  useRecoilCallback,
-  useRecoilState,
-  useSetRecoilState,
-} from "recoil";
+import { atom, selector, useRecoilCallback, useSetRecoilState } from "recoil";
 import { v4 } from "uuid";
 
 import { Action, isDecisionAction, isNavigationAction } from "@pusher/shared";

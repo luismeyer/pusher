@@ -1,21 +1,15 @@
 import { useEffect, useState } from "react";
-import { useRecoilCallback, useRecoilState, useRecoilValue } from "recoil";
-import {
-  connectEndAtom,
-  connectStartAtom,
-  connectTypeAtom,
-} from "../state/connect";
+import { useRecoilCallback, useRecoilValue } from "recoil";
 
-import { Line as LineData } from "../state/line";
-import { positionAtom } from "../state/position";
-import { sizeAtom } from "../state/size";
+import { canvasAtom } from "@/state/canvas";
+import { connectStartAtom, connectTypeAtom } from "@/state/connect";
+import { Line as LineData } from "@/state/line";
+import { positionAtom } from "@/state/position";
+import { sizeAtom } from "@/state/size";
+
 import { Line } from "./line";
 
-type CurrentLineProps = {
-  canvas: React.RefObject<HTMLDivElement>;
-};
-
-export const CurrentLine: React.FC<CurrentLineProps> = ({ canvas }) => {
+export const CurrentLine: React.FC = () => {
   const [currentLine, setCurrentLine] = useState<LineData | undefined>();
 
   const connectStart = useRecoilValue(connectStartAtom);
@@ -35,15 +29,17 @@ export const CurrentLine: React.FC<CurrentLineProps> = ({ canvas }) => {
 
         const type = await snapshot.getPromise(connectTypeAtom);
 
+        const canvas = await snapshot.getPromise(canvasAtom);
+
         setCurrentLine({
           ax: position.x + size.width / 2,
           ay: position.y + size.height / 2,
-          bx: event.clientX - (canvas.current?.offsetLeft ?? 0),
-          by: event.clientY - (canvas.current?.offsetTop ?? 0),
+          bx: event.clientX - canvas.offSetX,
+          by: event.clientY - canvas.offSetY,
           type,
         });
       },
-    [canvas.current, setCurrentLine]
+    [setCurrentLine]
   );
 
   useEffect(() => {
