@@ -3,8 +3,9 @@ import { Application } from "express";
 import { join } from "path";
 import { Lambda, LambdaMode } from "runl";
 
+import { ApiFunction } from "../createApi";
 import { FunctionOptions } from "../createFunction";
-import { ApiFunction, RunnerFunction } from "../stack";
+import { RunnerFunction } from "../createRunner";
 import { getQueryStringParameters } from "./getQuerystringParameters";
 import { getRequestHeaders } from "./getRequestHeaders";
 

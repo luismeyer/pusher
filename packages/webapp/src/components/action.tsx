@@ -105,10 +105,12 @@ export const Action: React.FC<ActionProps> = ({ id }) => {
       }}
     >
       <Card
+        hoverable
         style={{
           transition: "border-color 0.5s",
           zIndex: 2,
           borderColor,
+          cursor,
         }}
         bordered={true}
         title={
