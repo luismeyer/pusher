@@ -4,8 +4,9 @@ import { useRecoilCallback } from "recoil";
 import { dragIdAtom } from "@/state/drag";
 import { positionAtom } from "@/state/position";
 import { sizeAtom } from "@/state/size";
+import { canvasAtom } from "../state/canvas";
 
-export const useDrag = (canvas: React.RefObject<HTMLDivElement>) => {
+export const useDrag = () => {
   // refs stores the offset of the pointer from the top left corner of the action
   const pointerActionOffsetX = useRef<number>();
   const pointerActionOffsetY = useRef<number>();
@@ -48,12 +49,14 @@ export const useDrag = (canvas: React.RefObject<HTMLDivElement>) => {
           return;
         }
 
+        const canvas = await snapshot.getPromise(canvasAtom);
+
         const {
-          scrollHeight: canvasHeight = 0,
-          scrollWidth: canvasWidth = 0,
-          offsetLeft: canvasOffsetX = 0,
-          offsetTop: canvasOffsetY = 0,
-        } = canvas.current ?? {};
+          height: canvasHeight = 0,
+          width: canvasWidth = 0,
+          offSetX: canvasOffsetX = 0,
+          offSetY: canvasOffsetY = 0,
+        } = canvas;
 
         const { height: actionHeight = 0, width: actionWidth = 0 } = size;
 
@@ -79,7 +82,7 @@ export const useDrag = (canvas: React.RefObject<HTMLDivElement>) => {
           set(positionAtom(dragId), (pre) => ({ ...pre, y: newY }));
         }
       },
-    [pointerActionOffsetX.current, pointerActionOffsetY.current, canvas.current]
+    [pointerActionOffsetX.current, pointerActionOffsetY.current]
   );
 
   return handleDrag;
