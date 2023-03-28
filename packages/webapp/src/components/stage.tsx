@@ -20,46 +20,67 @@ const Texts = [
 export const Stage: React.FC = () => {
   const [text, setText] = useState("");
 
+  const [restText, setRestText] = useState("");
+
   const pointerIndex = useRef(0);
 
   const [cursor, setCursor] = useState(true);
 
-  const deleteText = (text: string) =>
-    new Promise((res) => {
-      const id = setInterval(() => {
-        if (pointerIndex.current === 0) {
-          clearInterval(id);
-          res(true);
+  const updateText = (text: string, index: number) => {
+    const letters = text.slice(0, index);
 
-          return;
-        }
+    const rest = text
+      .slice(index)
+      .split("")
+      .map(() => "\u00A0")
+      .join("");
 
-        pointerIndex.current = pointerIndex.current - 1;
+    setText(letters);
+    setRestText(rest);
+  };
 
-        setText(text.slice(0, pointerIndex.current));
-      }, 50);
-    });
+  const deleteText = useCallback(
+    (text: string) =>
+      new Promise((res) => {
+        const id = setInterval(() => {
+          if (pointerIndex.current === 0) {
+            clearInterval(id);
+            res(true);
 
-  const createText = (text: string) =>
-    new Promise((res) => {
-      const id = setInterval(async () => {
-        const random = Math.floor(Math.random() * 10);
-        if (random === 0) {
-          return;
-        }
+            return;
+          }
 
-        if (pointerIndex.current > text.length) {
-          clearInterval(id);
-          res(true);
+          pointerIndex.current = pointerIndex.current - 1;
 
-          return;
-        }
+          updateText(text, pointerIndex.current);
+        }, 50);
+      }),
+    []
+  );
 
-        setText(text.slice(0, pointerIndex.current));
+  const createText = useCallback(
+    (text: string) =>
+      new Promise((res) => {
+        const id = setInterval(async () => {
+          const random = Math.floor(Math.random() * 10);
+          if (random === 0) {
+            return;
+          }
 
-        pointerIndex.current = pointerIndex.current + 1;
-      }, 50);
-    });
+          if (pointerIndex.current > text.length) {
+            clearInterval(id);
+            res(true);
+
+            return;
+          }
+
+          pointerIndex.current = pointerIndex.current + 1;
+
+          updateText(text, pointerIndex.current);
+        }, 75);
+      }),
+    []
+  );
 
   const renderPointer = () => {
     const id = setInterval(() => {
@@ -90,7 +111,7 @@ export const Stage: React.FC = () => {
         await deleteText(text);
       }
     }
-  }, []);
+  }, [createText, deleteText]);
 
   useEffect(() => {
     renderTexts();
@@ -117,24 +138,24 @@ export const Stage: React.FC = () => {
 
       <div
         style={{
+          position: "absolute",
+          top: 20,
+          left: "50%",
+          transform: "translateX(-50%)",
+        }}
+      >
+        <Badge count={100}>
+          <h1 style={{ color: "white" }}>Pusher</h1>
+        </Badge>
+      </div>
+
+      <div
+        style={{
           height,
           padding: "0 0 10vh 10vw",
           position: "relative",
         }}
       >
-        <div
-          style={{
-            position: "absolute",
-            top: 20,
-            left: "50%",
-            transform: "translateX(-50%)",
-          }}
-        >
-          <Badge count={100}>
-            <h1 style={{ color: "white" }}>Pusher</h1>
-          </Badge>
-        </div>
-
         <div
           style={{
             display: "grid",
@@ -153,7 +174,8 @@ export const Stage: React.FC = () => {
               }}
             >
               {title}
-              {cursor && <span>|</span>}
+              {cursor && "|"}
+              {restText}
             </Typography.Title>
 
             <Link href="./console">
