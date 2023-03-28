@@ -8,8 +8,8 @@ import {
   ListTablesCommand,
 } from "@aws-sdk/client-dynamodb";
 
+import { TableOptions } from "../createTable";
 import { Environment } from "../readEnv";
-import { TableOptions } from "../stack";
 
 const tmpPath = resolve(__dirname, "../../../../tmp");
 

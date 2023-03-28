@@ -1,4 +1,4 @@
-import { SchedulerFunctions } from "../stack";
+import { SchedulerFunctions } from "../createSchedulers";
 import { invokeCronLambda } from "./invokeCronLambda";
 
 const main = async () => {
