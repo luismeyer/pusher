@@ -20,8 +20,8 @@ export const flowAtom = atom<FlowData>({
   },
 });
 
-export const flowParamsSelector = selector({
-  key: "FlowParam",
+export const flowSelector = selector<Flow | undefined>({
+  key: "FlowSelector",
   get: ({ get }) => {
     const flowData = get(flowAtom);
 
@@ -31,10 +31,21 @@ export const flowParamsSelector = selector({
       return undefined;
     }
 
-    const flow: Flow = {
+    return {
       ...flowData,
       actionTree,
     };
+  },
+});
+
+export const flowParamsSelector = selector({
+  key: "FlowParam",
+  get: ({ get }) => {
+    const flow = get(flowSelector);
+
+    if (!flow) {
+      return undefined;
+    }
 
     const params = new URLSearchParams();
     params.set("flow", encodeURIComponent(JSON.stringify(flow)));

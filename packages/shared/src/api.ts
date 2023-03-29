@@ -22,3 +22,7 @@ export type LoadSuccessResponse = {
 };
 
 export type LoadResponse = LoadErrorResponse | LoadSuccessResponse;
+
+export type ValidateResponse =
+  | { isValid: true }
+  | { isValid: false; error?: string };

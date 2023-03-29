@@ -1,8 +1,8 @@
+import { Button, Layout, Space } from "antd";
 import Head from "next/head";
 
+import { HowItWorks } from "@/components/howItWorks";
 import { Stage } from "@/components/stage";
-import { HowItWorks } from "../components/howItWorks";
-import { Button, Layout, Space } from "antd";
 import { GithubOutlined } from "@ant-design/icons";
 
 export default function Home() {
