@@ -17,9 +17,13 @@ export const SubmitModal: React.FC<SubmitModalProps> = ({ setOpen, open }) => {
 
   const flowData = useRecoilValue(flowAtom);
 
-  const getFlowParams = useRecoilCallback(({ snapshot }) => async () => {
-    return await snapshot.getPromise(flowParamsSelector);
-  });
+  const getFlowParams = useRecoilCallback(
+    ({ snapshot }) =>
+      async () => {
+        return await snapshot.getPromise(flowParamsSelector);
+      },
+    []
+  );
 
   const fetchApi = useFetchApi();
 

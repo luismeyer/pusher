@@ -11,7 +11,7 @@ export const useFetchApi = () => {
 
   return useCallback(
     async <T>(
-      path: "debug" | "submit" | "load" | "token",
+      path: "debug" | "submit" | "load" | "token" | "validate",
       params?: URLSearchParams
     ): Promise<T | undefined> => {
       const query = params ? `?${params?.toString()}` : "";

@@ -12,14 +12,13 @@ import { useMemo, useState } from "react";
 import { useRecoilState } from "recoil";
 
 import { flowAtom } from "@/state/flow";
-import styles from "@/styles/topbar.module.css";
 import { isInterval } from "@pusher/shared";
 
 import { DebugModal } from "./debugModal";
 import { ExecutionsDrawer } from "./executionsDrawer";
-import { LoadFlowModal } from "./loadFlowModel";
-import { SubmitModal } from "./submitModal";
+import { LoadFlowDrawer } from "./loadFlowDrawer";
 import { ResetModal } from "./resetModal";
+import { SubmitModal } from "./submitModal";
 
 export const TopBar: React.FC = () => {
   const [flowData, setFlowData] = useRecoilState(flowAtom);
@@ -94,23 +93,34 @@ export const TopBar: React.FC = () => {
           </Row>
 
           <Row gutter={[8, 8]}>
-            <Col span={12}>
+            <Col span={8}>
               <Button
                 type="default"
                 block
                 onClick={() => setIsLoadFlowOpen(true)}
               >
-                Load Flow
+                Load
               </Button>
             </Col>
 
-            <Col span={12}>
+            <Col span={8}>
               <Button
                 type="default"
                 block
                 onClick={() => setIsExecutionsOpen(true)}
               >
-                Flow executions
+                Executions
+              </Button>
+            </Col>
+
+            <Col span={8}>
+              <Button
+                block
+                type="default"
+                danger
+                onClick={() => setIsResetOpen(true)}
+              >
+                Reset
               </Button>
             </Col>
           </Row>
@@ -130,24 +140,13 @@ export const TopBar: React.FC = () => {
               />
             </Col>
 
-            <Col span={8}>
+            <Col span={12}>
               <Button block type="default" onClick={() => setIsDebugOpen(true)}>
                 Test
               </Button>
             </Col>
 
-            <Col span={8}>
-              <Button
-                block
-                type="default"
-                danger
-                onClick={() => setIsResetOpen(true)}
-              >
-                Reset
-              </Button>
-            </Col>
-
-            <Col span={8}>
+            <Col span={12}>
               <Button
                 block
                 type="primary"
@@ -160,7 +159,7 @@ export const TopBar: React.FC = () => {
         </div>
       </div>
 
-      <LoadFlowModal
+      <LoadFlowDrawer
         defaultId={flowData.id}
         open={isLoadFlowOpen}
         setOpen={setIsLoadFlowOpen}

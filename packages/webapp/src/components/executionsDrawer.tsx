@@ -28,7 +28,7 @@ export const ExecutionsDrawer: React.FC<ExecutionsDrawerProps> = ({
 
   return (
     <Drawer
-      title={"Executions Configuration"}
+      title="Executions Configuration"
       placement="left"
       size="large"
       onClose={() => setOpen(false)}

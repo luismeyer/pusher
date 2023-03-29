@@ -1,28 +1,19 @@
-import { useRouter } from "next/router";
-import { useCallback, useRef, useState } from "react";
+import { useRef } from "react";
 import { useRecoilCallback } from "recoil";
 
 import { actionIdsAtom } from "@/state/actions";
 import { dataAtom } from "@/state/data";
 import { flowAtom } from "@/state/flow";
 import { relationAtom } from "@/state/relation";
-import { useFetchApi } from "@/hooks/useFetchApi";
 import {
   Action,
   Flow,
   isDecisionAction,
   isNavigationAction,
-  LoadResponse,
 } from "@pusher/shared";
-import { positionAtom } from "../state/position";
+import { positionAtom } from "@/state/position";
 
-export const useLoadFlow = () => {
-  const [loading, setLoading] = useState(false);
-
-  const router = useRouter();
-
-  const fetchApi = useFetchApi();
-
+export const useStoreFlow = () => {
   // this ref is a workaround. When setting the actionsIds inside
   // of the storeAction callback, the atom is wrongly updated and
   // misses the first action id. Also we can ensure this way that
@@ -84,32 +75,5 @@ export const useLoadFlow = () => {
     set(actionIdsAtom, actionIds.current);
   });
 
-  const loadFlow = useCallback(
-    async (id: string) => {
-      if (!router.isReady || loading) {
-        return;
-      }
-
-      setLoading(true);
-
-      const response = await fetchApi<LoadResponse>(
-        "load",
-        new URLSearchParams({ id: id })
-      );
-
-      if (response?.type === "success") {
-        await storeFlow(response.flow);
-      }
-
-      setLoading(false);
-
-      return response;
-    },
-    [fetchApi, loading, router.isReady, storeFlow]
-  );
-
-  return {
-    loading,
-    loadFlow,
-  };
+  return storeFlow;
 };
