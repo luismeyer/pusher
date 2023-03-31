@@ -16,8 +16,6 @@
     "dev:cleaner": "lerna run dev:cleaner --scope=@pusher/aws",
     "build": "lerna run build",
     "synth": "lerna run synth",
-    "deploy:aws": "lerna run deploy --scope=@pusher/aws",
-    "deploy:vercel": "npx vercel deploy",
     "setup": "node scripts/setup.mjs"
   },
   "devDependencies": {

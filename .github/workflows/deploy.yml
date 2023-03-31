@@ -19,7 +19,7 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: 16.x
-          cache: "npm"
+          cache: npm
 
       - name: Install
         run: npm install
@@ -28,7 +28,7 @@ jobs:
         run: npm run build
 
       - name: Deploy AWS
-        env:  
+        env:
           TELEGRAM_TOKEN: ${{ secrets.TELEGRAM_TOKEN }}
           BUCKET_NAME: ${{ secrets.BUCKET_NAME }}
           TABLE_NAME: ${{ secrets.TABLE_NAME }}
@@ -38,13 +38,13 @@ jobs:
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           PUSHER_AUTH_TOKEN: ${{ secrets.PUSHER_AUTH_TOKEN }}
-        run: npm run deploy:aws -- -- --require-approval=never
+        run: lerna run deploy --scope=@pusher/aws -- --require-approval=never
 
       - name: Deploy Vercel
-        run: npm run deploy:vercel -- --prod --yes --token=${{ secrets.VERCEL_TOKEN }}
+        run: vercel deploy --prod --yes --token=${{ secrets.VERCEL_TOKEN }}
 
       - name: Setup
-        env: 
+        env:
           BUCKET_NAME: ${{ secrets.BUCKET_NAME }}
           MAC_FFMPEG_URL: ${{ vars.MAC_FFMPEG_URL }}
           LINUX_FFMPEG_URL: ${{ vars.LINUX_FFMPEG_URL }}
