@@ -15,7 +15,6 @@
     "dev:scheduler": "lerna run dev:scheduler --scope=@pusher/aws",
     "dev:cleaner": "lerna run dev:cleaner --scope=@pusher/aws",
     "build": "lerna run build",
-    "synth": "lerna run synth",
     "setup": "node scripts/setup.mjs"
   },
   "devDependencies": {
