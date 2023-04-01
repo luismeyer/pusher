@@ -32,14 +32,13 @@ export const HowItWorks: React.FC = () => {
                 Use the Top Navigation to configure your Flows Name, Interval,
                 Fails and Executions. Pick a <b>Name</b> to identify the Flow,
                 it will not be visible to other people.
-                <br /> The <b>Interval</b> is the time between two executions of
-                the Flow. Currently you can choose between 6 Hours and 12 Hours.
-                <br /> <b>Fails</b> displays the amount how oftern the Flow
-                failed in the cloud. The Flow will no longer be executed after 3
-                Fails. Make sure to reset this value after you fixed a failing
-                Flow.
+                <br /> The <b>Interval</b> is the time between two executions.
+                Currently you can choose between 6 Hours and 12 Hours.
+                <br /> <b>Fails</b> display the amount how often the Flow failed
+                in the cloud. After 3 Fails it will no longer be executed. Make
+                sure to reset this value after you fixed a failing Flow.
                 <br /> With <b>Executions</b> you can run your Flow multiple
-                Times with dynamic Data. Inside the Menu you can create
+                Times handling dynamic Data. Inside the Menu you can create
                 Executions and build Variables that can then be placed inside
                 the Actions.
               </p>
@@ -97,16 +96,16 @@ export const HowItWorks: React.FC = () => {
             icon: <span style={DotStyle}>☁️</span>,
             title: (
               <Typography.Title level={3}>
-                Submit and make it run in the cloud
+                Submit and run it in the cloud
               </Typography.Title>
             ),
             description: (
               <p>
-                Once your done testing you Flow you can submit it to the cloud.
-                Afterwards it will be executed based on the Interval you defined
-                previously. Save you Flow ID so you can always come back and
-                edit your Flow. If you are not done building you Flow but dont
-                wanna loose the Progress, you can disable it before you
+                Once you are done testing your Flow you can submit it to the
+                cloud. Afterwards it will be executed based on the Interval you
+                defined previously. Save the Flow ID so you can always come back
+                and edit the Flow later. If you are not done building youre Flow
+                but dont wanna loose the Progress, you can disable it before
                 submission to avoid fails.
               </p>
             ),
