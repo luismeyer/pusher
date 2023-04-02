@@ -4,6 +4,7 @@ import { ConnectType } from "./connect";
 import { positionAtom } from "./position";
 import { relationAtom } from "./relation";
 import { sizeAtom } from "./size";
+import { zoomAtom } from "./zoom";
 
 export type Line = {
   ax: number;
@@ -34,11 +35,13 @@ export const lineSelector = selectorFamily({
         const nextPosition = get(positionAtom(nextId));
         const nextSize = get(sizeAtom(nextId));
 
+        const zoom = get(zoomAtom);
+
         return {
-          ax: position.x + size.width / 2,
-          ay: position.y + size.height / 2,
-          bx: nextPosition.x + nextSize.width / 2,
-          by: nextPosition.y + nextSize.height / 2,
+          ax: position.x + size.width / 2 / zoom,
+          ay: position.y + size.height / 2 / zoom,
+          bx: nextPosition.x + nextSize.width / 2 / zoom,
+          by: nextPosition.y + nextSize.height / 2 / zoom,
           type,
         };
       };

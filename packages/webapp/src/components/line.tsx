@@ -1,5 +1,5 @@
 import { theme } from "antd";
-import React, { useCallback, useEffect, useMemo, useState } from "react";
+import React, { useCallback, useMemo } from "react";
 
 import { useCancelConnect } from "@/hooks/useCancelConnect";
 import { Line as LineData } from "@/state/line";
@@ -8,7 +8,7 @@ type LineProps = {
   data: LineData;
 };
 
-type Border = "bottomLeft" | "bottomRight" | "topLeft" | "topRight";
+type Border = "bottomleft" | "bottomright" | "topleft" | "topright";
 
 type State = {
   width: number;
@@ -25,7 +25,7 @@ export const Line: React.FC<LineProps> = ({ data }) => {
 
   const calculateBorder = useCallback(
     ({ ax, ay, bx, by }: LineData, width: number, height: number) => {
-      let border: Border = "bottomLeft";
+      let border: Border = "bottomleft";
 
       if (ax < bx) {
         // a is left of b
@@ -36,14 +36,14 @@ export const Line: React.FC<LineProps> = ({ data }) => {
            * #####
            * ###b#
            */
-          border = height > width ? "bottomLeft" : "topRight";
+          border = height > width ? "bottomleft" : "topright";
         } else {
           /**
            * ###b#
            * #####
            * #a###
            */
-          border = height > width ? "topLeft" : "bottomRight";
+          border = height > width ? "topleft" : "bottomright";
         }
       }
 
@@ -56,14 +56,14 @@ export const Line: React.FC<LineProps> = ({ data }) => {
            * #####
            * #b###
            */
-          border = height > width ? "bottomRight" : "topLeft";
+          border = height > width ? "bottomright" : "topleft";
         } else {
           /**
            * #b###
            * #####
            * ###a#
            */
-          border = height > width ? "topRight" : "bottomLeft";
+          border = height > width ? "topright" : "bottomleft";
         }
       }
 
@@ -90,24 +90,7 @@ export const Line: React.FC<LineProps> = ({ data }) => {
     [calculateBorder]
   );
 
-  const [state, setState] = useState<State>(calculateState(data));
-
-  useEffect(() => {
-    const newState = calculateState(data);
-    const { width, height, x, y, border } = state;
-
-    if (
-      newState.width === width &&
-      newState.height === height &&
-      newState.x === x &&
-      newState.y === y &&
-      newState.border === border
-    ) {
-      return;
-    }
-
-    setState(newState);
-  }, [calculateState, data, state]);
+  const state = useMemo(() => calculateState(data), [calculateState, data]);
 
   const color = useMemo(() => {
     switch (data.type) {
@@ -122,25 +105,13 @@ export const Line: React.FC<LineProps> = ({ data }) => {
 
   const border = `2px dashed ${color}`;
 
-  const borderTop =
-    state.border === "topRight" || state.border === "topLeft"
-      ? border
-      : undefined;
+  const borderTop = state.border.includes("top") ? border : undefined;
 
-  const borderRight =
-    state.border === "topRight" || state.border === "bottomRight"
-      ? border
-      : undefined;
+  const borderRight = state.border.includes("right") ? border : undefined;
 
-  const borderLeft =
-    state.border === "topLeft" || state.border === "bottomLeft"
-      ? border
-      : undefined;
+  const borderLeft = state.border.includes("left") ? border : undefined;
 
-  const borderBottom =
-    state.border === "bottomLeft" || state.border === "bottomRight"
-      ? border
-      : undefined;
+  const borderBottom = state.border.includes("bottom") ? border : undefined;
 
   const cancelConnect = useCancelConnect();
 

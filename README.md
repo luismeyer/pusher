@@ -18,7 +18,7 @@ npm run dev
 This will start:
 
 - Next Webapp on <http://localhost:3000/>
-- Lambda Invocation Server on <http://localhost:300>
+- Lambda Invocation Server on <http://localhost:3002>
 - Lambda HTTP Proxy Endpoint on <http://localhost:3004>
 - S3 Server on <http://localhost:3001/>
 - DynamoDB Server on <http://localhost:3003>

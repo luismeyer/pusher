@@ -1,9 +1,8 @@
-import { FloatButton, Layout, theme } from "antd";
+import { Layout, theme } from "antd";
 import dynamic from "next/dynamic";
-import { useState } from "react";
 
 import { SideBar } from "@/components/sideBar";
-import { MinusOutlined, PlusOutlined } from "@ant-design/icons";
+import { Zoom } from "./zoom";
 
 const Canvas = dynamic(
   import("@/components/canvas").then((i) => i.Canvas),
@@ -22,8 +21,6 @@ export const Console: React.FC = () => {
     token: { colorBgContainer },
   } = theme.useToken();
 
-  const [zoom, setZoom] = useState(1);
-
   return (
     <Layout style={{ height: "100vh" }}>
       <Header style={{ height: "auto", backgroundColor: "#072448" }}>
@@ -37,18 +34,9 @@ export const Console: React.FC = () => {
 
         <Layout style={{ padding: "24px" }}>
           <Content style={{ background: colorBgContainer }}>
-            <Canvas zoom={zoom} />
+            <Canvas />
 
-            <FloatButton.Group shape="square" style={{ right: 35, bottom: 35 }}>
-              <FloatButton
-                icon={<PlusOutlined />}
-                onClick={() => setZoom((pre) => pre + 0.1)}
-              />
-              <FloatButton
-                icon={<MinusOutlined />}
-                onClick={() => setZoom((pre) => pre - 0.1)}
-              />
-            </FloatButton.Group>
+            <Zoom />
           </Content>
         </Layout>
       </Layout>

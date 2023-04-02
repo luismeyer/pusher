@@ -6,6 +6,7 @@ import { connectStartAtom, connectTypeAtom } from "@/state/connect";
 import { Line as LineData } from "@/state/line";
 import { positionAtom } from "@/state/position";
 import { sizeAtom } from "@/state/size";
+import { zoomAtom } from "@/state/zoom";
 
 import { Line } from "./line";
 
@@ -31,9 +32,11 @@ export const CurrentLine: React.FC = () => {
 
         const canvas = await snapshot.getPromise(canvasAtom);
 
+        const zoom = await snapshot.getPromise(zoomAtom);
+
         setCurrentLine({
-          ax: position.x + size.width / 2,
-          ay: position.y + size.height / 2,
+          ax: position.x + size.width / 2 / zoom,
+          ay: position.y + size.height / 2 / zoom,
           bx: event.clientX - canvas.offSetX,
           by: event.clientY - canvas.offSetY,
           type,
