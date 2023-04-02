@@ -11,11 +11,7 @@ import { Action } from "./action";
 import { CurrentLine } from "./currentLine";
 import { Lines } from "./lines";
 
-type CanvasProps = {
-  zoom: number;
-};
-
-export const Canvas: React.FC<CanvasProps> = ({ zoom }) => {
+export const Canvas: React.FC = () => {
   const actionIds = useRecoilValue(actionIdsAtom);
 
   const canvasRef = useRef<HTMLDivElement>(null);
@@ -34,8 +30,8 @@ export const Canvas: React.FC<CanvasProps> = ({ zoom }) => {
     }
 
     setCanvas({
-      width: canvasRef.current.offsetWidth,
-      height: canvasRef.current.offsetHeight,
+      width: canvasRef.current.scrollWidth,
+      height: canvasRef.current.scrollHeight,
       offSetX: canvasRef.current.offsetLeft,
       offSetY: canvasRef.current.offsetTop,
     });
@@ -47,12 +43,10 @@ export const Canvas: React.FC<CanvasProps> = ({ zoom }) => {
       onMouseMove={handleDrag}
       onClick={cancelConnect}
       style={{
-        zoom,
         width: "100%",
         height: "100%",
         position: "relative",
         overflow: "scroll",
-        padding: "50px",
       }}
     >
       {actionIds.map((id) => (

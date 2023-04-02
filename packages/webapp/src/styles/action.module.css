@@ -1,3 +1,7 @@
+.action {
+  z-index: 1;
+}
+
 .action:hover {
   z-index: 10;
 }

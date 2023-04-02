@@ -3,9 +3,10 @@ import React, { useEffect, useMemo, useRef } from "react";
 import { useRecoilCallback, useRecoilState, useRecoilValue } from "recoil";
 
 import { useConnect } from "@/hooks/useConnect";
-import { useSizeSync } from "@/hooks/useSizeSync";
 import { dragIdAtom } from "@/state/drag";
 import { positionAtom } from "@/state/position";
+import { sizeAtom } from "@/state/size";
+import { zoomAtom } from "@/state/zoom";
 import styles from "@/styles/action.module.css";
 
 import { ActionButtons } from "./actionButton";
@@ -17,11 +18,27 @@ type ActionProps = {
 };
 
 export const Action: React.FC<ActionProps> = ({ id }) => {
+  const zoom = useRecoilValue(zoomAtom);
+
   const position = useRecoilValue(positionAtom(id));
 
   const ref = useRef<HTMLDivElement>(null);
 
-  useSizeSync(id, ref);
+  const [size, setSize] = useRecoilState(sizeAtom(id));
+
+  // saves the element height in the atom
+  useEffect(() => {
+    const { height = 0, width = 0 } =
+      ref.current?.getBoundingClientRect() ?? {};
+
+    if (size.height !== height) {
+      setSize((pre) => ({ ...pre, height }));
+    }
+
+    if (size.width !== width) {
+      setSize((pre) => ({ ...pre, width }));
+    }
+  }, [ref, setSize, size.height, size.width, zoom]);
 
   const {
     connectPreviousAction,
@@ -54,20 +71,19 @@ export const Action: React.FC<ActionProps> = ({ id }) => {
     );
 
   // stop drag
-  const handleMouseUp: React.MouseEventHandler<HTMLDivElement> =
-    useRecoilCallback(
-      ({ snapshot, set }) =>
-        async () => {
-          const dragId = await snapshot.getPromise(dragIdAtom);
+  const stopDrag: React.MouseEventHandler<HTMLDivElement> = useRecoilCallback(
+    ({ snapshot, set }) =>
+      async () => {
+        const dragId = await snapshot.getPromise(dragIdAtom);
 
-          if (!dragId) {
-            return;
-          }
+        if (!dragId) {
+          return;
+        }
 
-          set(dragIdAtom, undefined);
-        },
-      []
-    );
+        set(dragIdAtom, undefined);
+      },
+    []
+  );
 
   const cursor = useMemo(() => {
     if (allowConnect) {
@@ -94,9 +110,11 @@ export const Action: React.FC<ActionProps> = ({ id }) => {
       key={id}
       ref={ref}
       onMouseDown={handleMouseDown}
-      onMouseUp={handleMouseUp}
+      onMouseUp={stopDrag}
+      onMouseLeave={stopDrag}
       className={styles.action}
       style={{
+        transform: `scale(${zoom})`,
         position: "absolute",
         borderRadius: 5,
         top: position.y,

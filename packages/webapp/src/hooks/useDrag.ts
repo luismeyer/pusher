@@ -4,7 +4,6 @@ import { useRecoilCallback } from "recoil";
 import { canvasAtom } from "@/state/canvas";
 import { dragIdAtom } from "@/state/drag";
 import { positionAtom } from "@/state/position";
-import { sizeAtom } from "@/state/size";
 
 export const useDrag = () => {
   // refs stores the offset of the pointer from the top left corner of the action
@@ -43,7 +42,6 @@ export const useDrag = () => {
         const { clientX, clientY } = event;
 
         const position = await snapshot.getPromise(positionAtom(dragId));
-        const size = await snapshot.getPromise(sizeAtom(dragId));
 
         if (!position) {
           return;
@@ -51,21 +49,15 @@ export const useDrag = () => {
 
         const canvas = await snapshot.getPromise(canvasAtom);
 
-        const {
-          height: canvasHeight = 0,
-          width: canvasWidth = 0,
-          offSetX: canvasOffsetX = 0,
-          offSetY: canvasOffsetY = 0,
-        } = canvas;
+        const { offSetX: canvasOffsetX = 0, offSetY: canvasOffsetY = 0 } =
+          canvas;
 
-        const { height: actionHeight = 0, width: actionWidth = 0 } = size;
-
-        // set the pointer offset on the first drag event
+        // set the pointer offsetX on the first drag event
         if (!pointerActionOffsetX.current) {
           pointerActionOffsetX.current = clientX - canvasOffsetX - position.x;
         }
 
-        // set the pointer offset on the first drag event
+        // set the pointer offsetY on the first drag event
         if (!pointerActionOffsetY.current) {
           pointerActionOffsetY.current = clientY - canvasOffsetY - position.y;
         }
@@ -74,13 +66,9 @@ export const useDrag = () => {
 
         const newY = clientY - canvasOffsetY - pointerActionOffsetY.current;
 
-        if (newX + actionWidth <= canvasWidth && newX >= 0) {
-          set(positionAtom(dragId), (pre) => ({ ...pre, x: newX }));
-        }
+        set(positionAtom(dragId), (pre) => ({ ...pre, x: newX }));
 
-        if (newY + actionHeight <= canvasHeight && newY >= 0) {
-          set(positionAtom(dragId), (pre) => ({ ...pre, y: newY }));
-        }
+        set(positionAtom(dragId), (pre) => ({ ...pre, y: newY }));
       },
     [pointerActionOffsetX.current, pointerActionOffsetY.current]
   );
