@@ -20,6 +20,7 @@ const TypeLabels: Record<Action["type"], string> = {
   telegram: "Telegram",
   textContentMatches: "Text Content Matches",
   timeout: "Timeout",
+  storeTextContent: "Store Text Content in Variable",
 };
 
 export const ActionHeader: React.FC<ActionHeaderProps> = ({ id }) => {

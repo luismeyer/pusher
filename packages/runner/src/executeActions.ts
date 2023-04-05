@@ -1,17 +1,13 @@
 import { Page } from "puppeteer-core";
 
-import {
-  Action,
-  isDecisionAction,
-  isNavigationAction,
-  isSelectorAction,
-} from "@pusher/shared";
+import { Action, isDecisionAction, isNavigationAction } from "@pusher/shared";
 
 import { click } from "./click";
 import { exists } from "./exists";
 import { openPage } from "./openPage";
 import { scrollPageToBottom } from "./scrollPageToBottom";
 import { sendTelegramMessage } from "./sendTelegramMessage";
+import { textContent } from "./textContent";
 import { textContentMatches } from "./textContentMatches";
 import { timeout } from "./timeout";
 import { type } from "./type";
@@ -19,7 +15,7 @@ import { waitFor } from "./waitFor";
 
 const replaceVariables = (
   action: Action,
-  variables?: Record<string, string>
+  variables?: Record<string, string | undefined>
 ): Action => {
   if (!variables) {
     return action;
@@ -56,11 +52,13 @@ const replaceVariables = (
 export const executeActions = async (
   page: Page,
   rawAction: Action,
-  variables?: Record<string, string>
+  variables?: Record<string, string | undefined>
 ): Promise<boolean> => {
   let decision = undefined;
 
   const action = replaceVariables(rawAction, variables);
+
+  let newVariables = variables ?? {};
 
   switch (action.type) {
     case "openPage":
@@ -98,18 +96,27 @@ export const executeActions = async (
     case "telegram":
       await sendTelegramMessage(action.chatId, action.message);
       break;
+
+    case "storeTextContent":
+      const value = await textContent(page, action.selector);
+      newVariables = {
+        ...variables,
+        [action.variableName]: value,
+      };
+
+      break;
   }
 
   if (decision && isDecisionAction(action) && action.trueNextAction) {
-    return executeActions(page, action.trueNextAction, variables);
+    return executeActions(page, action.trueNextAction, newVariables);
   }
 
   if (!decision && isDecisionAction(action) && action.falseNextAction) {
-    return executeActions(page, action.falseNextAction, variables);
+    return executeActions(page, action.falseNextAction, newVariables);
   }
 
   if (isNavigationAction(action) && action.nextAction) {
-    return executeActions(page, action.nextAction, variables);
+    return executeActions(page, action.nextAction, newVariables);
   }
 
   return true;

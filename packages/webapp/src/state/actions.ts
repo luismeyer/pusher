@@ -1,8 +1,19 @@
 import { useCallback, useState } from "react";
-import { atom, selector, useRecoilCallback, useSetRecoilState } from "recoil";
+import {
+  atom,
+  selector,
+  selectorFamily,
+  useRecoilCallback,
+  useSetRecoilState,
+} from "recoil";
 import { v4 } from "uuid";
 
-import { Action, isDecisionAction, isNavigationAction } from "@pusher/shared";
+import {
+  Action,
+  StoreTextContentAction,
+  isDecisionAction,
+  isNavigationAction,
+} from "@pusher/shared";
 
 import { dataAtom } from "./data";
 import { localStorageEffect } from "./localStorage";
@@ -10,6 +21,7 @@ import { localStorageEffect } from "./localStorage";
 import {
   firstParentSelector,
   parentActionSelector,
+  previousActionsSelector,
   relationAtom,
 } from "./relation";
 import { positionAtom } from "./position";
@@ -92,6 +104,10 @@ export const actionTreeSelector = selector({
 
     const firstAction = get(firstParentSelector(actionId));
 
+    if (!firstAction) {
+      return;
+    }
+
     const transformActions = (id: string): Action => {
       const data = get(dataAtom(id));
 
@@ -139,4 +155,26 @@ export const actionTreeSelector = selector({
 
     return transformActions(firstAction);
   },
+});
+
+export const storedVariablesSelector = selectorFamily({
+  key: "StoredVariables",
+  get:
+    (id: string) =>
+    ({ get }) => {
+      const ids = get(previousActionsSelector(id));
+
+      if (!ids) {
+        return [];
+      }
+
+      return ids
+        .map((id) => get(dataAtom(id)))
+        .filter(
+          (action): action is StoreTextContentAction =>
+            action.type === "storeTextContent"
+        )
+        .map((action) => action.variableName)
+        .filter((name) => Boolean(name));
+    },
 });

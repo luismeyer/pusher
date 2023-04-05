@@ -4,12 +4,14 @@ import { useRecoilValue } from "recoil";
 
 import { defaultVariables } from "@/state/flow";
 import { WarningOutlined } from "@ant-design/icons";
+import { storedVariablesSelector } from "../state/actions";
 
 type TextInputProps = {
   addonBeforeOptions?: { value: string }[];
   placeholder?: string;
   onChange: (value: string) => void;
   value: string;
+  id: string;
 };
 
 export const TextInput: React.FC<TextInputProps> = ({
@@ -17,8 +19,11 @@ export const TextInput: React.FC<TextInputProps> = ({
   placeholder,
   onChange,
   value: fullValue,
+  id,
 }) => {
   const variables = useRecoilValue(defaultVariables);
+
+  const storedVariables = useRecoilValue(storedVariablesSelector(id));
 
   const { prefix, value } = useMemo(() => {
     const prefixInValue = addonBeforeOptions?.find(({ value }) =>
@@ -73,8 +78,10 @@ export const TextInput: React.FC<TextInputProps> = ({
       return;
     }
 
-    return !variables.includes(variableName.trim());
-  }, [variableName, variables]);
+    const name = variableName.trim();
+
+    return !variables.includes(name) && !storedVariables.includes(name);
+  }, [storedVariables, variableName, variables]);
 
   return (
     <Input
