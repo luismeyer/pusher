@@ -1,9 +1,8 @@
-import { Col, InputNumber, Row, Space } from "antd";
+import { InputNumber, Space } from "antd";
 import { useMemo } from "react";
 import { useRecoilState } from "recoil";
 
 import { dataAtom } from "@/state/data";
-import styles from "@/styles/action.module.css";
 import { InfoCircleOutlined } from "@ant-design/icons";
 
 import { TextInput } from "./textInput";
@@ -24,6 +23,7 @@ export const ActionContent: React.FC<ActionContentProps> = ({ id }) => {
       components = [
         ...components,
         <TextInput
+          id={id}
           key={components.length}
           value={data.selector}
           addonBeforeOptions={prefixOptions}
@@ -37,6 +37,7 @@ export const ActionContent: React.FC<ActionContentProps> = ({ id }) => {
       components = [
         ...components,
         <InputNumber
+          id={id}
           key={components.length}
           value={data.timeInSeconds}
           addonAfter="Seconds"
@@ -53,6 +54,7 @@ export const ActionContent: React.FC<ActionContentProps> = ({ id }) => {
       components = [
         ...components,
         <TextInput
+          id={id}
           key={components.length}
           value={data.pageUrl}
           placeholder="google.com"
@@ -76,6 +78,7 @@ export const ActionContent: React.FC<ActionContentProps> = ({ id }) => {
       components = [
         ...components,
         <TextInput
+          id={id}
           key={components.length}
           value={data.text}
           placeholder={placeholder}
@@ -88,12 +91,14 @@ export const ActionContent: React.FC<ActionContentProps> = ({ id }) => {
       components = [
         ...components,
         <TextInput
+          id={id}
           key={components.length}
           value={data.chatId}
           placeholder="Enter Telegram ChatId"
           onChange={(value) => setData((pre) => ({ ...pre, chatId: value }))}
         />,
         <TextInput
+          id={id}
           key={components.length + 1}
           value={data.message}
           placeholder="Enter Telegram Message"
@@ -102,8 +107,23 @@ export const ActionContent: React.FC<ActionContentProps> = ({ id }) => {
       ];
     }
 
+    if (data.type === "storeTextContent") {
+      components = [
+        ...components,
+        <TextInput
+          id={id}
+          key={components.length}
+          value={data.variableName}
+          placeholder="Enter VariableName to store the TextContent"
+          onChange={(value) =>
+            setData((pre) => ({ ...pre, variableName: value }))
+          }
+        />,
+      ];
+    }
+
     return components;
-  }, [data, setData]);
+  }, [data, id, setData]);
 
   return (
     <div style={{ display: "grid", gap: 8 }}>

@@ -1,17 +1,14 @@
 import { Page } from "puppeteer-core";
 
+import { textContent } from "./textContent";
+
 export const textContentMatches = async (
   page: Page,
   selector: string,
   text: string
 ) => {
   try {
-    const element = await page.waitForSelector(selector, { timeout: 5000 });
-
-    const elementText = await page.evaluate(
-      (element) => element?.textContent,
-      element
-    );
+    const elementText = await textContent(page, selector);
 
     return elementText?.includes(text);
   } catch {

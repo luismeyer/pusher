@@ -49,6 +49,17 @@ export const SideBar: React.FC = () => {
             onClick: () =>
               addAction({ id, type: "type", selector: "", text: "" }),
           },
+          {
+            key: "8",
+            label: "Store Text Content",
+            onClick: () =>
+              addAction({
+                id,
+                type: "storeTextContent",
+                selector: "",
+                variableName: "",
+              }),
+          },
         ],
       },
       {
@@ -57,12 +68,12 @@ export const SideBar: React.FC = () => {
         key: "decisions",
         children: [
           {
-            key: "8",
+            key: "9",
             label: "Element Exists",
             onClick: () => addAction({ id, type: "exists", selector: "" }),
           },
           {
-            key: "9",
+            key: "10",
             label: "Text Content Matches",
             onClick: () =>
               addAction({
@@ -80,7 +91,7 @@ export const SideBar: React.FC = () => {
         key: "output",
         children: [
           {
-            key: "10",
+            key: "11",
             label: "Telegram",
             onClick: () =>
               addAction({ id, type: "telegram", chatId: "", message: "" }),

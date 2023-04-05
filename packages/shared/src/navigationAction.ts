@@ -34,13 +34,20 @@ export type TypeAction = NavigationBaseAction & {
   text: string;
 };
 
+export type StoreTextContentAction = NavigationBaseAction & {
+  type: "storeTextContent";
+  selector: string;
+  variableName: string;
+};
+
 export type NavigationAction =
   | ClickAction
   | ScrollToBottomAction
   | TimeoutAction
   | WaitForAction
   | OpenPageAction
-  | TypeAction;
+  | TypeAction
+  | StoreTextContentAction;
 
 export const isNavigationAction = (
   action: Action
@@ -50,4 +57,5 @@ export const isNavigationAction = (
   action.type === "timeout" ||
   action.type === "waitFor" ||
   action.type === "openPage" ||
-  action.type === "type";
+  action.type === "type" ||
+  action.type === "storeTextContent";

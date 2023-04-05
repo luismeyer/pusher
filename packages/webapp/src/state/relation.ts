@@ -58,20 +58,30 @@ export const areConnectedSelector = selectorFamily({
     },
 });
 
+export const previousActionsSelector = selectorFamily({
+  key: "PreviousActions",
+  get:
+    (id: string) =>
+    ({ get }) => {
+      let parentId = get(parentActionSelector(id));
+      let ids: string[] = [id];
+
+      while (parentId) {
+        ids = [...ids, parentId];
+        parentId = get(parentActionSelector(parentId));
+      }
+
+      return ids;
+    },
+});
+
 export const firstParentSelector = selectorFamily({
   key: "FirstParent",
   get:
     (id: string) =>
     ({ get }) => {
-      let parentId = get(parentActionSelector(id));
-      let currentId = id;
-
-      while (parentId) {
-        currentId = parentId;
-        parentId = get(parentActionSelector(parentId));
-      }
-
-      return currentId;
+      const previousIds = get(previousActionsSelector(id));
+      return previousIds[previousIds.length - 1];
     },
 });
 
@@ -80,14 +90,7 @@ export const actionIndexSelector = selectorFamily({
   get:
     (id: string) =>
     ({ get }) => {
-      let parentId = get(parentActionSelector(id));
-      let index = 1;
-
-      while (parentId) {
-        index = index + 1;
-        parentId = get(parentActionSelector(parentId));
-      }
-
-      return index;
+      const previousIds = get(previousActionsSelector(id));
+      return previousIds.length;
     },
 });
