@@ -103,7 +103,7 @@ export const Line: React.FC<LineProps> = ({ data }) => {
     }
   }, [colorError, colorPrimary, colorSuccess, data.type]);
 
-  const border = `2px dashed ${color}`;
+  const border = `1px solid ${color}`;
 
   const borderTop = state.border.includes("top") ? border : undefined;
 
@@ -130,6 +130,7 @@ export const Line: React.FC<LineProps> = ({ data }) => {
         borderRight,
         borderBottom,
         borderLeft,
+        borderRadius: 10,
 
         // backgroundColor: "pink",
       }}

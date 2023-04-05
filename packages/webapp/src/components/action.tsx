@@ -49,7 +49,7 @@ export const Action: React.FC<ActionProps> = ({ id }) => {
   } = useConnect(id);
 
   const {
-    token: { colorPrimary },
+    token: { colorPrimary, colorBorder },
   } = theme.useToken();
 
   // start drag or connect
@@ -103,7 +103,9 @@ export const Action: React.FC<ActionProps> = ({ id }) => {
     if (nextAction || parentAction) {
       return colorPrimary;
     }
-  }, [nextAction, parentAction, colorPrimary]);
+
+    return colorBorder;
+  }, [nextAction, parentAction, colorBorder, colorPrimary]);
 
   return (
     <div

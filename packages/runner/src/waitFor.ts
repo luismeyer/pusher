@@ -1,4 +1,5 @@
 import { Page } from "puppeteer-core";
 
-export const waitFor = (page: Page, selector: string) =>
-  page.waitForSelector(selector);
+export const waitFor = async (page: Page, selector: string) => {
+  await page.waitForSelector(selector, { timeout: 5000 });
+};
