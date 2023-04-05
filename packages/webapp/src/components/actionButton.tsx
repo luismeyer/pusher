@@ -130,7 +130,7 @@ export const ActionButtons: React.FC<ActionButtonsProps> = ({
         <Button
           type="dashed"
           shape="round"
-          danger={Boolean(nextAction) || connectStart === id}
+          danger={Boolean(nextAction)}
           disabled={disabled}
           onClick={handleConnectClick}
           icon={nextAction ? <DisconnectOutlined /> : <ApiOutlined />}
@@ -147,16 +147,22 @@ export const ActionButtons: React.FC<ActionButtonsProps> = ({
                   label: "If true",
                   key: 1,
                   onClick: handleConnectClickTrue,
+                  danger: Boolean(trueNextAction),
                 },
                 {
                   label: "If false",
                   key: 2,
                   onClick: handleConnectClickFalse,
+                  danger: Boolean(falseNextAction),
                 },
               ],
             }}
           >
-            <Button type="dashed" shape="round">
+            <Button
+              danger={Boolean(falseNextAction && trueNextAction)}
+              type="dashed"
+              shape="round"
+            >
               {falseNextAction && trueNextAction ? (
                 <DisconnectOutlined />
               ) : (

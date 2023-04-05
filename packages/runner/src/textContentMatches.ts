@@ -6,7 +6,7 @@ export const textContentMatches = async (
   text: string
 ) => {
   try {
-    const element = await page.waitForSelector(selector);
+    const element = await page.waitForSelector(selector, { timeout: 5000 });
 
     const elementText = await page.evaluate(
       (element) => element?.textContent,
