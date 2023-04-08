@@ -22,30 +22,35 @@ const replaceVariables = (
   }
 
   return Object.entries(action).reduce<Action>((acc, [key, value]) => {
-    const raw = { ...acc, [key]: value };
-
     if (typeof value !== "string") {
-      return raw;
+      return { ...acc, [key]: value };
     }
 
-    const regex = /{{(.*)}}/;
+    // all fields that allow strings can contain variables
+    let stringInputs = value;
 
-    const [_match, variableName] = value.match(regex) ?? [];
+    const regex = /{{[\w|\s]*}}/g;
 
-    if (!variableName) {
-      return raw;
-    }
+    const matches = stringInputs.match(regex) ?? [];
 
-    const { [variableName.trim()]: override } = variables;
+    matches.forEach((match) => {
+      const variableName = match.replace("{{", "").replace("}}", "").trim();
 
-    if (!override) {
-      return raw;
-    }
+      if (!variableName) {
+        return;
+      }
 
-    return {
-      ...acc,
-      [key]: value.replace(regex, override),
-    };
+      // read override from variables
+      const { [variableName]: override } = variables;
+
+      if (!override) {
+        return;
+      }
+
+      stringInputs = stringInputs.replace(match, override);
+    });
+
+    return { ...acc, [key]: stringInputs };
   }, {} as Action);
 };
 

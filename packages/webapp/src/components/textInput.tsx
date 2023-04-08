@@ -65,23 +65,27 @@ export const TextInput: React.FC<TextInputProps> = ({
     );
   }, [addonBeforeOptions, handleInputChange, prefix]);
 
-  const variableName = useMemo(() => {
-    const regex = /{{(.*)}}/;
+  const variableNames = useMemo(() => {
+    const regex = /{{[\w|\s]*}}/g;
 
-    const [_match, variableName] = value.match(regex) ?? [];
+    const matches = value.match(regex) ?? [];
 
-    return variableName ? variableName.trim() : undefined;
+    return matches.map((match) =>
+      match.replace("{{", "").replace("}}", "").trim()
+    );
   }, [value]);
 
   const error = useMemo(() => {
-    if (!variableName) {
+    if (!variableNames) {
       return;
     }
 
-    const name = variableName.trim();
-
-    return !variables.includes(name) && !storedVariables.includes(name);
-  }, [storedVariables, variableName, variables]);
+    return variableNames
+      .filter(
+        (name) => !variables.includes(name) && !storedVariables.includes(name)
+      )
+      .join(", ");
+  }, [storedVariables, variableNames, variables]);
 
   return (
     <Input
@@ -89,9 +93,7 @@ export const TextInput: React.FC<TextInputProps> = ({
       addonBefore={addonBefore}
       suffix={
         error ? (
-          <Tooltip
-            title={error ? `Wrong variable: "${variableName}"` : undefined}
-          >
+          <Tooltip title={error ? `Wrong variable: "${error}"` : undefined}>
             <WarningOutlined />{" "}
           </Tooltip>
         ) : (
