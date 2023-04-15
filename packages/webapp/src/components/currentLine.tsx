@@ -37,8 +37,8 @@ export const CurrentLine: React.FC = () => {
         setCurrentLine({
           ax: position.x + size.width / 2 / zoom,
           ay: position.y + size.height / 2 / zoom,
-          bx: event.clientX - canvas.offSetX,
-          by: event.clientY - canvas.offSetY,
+          bx: (event.clientX - canvas.offSetX) / zoom,
+          by: (event.clientY - canvas.offSetY) / zoom,
           type,
         });
       },

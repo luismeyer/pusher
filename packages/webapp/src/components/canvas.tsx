@@ -1,17 +1,20 @@
 import React, { useEffect, useRef } from "react";
-import { useRecoilValue, useSetRecoilState } from "recoil";
+import { useRecoilState, useRecoilValue } from "recoil";
 
 import { useCancelConnect } from "@/hooks/useCancelConnect";
 import { useDrag } from "@/hooks/useDrag";
 import { useWindowSize } from "@/hooks/useWindowSize";
 import { actionIdsAtom } from "@/state/actions";
 import { canvasAtom } from "@/state/canvas";
+import { zoomAtom } from "@/state/zoom";
 
 import { Action } from "./action";
 import { CurrentLine } from "./currentLine";
 import { Lines } from "./lines";
 
 export const Canvas: React.FC = () => {
+  const zoom = useRecoilValue(zoomAtom);
+
   const actionIds = useRecoilValue(actionIdsAtom);
 
   const canvasRef = useRef<HTMLDivElement>(null);
@@ -20,7 +23,7 @@ export const Canvas: React.FC = () => {
 
   const cancelConnect = useCancelConnect();
 
-  const setCanvas = useSetRecoilState(canvasAtom);
+  const [canvas, setCanvas] = useRecoilState(canvasAtom);
   const windowSize = useWindowSize();
 
   // saves the element height in the atom
@@ -30,8 +33,8 @@ export const Canvas: React.FC = () => {
     }
 
     setCanvas({
-      width: canvasRef.current.scrollWidth,
-      height: canvasRef.current.scrollHeight,
+      width: canvasRef.current.clientWidth,
+      height: canvasRef.current.offsetHeight,
       offSetX: canvasRef.current.offsetLeft,
       offSetY: canvasRef.current.offsetTop,
     });
@@ -43,8 +46,9 @@ export const Canvas: React.FC = () => {
       onMouseMove={handleDrag}
       onClick={cancelConnect}
       style={{
-        width: "100%",
-        height: "100%",
+        transform: `scale(${zoom}) translate(calc(50% - 50% / ${zoom}), calc(50% - 50% / ${zoom}))`,
+        width: `calc(100% / ${zoom})`,
+        height: `calc(100% / ${zoom})`,
         position: "relative",
         overflow: "scroll",
       }}
