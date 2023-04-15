@@ -4,6 +4,7 @@ import { useRecoilCallback } from "recoil";
 import { canvasAtom } from "@/state/canvas";
 import { dragIdAtom } from "@/state/drag";
 import { positionAtom } from "@/state/position";
+import { zoomAtom } from "../state/zoom";
 
 export const useDrag = () => {
   // refs stores the offset of the pointer from the top left corner of the action
@@ -39,8 +40,6 @@ export const useDrag = () => {
           return;
         }
 
-        const { clientX, clientY } = event;
-
         const position = await snapshot.getPromise(positionAtom(dragId));
 
         if (!position) {
@@ -51,6 +50,11 @@ export const useDrag = () => {
 
         const { offSetX: canvasOffsetX = 0, offSetY: canvasOffsetY = 0 } =
           canvas;
+
+        const zoom = await snapshot.getPromise(zoomAtom);
+
+        const clientX = event.clientX / zoom;
+        const clientY = event.clientY / zoom;
 
         // set the pointer offsetX on the first drag event
         if (!pointerActionOffsetX.current) {

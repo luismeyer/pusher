@@ -113,10 +113,8 @@ export const Action: React.FC<ActionProps> = ({ id }) => {
       ref={ref}
       onMouseDown={handleMouseDown}
       onMouseUp={stopDrag}
-      onMouseLeave={stopDrag}
       className={styles.action}
       style={{
-        transform: `scale(${zoom})`,
         position: "absolute",
         borderRadius: 5,
         top: position.y,

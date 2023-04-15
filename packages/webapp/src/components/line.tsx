@@ -76,8 +76,8 @@ export const Line: React.FC<LineProps> = ({ data }) => {
     (line: LineData): State => {
       const { ax, ay, bx, by } = line;
 
-      const width = Math.abs(bx - ax);
-      const height = Math.abs(by - ay);
+      const width = Math.abs(ax - bx);
+      const height = Math.abs(ay - by);
 
       return {
         width,
@@ -106,14 +106,18 @@ export const Line: React.FC<LineProps> = ({ data }) => {
   const border = `1px solid ${color}`;
 
   const borderTop = state.border.includes("top") ? border : undefined;
-
   const borderRight = state.border.includes("right") ? border : undefined;
-
   const borderLeft = state.border.includes("left") ? border : undefined;
-
   const borderBottom = state.border.includes("bottom") ? border : undefined;
 
   const cancelConnect = useCancelConnect();
+
+  const radius = 10;
+
+  const borderTopLeftRadius = borderTop && borderLeft ? radius : 0;
+  const borderTopRightRadius = borderTop && borderRight ? radius : 0;
+  const borderBottomLeftRadius = borderBottom && borderLeft ? radius : 0;
+  const borderBottomRightRadius = borderBottom && borderRight ? radius : 0;
 
   return (
     <div
@@ -126,11 +130,16 @@ export const Line: React.FC<LineProps> = ({ data }) => {
         top: state.y + "px",
         left: state.x + "px",
         zIndex: 0,
+
         borderTop,
         borderRight,
         borderBottom,
         borderLeft,
-        borderRadius: 10,
+
+        borderTopLeftRadius,
+        borderTopRightRadius,
+        borderBottomLeftRadius,
+        borderBottomRightRadius,
 
         // backgroundColor: "pink",
       }}
