@@ -1,5 +1,5 @@
 import { Card, Space, theme } from "antd";
-import React, { useEffect, useMemo, useRef } from "react";
+import React, { useCallback, useEffect, useMemo, useRef } from "react";
 import { useRecoilCallback, useRecoilState, useRecoilValue } from "recoil";
 
 import { useConnect } from "@/hooks/useConnect";
@@ -71,7 +71,7 @@ export const Action: React.FC<ActionProps> = ({ id }) => {
     );
 
   // stop drag
-  const stopDrag: React.MouseEventHandler<HTMLDivElement> = useRecoilCallback(
+  const stopDrag = useRecoilCallback(
     ({ snapshot, set }) =>
       async () => {
         const dragId = await snapshot.getPromise(dragIdAtom);
@@ -106,6 +106,25 @@ export const Action: React.FC<ActionProps> = ({ id }) => {
 
     return colorBorder;
   }, [nextAction, parentAction, colorBorder, colorPrimary]);
+
+  const handleKeyDown = useCallback(
+    (event: KeyboardEvent) => {
+      if (event.key !== "Escape") {
+        return;
+      }
+
+      stopDrag();
+    },
+    [stopDrag]
+  );
+
+  useEffect(() => {
+    document.addEventListener("keydown", handleKeyDown, false);
+
+    return () => {
+      document.removeEventListener("keydown", handleKeyDown, false);
+    };
+  }, [handleKeyDown]);
 
   return (
     <div
