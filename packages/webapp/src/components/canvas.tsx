@@ -33,8 +33,8 @@ export const Canvas: React.FC = () => {
     }
 
     setCanvas({
-      width: canvasRef.current.clientWidth,
-      height: canvasRef.current.offsetHeight,
+      width: canvasRef.current.scrollWidth,
+      height: canvasRef.current.scrollHeight,
       offSetX: canvasRef.current.offsetLeft,
       offSetY: canvasRef.current.offsetTop,
     });
