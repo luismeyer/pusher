@@ -3,7 +3,6 @@ import { Construct } from "constructs";
 
 import { createApi } from "./createApi";
 import { createBucket } from "./createBucket";
-import { createCleaner } from "./createCleaner";
 import { createRunner } from "./createRunner";
 import { createSchedulers } from "./createSchedulers";
 import { createTable } from "./createTable";
@@ -23,10 +22,6 @@ export class AwsStack extends Stack {
     const apiLambda = createApi(this);
     table.grantReadWriteData(apiLambda);
     runnerLambda.grantInvoke(apiLambda);
-
-    const cleanerLambda = createCleaner(this);
-    bucket.grantDelete(cleanerLambda);
-    bucket.grantRead(cleanerLambda);
 
     createSchedulers(this, table, runnerLambda);
   }

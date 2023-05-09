@@ -1,4 +1,4 @@
-import { RemovalPolicy, Stack } from "aws-cdk-lib";
+import { Duration, RemovalPolicy, Stack } from "aws-cdk-lib";
 import { Bucket } from "aws-cdk-lib/aws-s3";
 
 import { Environment } from "./readEnv";
@@ -11,6 +11,12 @@ export const createBucket = (stack: Stack) => {
     publicReadAccess: true,
     removalPolicy: RemovalPolicy.DESTROY,
     autoDeleteObjects: true,
+    lifecycleRules: [
+      {
+        enabled: true,
+        expiration: Duration.days(3),
+      },
+    ],
   });
 
   return bucket;
