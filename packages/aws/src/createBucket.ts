@@ -14,6 +14,7 @@ export const createBucket = (stack: Stack) => {
     lifecycleRules: [
       {
         enabled: true,
+        tagFilters: { delete: "true" },
         expiration: Duration.days(3),
       },
     ],
