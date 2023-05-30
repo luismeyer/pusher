@@ -29,6 +29,7 @@ export const uploadFileToS3 = async (filePath: string, flowId: string) => {
     Bucket: BUCKET_NAME,
     Key: key,
     Body: readFileSync(filePath),
+    Tagging: "delete=true",
   });
 
   return client
