@@ -2,7 +2,6 @@ import { Layout, theme } from "antd";
 import dynamic from "next/dynamic";
 
 import { SideBar } from "@/components/sideBar";
-import { Zoom } from "./zoom";
 
 const Canvas = dynamic(
   import("@/components/canvas").then((i) => i.Canvas),
@@ -11,6 +10,11 @@ const Canvas = dynamic(
 
 const TopBar = dynamic(
   import("@/components/topBar").then((i) => i.TopBar),
+  { ssr: false }
+);
+
+const Zoom = dynamic(
+  import("@/components/zoom").then((i) => i.Zoom),
   { ssr: false }
 );
 

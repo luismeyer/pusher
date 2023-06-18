@@ -13,6 +13,7 @@ export const Zoom: React.FC = () => {
       <FloatButton.Group shape="square" style={{ right: 35, bottom: 35 }}>
         {zoom !== 1 && (
           <FloatButton
+            shape="square"
             description={(zoom * 100).toFixed() + "%"}
             onClick={() => setZoom(1)}
           />
