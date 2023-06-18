@@ -14,12 +14,12 @@
     },
     "build": {
       "inputs": ["src/**/*"],
-      "outputs": ["dist/**"],
+      "outputs": ["dist/**", ".next/**"],
       "dependsOn": ["compile"]
     },
     "build:watch": {
       "inputs": ["src/**/*"],
-      "outputs": ["dist/**"],
+      "outputs": ["dist/**", ".next/**"],
       "persistent": true
     },
     "dev": {
