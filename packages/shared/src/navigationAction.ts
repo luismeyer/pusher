@@ -1,4 +1,5 @@
 import { Action, BaseAction } from "./flow";
+import { Key } from "./keyboard";
 
 export type NavigationBaseAction = BaseAction & {
   nextAction?: Action;
@@ -40,6 +41,11 @@ export type StoreTextContentAction = NavigationBaseAction & {
   variableName: string;
 };
 
+export type KeyboardAction = NavigationBaseAction & {
+  type: "keyboard";
+  key: Key;
+};
+
 export type NavigationAction =
   | ClickAction
   | ScrollToBottomAction
@@ -47,7 +53,8 @@ export type NavigationAction =
   | WaitForAction
   | OpenPageAction
   | TypeAction
-  | StoreTextContentAction;
+  | StoreTextContentAction
+  | KeyboardAction;
 
 export const isNavigationAction = (
   action: Action
@@ -58,4 +65,5 @@ export const isNavigationAction = (
   action.type === "waitFor" ||
   action.type === "openPage" ||
   action.type === "type" ||
-  action.type === "storeTextContent";
+  action.type === "storeTextContent" ||
+  action.type === "keyboard";

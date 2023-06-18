@@ -7,9 +7,12 @@ import {
   NodeCollapseOutlined,
   SendOutlined,
 } from "@ant-design/icons";
+import { useFeatureFlag } from "../utils/featureFlags";
 
 export const SideBar: React.FC = () => {
   const { addAction, id } = useAddAction();
+
+  const enableKeyboardInputAction = useFeatureFlag("enableKeyboardInputAction");
 
   const items: MenuProps["items"] = useMemo(
     () => [
@@ -19,38 +22,38 @@ export const SideBar: React.FC = () => {
         key: "navigation",
         children: [
           {
-            key: "1",
+            key: "click",
             label: "Click",
             onClick: () => addAction({ id, type: "click", selector: "" }),
           },
           {
-            key: "2",
+            key: "scroll",
             label: "Scroll To Bottom",
             onClick: () => addAction({ id, type: "scrollToBottom" }),
           },
           {
-            key: "4",
+            key: "timeout",
             label: "Timeout",
             onClick: () => addAction({ id, type: "timeout", timeInSeconds: 0 }),
           },
           {
-            key: "5",
+            key: "wait",
             label: "Wait For Element",
             onClick: () => addAction({ id, type: "waitFor", selector: "" }),
           },
           {
-            key: "6",
+            key: "open",
             label: "Open Page",
             onClick: () => addAction({ id, type: "openPage", pageUrl: "" }),
           },
           {
-            key: "7",
+            key: "type",
             label: "Type Text",
             onClick: () =>
               addAction({ id, type: "type", selector: "", text: "" }),
           },
           {
-            key: "8",
+            key: "store",
             label: "Store Text Content",
             onClick: () =>
               addAction({
@@ -60,6 +63,18 @@ export const SideBar: React.FC = () => {
                 variableName: "",
               }),
           },
+          enableKeyboardInputAction
+            ? {
+                key: "keyboard",
+                label: "Keyboard Input",
+                onClick: () =>
+                  addAction({
+                    id,
+                    type: "keyboard",
+                    key: "Enter",
+                  }),
+              }
+            : undefined,
         ],
       },
       {
@@ -68,12 +83,12 @@ export const SideBar: React.FC = () => {
         key: "decisions",
         children: [
           {
-            key: "9",
+            key: "exists",
             label: "Element Exists",
             onClick: () => addAction({ id, type: "exists", selector: "" }),
           },
           {
-            key: "10",
+            key: "contetnMatches",
             label: "Text Content Matches",
             onClick: () =>
               addAction({
@@ -99,7 +114,7 @@ export const SideBar: React.FC = () => {
         ],
       },
     ],
-    [addAction, id]
+    [addAction, enableKeyboardInputAction, id]
   );
 
   return (

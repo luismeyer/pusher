@@ -21,6 +21,7 @@ const TypeLabels: Record<Action["type"], string> = {
   textContentMatches: "Text Content Matches",
   timeout: "Timeout",
   storeTextContent: "Store Text Content in Variable",
+  keyboard: "Keyboard Strokes",
 };
 
 export const ActionHeader: React.FC<ActionHeaderProps> = ({ id }) => {

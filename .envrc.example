@@ -14,3 +14,5 @@ export IS_LOCAL=true
 export PUSHER_AUTH_TOKEN=secret
 
 export NEXT_PUBLIC_API_URL=http://localhost:3004
+
+export EDGE_CONFIG=example

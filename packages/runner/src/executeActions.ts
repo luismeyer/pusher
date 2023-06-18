@@ -12,6 +12,7 @@ import { textContentMatches } from "./textContentMatches";
 import { timeout } from "./timeout";
 import { type } from "./type";
 import { waitFor } from "./waitFor";
+import { keyboard } from "./keyboard";
 
 const replaceVariables = (
   action: Action,
@@ -108,8 +109,14 @@ export const executeActions = async (
         ...variables,
         [action.variableName]: value,
       };
-
       break;
+
+    case "keyboard":
+      await keyboard(page, action.key);
+      break;
+
+    default:
+      throw new Error(`Unknown action type: ${action}`);
   }
 
   if (decision && isDecisionAction(action) && action.trueNextAction) {
