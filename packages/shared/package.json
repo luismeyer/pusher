@@ -5,8 +5,8 @@
   "main": "lib/index.js",
   "types": "lib/index.d.ts",
   "scripts": {
-    "build": "tsc --build",
-    "dev": "npm run build -- --watch"
+    "compile": "tsc --build",
+    "compile:watch": "npm run compile -- --watch"
   },
   "keywords": [],
   "author": "",

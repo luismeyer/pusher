@@ -1,0 +1,6 @@
+{
+  "name": "@pusher/esbuild",
+  "devDependencies": {
+    "esbuild": "^0.17.11"
+  }
+}
