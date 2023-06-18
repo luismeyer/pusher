@@ -4,10 +4,11 @@
   "private": true,
   "scripts": {
     "build": "next build",
+    "compile": "tsc --build",
+    "compile:watch": "tsc --build --watch",
     "dev": "next dev",
     "lint": "next lint",
-    "start": "next start",
-    "ts": "tsc --build"
+    "start": "next start"
   },
   "dependencies": {
     "@ant-design/icons": "^5.0.1",

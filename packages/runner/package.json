@@ -7,8 +7,9 @@
   "author": "",
   "scripts": {
     "build": "esbuild src/index.ts --bundle --outfile=dist/index.js --platform=node --external:'./lib-cov/fluent-ffmpeg'",
-    "dev": "npm run build -- --watch",
-    "ts": "tsc --build"
+    "build:watch": "npm run build -- --watch",
+    "compile": "tsc --build",
+    "compile:watch": "tsc --build --watch"
   },
   "dependencies": {
     "@aws-sdk/client-s3": "^3.282.0",

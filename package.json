@@ -9,12 +9,13 @@
     "packages/*"
   ],
   "scripts": {
-    "ts": "lerna run ts",
-    "start": "npm run dev",
-    "dev": "lerna run dev --parallel",
-    "dev:scheduler": "lerna run dev:scheduler --scope=@pusher/aws",
-    "build": "lerna run build",
-    "setup": "node scripts/setup.mjs"
+    "build": "turbo run build",
+    "build:watch": "turbo run build:watch",
+    "start": "turbo run dev build:watch compile:watch --concurrency 20",
+    "dev:scheduler": "npm run -w @pusher/aws dev:scheduler",
+    "setup": "node scripts/setup.mjs",
+    "compile": "turbo run compile",
+    "compile:watch": "turbo run compile:watch"
   },
   "devDependencies": {
     "@aws-sdk/client-s3": "^3.294.0",
@@ -22,8 +23,8 @@
     "decompress": "^4.2.1",
     "decompress-tarxz": "^3.0.0",
     "decompress-unzip": "^4.0.1",
-    "lerna": "^6.5.1",
     "node-fetch": "^3.3.1",
+    "turbo": "^1.10.3",
     "typescript": "^4.9.5",
     "vercel": "^28.17.0"
   }
