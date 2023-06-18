@@ -30,7 +30,7 @@ Build the App first with `npm run build` and
 Deploy the AWS Stack:
 
 ```sh
-lerna run deploy --scope=@pusher/aws
+npm run -w @pusher/aws deploy
 ```
 
 Deploy the Webapp to Vercel:

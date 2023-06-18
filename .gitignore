@@ -35,6 +35,7 @@ yarn-error.log*
 *.tsbuildinfo
 next-env.d.ts
 
+lib
 dist
 .env
 .envrc
@@ -55,3 +56,4 @@ cdk.out
 
 dynamodblocal
 tmp
+.turbo

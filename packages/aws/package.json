@@ -9,7 +9,8 @@
     "dev": "ts-node src/dev/index.ts",
     "dev:scheduler": "ts-node src/dev/invokeScheduler.ts",
     "synth": "cdk synth",
-    "ts": "tsc --build"
+    "compile": "tsc --build",
+    "compile:watch": "tsc --build --watch"
   },
   "dependencies": {
     "aws-cdk-lib": "2.69.0",

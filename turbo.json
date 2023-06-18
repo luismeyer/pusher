@@ -1,0 +1,30 @@
+{
+  "$schema": "https://turbo.build/schema.json",
+  "globalDotEnv": [".envrc"],
+  "pipeline": {
+    "compile": {
+      "inputs": ["src/**/*.ts", "src/**/*.tsx"],
+      "outputs": ["lib/**"],
+      "dependsOn": ["^compile"]
+    },
+    "compile:watch": {
+      "inputs": ["src/**/*.ts", "src/**/*.tsx"],
+      "outputs": ["lib/**"],
+      "persistent": true
+    },
+    "build": {
+      "inputs": ["src/**/*"],
+      "outputs": ["dist/**"],
+      "dependsOn": ["compile"]
+    },
+    "build:watch": {
+      "inputs": ["src/**/*"],
+      "outputs": ["dist/**"],
+      "persistent": true
+    },
+    "dev": {
+      "persistent": true,
+      "cache": false
+    }
+  }
+}
