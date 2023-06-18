@@ -11,7 +11,7 @@
   "scripts": {
     "build": "turbo run build",
     "build:watch": "turbo run build:watch",
-    "start": "turbo run dev build:watch compile:watch --concurrency 20",
+    "start": "turbo run dev build:watch compile:watch --concurrency 25",
     "dev:scheduler": "npm run -w @pusher/aws dev:scheduler",
     "setup": "node scripts/setup.mjs",
     "compile": "turbo run compile",
