@@ -1,4 +1,4 @@
-import { InputNumber, Space } from "antd";
+import { InputNumber, Select, Space } from "antd";
 import { useMemo } from "react";
 import { useRecoilState } from "recoil";
 
@@ -6,6 +6,7 @@ import { dataAtom } from "@/state/data";
 import { InfoCircleOutlined } from "@ant-design/icons";
 
 import { TextInput } from "./textInput";
+import { Keys } from "@pusher/shared";
 
 type ActionContentProps = {
   id: string;
@@ -118,6 +119,25 @@ export const ActionContent: React.FC<ActionContentProps> = ({ id }) => {
           onChange={(value) =>
             setData((pre) => ({ ...pre, variableName: value }))
           }
+        />,
+      ];
+    }
+
+    if (data.type === "keyboard") {
+      components = [
+        ...components,
+        <Select
+          id={id}
+          key={components.length}
+          showSearch
+          placeholder="Select a person"
+          optionFilterProp="children"
+          value={data.key}
+          onChange={(value) => setData((pre) => ({ ...pre, key: value }))}
+          filterOption={(input, option) =>
+            (option?.label ?? "").toLowerCase().includes(input.toLowerCase())
+          }
+          options={Keys.map((key) => ({ value: key, label: key }))}
         />,
       ];
     }

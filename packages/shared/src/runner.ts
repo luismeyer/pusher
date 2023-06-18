@@ -12,6 +12,7 @@ export type RunnerErrorResult = {
 export type RunnerDebugResult = {
   type: "debug";
   videoUrl: string;
+  errorMessage?: string;
 };
 
 export type RunnerResult =

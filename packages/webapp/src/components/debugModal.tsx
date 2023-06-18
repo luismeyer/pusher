@@ -47,12 +47,12 @@ export const DebugModal: React.FC<DebugModalProps> = ({ setOpen, open }) => {
 
     if (response?.type === "debug" && !video) {
       setVideo(response.videoUrl);
-      setError(undefined);
+      setError(response.errorMessage);
     }
 
     if (response?.type === "debug" && video) {
       videoRef.current?.load();
-      setError(undefined);
+      setError(response.errorMessage);
     }
 
     if (response?.type === "error") {

@@ -14,7 +14,6 @@ export const handler = async ({
   const page = await browser.newPage();
 
   let stopRecorder: StopRecorderFunction | undefined;
-
   if (debug) {
     stopRecorder = await startRecorder(page);
   }
@@ -35,6 +34,7 @@ export const handler = async ({
       result = { type: "error", message: error.message };
     });
 
+  // if debug mode and the recorder has been started successfully
   if (stopRecorder) {
     const videoPath = await stopRecorder();
 
@@ -42,7 +42,7 @@ export const handler = async ({
       const videoUrl = await uploadFileToS3(videoPath, flow.id);
 
       if (videoUrl) {
-        result = { type: "debug", videoUrl };
+        result = { type: "debug", videoUrl, errorMessage: result.message };
       }
     }
   }
