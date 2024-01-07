@@ -40,8 +40,8 @@ export const createDDBServer = async () => {
     region: process.env.REGION ?? "eu-central-1",
     endpoint,
     credentials: {
-      accessKeyId: "DEFAULT_ACCESS_KEY",
-      secretAccessKey: "DEFAULT_SECRET",
+      accessKeyId: "LOCAL",
+      secretAccessKey: "LOCAL",
     },
   });
 

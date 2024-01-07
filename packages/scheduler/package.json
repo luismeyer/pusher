@@ -9,7 +9,7 @@
     "build": "node esbuild.mjs --minify",
     "build:watch": "node esbuild.mjs --watch",
     "compile": "tsc --build",
-    "compile:watch": "tsc --build --watch"
+    "compile:watch": "tsc --build --watch --preserveWatchOutput"
   },
   "dependencies": {
     "@aws-sdk/client-lambda": "^3.289.0",

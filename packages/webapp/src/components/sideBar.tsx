@@ -7,12 +7,9 @@ import {
   NodeCollapseOutlined,
   SendOutlined,
 } from "@ant-design/icons";
-import { useFeatureFlag } from "../utils/featureFlags";
 
 export const SideBar: React.FC = () => {
   const { addAction, id } = useAddAction();
-
-  const enableKeyboardInputAction = useFeatureFlag("enableKeyboardInputAction");
 
   const items: MenuProps["items"] = useMemo(
     () => [
@@ -63,18 +60,16 @@ export const SideBar: React.FC = () => {
                 variableName: "",
               }),
           },
-          enableKeyboardInputAction
-            ? {
-                key: "keyboard",
-                label: "Keyboard Input",
-                onClick: () =>
-                  addAction({
-                    id,
-                    type: "keyboard",
-                    key: "Enter",
-                  }),
-              }
-            : undefined,
+          {
+            key: "keyboard",
+            label: "Keyboard Input",
+            onClick: () =>
+              addAction({
+                id,
+                type: "keyboard",
+                key: "Enter",
+              }),
+          },
         ],
       },
       {
@@ -114,7 +109,7 @@ export const SideBar: React.FC = () => {
         ],
       },
     ],
-    [addAction, enableKeyboardInputAction, id]
+    [addAction, id]
   );
 
   return (

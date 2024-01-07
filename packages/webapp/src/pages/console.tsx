@@ -2,19 +2,8 @@ import Head from "next/head";
 
 import { AuthModal } from "@/components/authModal";
 import { Console } from "@/components/console";
-import { getAll, get } from "@vercel/edge-config";
-import { GetServerSideProps } from "next";
-import { FeatureFlags, FeatureFlagsContext } from "../utils/featureFlags";
 
-export const getServerSideProps: GetServerSideProps<
-  FeatureFlags
-> = async () => {
-  return {
-    props: await getAll<FeatureFlags>(),
-  };
-};
-
-export default function ConsolePage(props: FeatureFlags) {
+export default function ConsolePage() {
   return (
     <>
       <Head>
@@ -27,9 +16,7 @@ export default function ConsolePage(props: FeatureFlags) {
       <main>
         <AuthModal />
 
-        <FeatureFlagsContext.Provider value={props}>
-          <Console />
-        </FeatureFlagsContext.Provider>
+        <Console />
       </main>
     </>
   );

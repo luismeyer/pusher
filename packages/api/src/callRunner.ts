@@ -10,6 +10,9 @@ if (!RUNNER_FUNCTION_NAME) {
 const client = new LambdaClient({
   region: process.env.REGION ?? "eu-central-1",
   endpoint: process.env.IS_LOCAL ? "http://localhost:3002" : undefined,
+  credentials: process.env.IS_LOCAL
+    ? { accessKeyId: "LOCAL", secretAccessKey: "LOCAL" }
+    : undefined,
 });
 
 export const callRunner = (flow: Flow) => {

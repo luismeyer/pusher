@@ -10,9 +10,9 @@ The Application is available in the Cloud on [phr.vercel.app](https://phr.vercel
 2. Create a .envrc file based on the .envrc.example file
 
 ```sh
-npm install
-npm run setup
-npm run dev
+pnpm install
+pnpm run setup
+pnpm run dev
 ```
 
 This will start:
@@ -25,12 +25,12 @@ This will start:
 
 ## Deployment
 
-Build the App first with `npm run build` and
+Build the App first with `pnpm run build` and
 
 Deploy the AWS Stack:
 
 ```sh
-npm run -w @pusher/aws deploy
+pnpm run -w @pusher/aws deploy
 ```
 
 Deploy the Webapp to Vercel:

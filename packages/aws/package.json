@@ -10,7 +10,7 @@
     "dev:scheduler": "ts-node src/dev/invokeScheduler.ts",
     "synth": "cdk synth",
     "compile": "tsc --build",
-    "compile:watch": "tsc --build --watch"
+    "compile:watch": "tsc --build --watch --preserveWatchOutput"
   },
   "dependencies": {
     "aws-cdk-lib": "2.69.0",

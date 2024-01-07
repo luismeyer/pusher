@@ -19,13 +19,13 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: 16.x
-          cache: npm
+          cache: pnpm
 
       - name: Install
-        run: npm install
+        run: pnpm install
 
       - name: Build
-        run: npm run build
+        run: pnpm run build
 
       - name: Deploy AWS
         env:
@@ -38,7 +38,7 @@ jobs:
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           PUSHER_AUTH_TOKEN: ${{ secrets.PUSHER_AUTH_TOKEN }}
-        run: npm run -w @pusher/aws deploy -- --require-approval=never
+        run: pnpm run -w @pusher/aws deploy -- --require-approval=never
 
       - name: Deploy Vercel
         run: vercel deploy --prod --yes --token=${{ secrets.VERCEL_TOKEN }}
@@ -50,4 +50,4 @@ jobs:
           LINUX_FFMPEG_URL: ${{ vars.LINUX_FFMPEG_URL }}
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-        run: npm run setup
+        run: pnpm run setup

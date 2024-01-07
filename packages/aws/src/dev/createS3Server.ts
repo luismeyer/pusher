@@ -23,6 +23,7 @@ const uploadFFMPEG = async (endpoint: string) => {
   const client = new S3Client({
     forcePathStyle: true,
     endpoint,
+    region: "eu-central-1",
     credentials: {
       accessKeyId: "S3RVER",
       secretAccessKey: "S3RVER",
