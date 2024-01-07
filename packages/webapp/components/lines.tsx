@@ -3,7 +3,7 @@
 import React from "react";
 import { useRecoilValue } from "recoil";
 
-import { lineSelector } from "../state/line";
+import { lineSelector } from "@/state/line";
 
 import { Line } from "./line";
 

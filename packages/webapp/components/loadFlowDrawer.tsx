@@ -2,7 +2,7 @@
 
 import { Divider, Drawer, Space } from "antd";
 
-import { useValidateFlowString } from "../hooks/useValidateFlow";
+import { useValidateFlowString } from "@/hooks/useValidateFlow";
 
 import { ImportExport } from "./importExport";
 import { LoadFlow } from "./loadFlow";

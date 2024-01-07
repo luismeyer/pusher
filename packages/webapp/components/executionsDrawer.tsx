@@ -4,7 +4,7 @@ import { Button, Drawer, List } from "antd";
 import { useCallback } from "react";
 import { useRecoilState } from "recoil";
 
-import { flowAtom } from "../state/flow";
+import { flowAtom } from "@/state/flow";
 import { PlusCircleOutlined } from "@ant-design/icons";
 
 import { ExecutionsInput } from "./executionInput";

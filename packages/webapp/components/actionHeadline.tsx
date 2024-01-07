@@ -2,8 +2,8 @@
 
 import { useRecoilValue } from "recoil";
 
-import { dataAtom } from "../state/data";
-import { actionIndexSelector } from "../state/relation";
+import { dataAtom } from "@/state/data";
+import { actionIndexSelector } from "@/state/relation";
 import { Action } from "@pusher/shared";
 
 type ActionHeaderProps = {

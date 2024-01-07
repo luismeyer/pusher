@@ -6,9 +6,9 @@ import Title from "antd/lib/typography/Title";
 import { useCallback, useState } from "react";
 import { useRecoilCallback } from "recoil";
 
-import { useStoreFlow } from "../hooks/useStoreFlow";
-import { useValidateFlowString } from "../hooks/useValidateFlow";
-import { flowSelector } from "../state/flow";
+import { useStoreFlow } from "@/hooks/useStoreFlow";
+import { useValidateFlowString } from "@/hooks/useValidateFlow";
+import { flowSelector } from "@/state/flow";
 
 const { TextArea } = Input;
 

@@ -4,9 +4,10 @@ import { App, Input, Modal, Space } from "antd";
 import React, { useCallback, useState } from "react";
 import { useRecoilState } from "recoil";
 
-import { authOpenAtom } from "../state/auth";
+import { useFetchApi } from "@/hooks/useFetchApi";
+import { authOpenAtom } from "@/state/auth";
+
 import { clearToken, storeToken } from "../utils/auth";
-import { useFetchApi } from "../hooks/useFetchApi";
 
 export const AuthModal: React.FC = () => {
   const { message } = App.useApp();

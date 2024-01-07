@@ -1,11 +1,8 @@
-"use client";
+import { Space } from "antd";
 
-import { Button, Layout, Space } from "antd";
-const { Footer } = Layout;
-
-import { HowItWorks } from "../components/howItWorks";
-import { Stage } from "../components/stage";
-import { GithubOutlined } from "@ant-design/icons";
+import { Footer } from "@/components/footer";
+import { HowItWorks } from "@/components/howItWorks";
+import { Stage } from "@/components/stage";
 
 export default function Home() {
   return (
@@ -15,17 +12,7 @@ export default function Home() {
 
         <HowItWorks />
 
-        <Footer style={{ display: "flex", justifyContent: "center" }}>
-          <Button
-            style={{ fontSize: 16 }}
-            icon={<GithubOutlined />}
-            type="link"
-            href="https://github.com/luismeyer/pusher"
-            target="_blank"
-          >
-            Repository
-          </Button>
-        </Footer>
+        <Footer />
       </Space>
     </main>
   );

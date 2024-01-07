@@ -3,7 +3,7 @@
 import { Menu, MenuProps } from "antd";
 import { useMemo } from "react";
 
-import { useAddAction } from "../state/actions";
+import { useAddAction } from "@/state/actions";
 import {
   CodeOutlined,
   NodeCollapseOutlined,

@@ -4,9 +4,9 @@ import { Modal, Spin, Typography } from "antd";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useRecoilCallback } from "recoil";
 
-import { useWindowSize } from "../hooks/useWindowSize";
-import { flowParamsSelector } from "../state/flow";
-import { useFetchApi } from "../hooks/useFetchApi";
+import { useFetchApi } from "@/hooks/useFetchApi";
+import { useWindowSize } from "@/hooks/useWindowSize";
+import { flowParamsSelector } from "@/state/flow";
 import { LoadingOutlined } from "@ant-design/icons";
 import { RunnerResult } from "@pusher/shared";
 

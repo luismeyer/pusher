@@ -4,7 +4,7 @@ import { FloatButton } from "antd";
 import React from "react";
 import { useRecoilState } from "recoil";
 
-import { zoomAtom } from "../state/zoom";
+import { zoomAtom } from "@/state/zoom";
 import { MinusOutlined, PlusOutlined } from "@ant-design/icons";
 
 export const Zoom: React.FC = () => {

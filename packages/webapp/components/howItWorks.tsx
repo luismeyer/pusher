@@ -1,6 +1,8 @@
-import React from "react";
+"use client";
+
 import { Steps } from "antd";
 import Title from "antd/lib/typography/Title";
+import React from "react";
 
 export const HowItWorks: React.FC = () => {
   const DotStyle = { fontSize: "24px" };

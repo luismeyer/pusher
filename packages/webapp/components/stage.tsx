@@ -1,8 +1,7 @@
 "use client";
 
-import { Button, Badge } from "antd";
+import { Badge, Button } from "antd";
 import Title from "antd/lib/typography/Title";
-
 import Image from "next/image";
 import Link from "next/link";
 import React, {

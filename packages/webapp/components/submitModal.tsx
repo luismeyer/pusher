@@ -4,8 +4,8 @@ import { App, Modal, Space, Typography } from "antd";
 import { useCallback } from "react";
 import { useRecoilCallback, useRecoilValue } from "recoil";
 
-import { flowAtom, flowParamsSelector } from "../state/flow";
-import { useFetchApi } from "../hooks/useFetchApi";
+import { useFetchApi } from "@/hooks/useFetchApi";
+import { flowAtom, flowParamsSelector } from "@/state/flow";
 import { SubmitResponse } from "@pusher/shared";
 
 type SubmitModalProps = {

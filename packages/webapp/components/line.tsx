@@ -3,8 +3,8 @@
 import { theme } from "antd";
 import React, { useCallback, useMemo } from "react";
 
-import { useCancelConnect } from "../hooks/useCancelConnect";
-import { Line as LineData } from "../state/line";
+import { useCancelConnect } from "@/hooks/useCancelConnect";
+import { Line as LineData } from "@/state/line";
 
 type LineProps = {
   data: LineData;

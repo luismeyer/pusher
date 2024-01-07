@@ -1,10 +1,10 @@
 import { useRef } from "react";
 import { useRecoilCallback } from "recoil";
 
-import { canvasAtom } from "../state/canvas";
-import { dragIdAtom } from "../state/drag";
-import { positionAtom } from "../state/position";
-import { zoomAtom } from "../state/zoom";
+import { canvasAtom } from "@/state/canvas";
+import { dragIdAtom } from "@/state/drag";
+import { positionAtom } from "@/state/position";
+import { zoomAtom } from "@/state/zoom";
 
 export const useDrag = () => {
   // refs stores the offset of the pointer from the top left corner of the action

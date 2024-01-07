@@ -3,12 +3,12 @@
 import { useEffect, useState } from "react";
 import { useRecoilCallback, useRecoilValue } from "recoil";
 
-import { canvasAtom } from "../state/canvas";
-import { connectStartAtom, connectTypeAtom } from "../state/connect";
-import { Line as LineData } from "../state/line";
-import { positionAtom } from "../state/position";
-import { sizeAtom } from "../state/size";
-import { zoomAtom } from "../state/zoom";
+import { canvasAtom } from "@/state/canvas";
+import { connectStartAtom, connectTypeAtom } from "@/state/connect";
+import { Line as LineData } from "@/state/line";
+import { positionAtom } from "@/state/position";
+import { sizeAtom } from "@/state/size";
+import { zoomAtom } from "@/state/zoom";
 
 import { Line } from "./line";
 

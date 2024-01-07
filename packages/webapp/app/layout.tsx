@@ -4,9 +4,9 @@ import { Inter } from "next/font/google";
 
 import { AntdRegistry } from "@ant-design/nextjs-registry";
 
-import type { Metadata } from "next";
 import { Providers } from "./providers";
 
+import type { Metadata } from "next";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {

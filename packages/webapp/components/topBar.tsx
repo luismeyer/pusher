@@ -13,7 +13,7 @@ import {
 import { useMemo, useState } from "react";
 import { useRecoilState } from "recoil";
 
-import { flowAtom } from "../state/flow";
+import { flowAtom } from "@/state/flow";
 import { isInterval } from "@pusher/shared";
 
 import { DebugModal } from "./debugModal";

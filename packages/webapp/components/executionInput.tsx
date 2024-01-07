@@ -4,11 +4,11 @@ import { Button, Col, Input, Row, theme, Tooltip } from "antd";
 import { useCallback, useMemo } from "react";
 import { useRecoilState, useRecoilValue } from "recoil";
 
-import { defaultVariables, executionsSelector } from "../state/flow";
-import { removeItemFromArray, replaceItemInArray } from "../utils/array";
+import { defaultVariables, executionsSelector } from "@/state/flow";
 import { WarningOutlined } from "@ant-design/icons";
 import { Execution } from "@pusher/shared";
 
+import { removeItemFromArray, replaceItemInArray } from "../utils/array";
 import { VariablesInput } from "./variablesInput";
 
 type ExecutionsInputProps = {

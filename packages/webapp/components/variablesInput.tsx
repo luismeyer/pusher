@@ -3,8 +3,9 @@
 import { Col, Input, InputRef, Row } from "antd";
 import { useCallback, useEffect, useRef, useState } from "react";
 
-import { removeItemFromArray, replaceItemInArray } from "../utils/array";
 import { DoubleRightOutlined } from "@ant-design/icons";
+
+import { removeItemFromArray, replaceItemInArray } from "../utils/array";
 
 type VariablesInputProps = {
   executionIndex: number;

@@ -2,10 +2,9 @@
 
 import { App, Button, Input, Space } from "antd";
 import Title from "antd/lib/typography/Title";
-
 import { useCallback, useState } from "react";
 
-import { useFetchFlow } from "../hooks/useFetchFlow";
+import { useFetchFlow } from "@/hooks/useFetchFlow";
 import { CloudDownloadOutlined, LoadingOutlined } from "@ant-design/icons";
 
 type LoadFlowModalProps = {

@@ -1,8 +1,9 @@
 import { useCallback } from "react";
 import { v4 } from "uuid";
 
-import { useFetchApi } from "./useFetchApi";
 import { Flow, ValidateResponse } from "@pusher/shared";
+
+import { useFetchApi } from "./useFetchApi";
 
 type ValidateFlowResult =
   | {

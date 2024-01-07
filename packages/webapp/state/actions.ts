@@ -10,21 +10,20 @@ import { v4 } from "uuid";
 
 import {
   Action,
-  StoreTextContentAction,
   isDecisionAction,
   isNavigationAction,
+  StoreTextContentAction,
 } from "@pusher/shared";
 
 import { dataAtom } from "./data";
 import { localStorageEffect } from "./localStorage";
-
+import { positionAtom } from "./position";
 import {
   firstParentSelector,
   parentActionSelector,
   previousActionsSelector,
   relationAtom,
 } from "./relation";
-import { positionAtom } from "./position";
 import { sizeAtom } from "./size";
 
 export const actionIdsAtom = atom<string[]>({

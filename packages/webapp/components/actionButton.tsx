@@ -9,14 +9,14 @@ import {
   useSetRecoilState,
 } from "recoil";
 
-import { useDeleteAction } from "../state/actions";
+import { useDeleteAction } from "@/state/actions";
 import {
   connectStartAtom,
   ConnectType,
   connectTypeAtom,
-} from "../state/connect";
-import { dataAtom } from "../state/data";
-import { relationAtom } from "../state/relation";
+} from "@/state/connect";
+import { dataAtom } from "@/state/data";
+import { relationAtom } from "@/state/relation";
 import {
   ApiOutlined,
   DeleteOutlined,

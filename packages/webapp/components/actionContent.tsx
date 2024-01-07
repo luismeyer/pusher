@@ -4,11 +4,11 @@ import { InputNumber, Select, Space } from "antd";
 import { useMemo } from "react";
 import { useRecoilState } from "recoil";
 
-import { dataAtom } from "../state/data";
+import { dataAtom } from "@/state/data";
 import { InfoCircleOutlined } from "@ant-design/icons";
+import { Keys } from "@pusher/shared";
 
 import { TextInput } from "./textInput";
-import { Keys } from "@pusher/shared";
 
 type ActionContentProps = {
   id: string;

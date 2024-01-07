@@ -1,14 +1,14 @@
 "use client";
 
 import React, { useEffect, useRef } from "react";
-import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
+import { useRecoilValue, useSetRecoilState } from "recoil";
 
-import { useCancelConnect } from "../hooks/useCancelConnect";
-import { useDrag } from "../hooks/useDrag";
-import { useWindowSize } from "../hooks/useWindowSize";
-import { actionIdsAtom } from "../state/actions";
-import { canvasAtom } from "../state/canvas";
-import { zoomAtom } from "../state/zoom";
+import { useCancelConnect } from "@/hooks/useCancelConnect";
+import { useDrag } from "@/hooks/useDrag";
+import { useWindowSize } from "@/hooks/useWindowSize";
+import { actionIdsAtom } from "@/state/actions";
+import { canvasAtom } from "@/state/canvas";
+import { zoomAtom } from "@/state/zoom";
 
 import { Action } from "./action";
 import { CurrentLine } from "./currentLine";

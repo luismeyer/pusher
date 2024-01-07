@@ -4,9 +4,9 @@ import { Input, Select, Tooltip } from "antd";
 import React, { useCallback, useMemo } from "react";
 import { useRecoilValue } from "recoil";
 
-import { defaultVariables } from "../state/flow";
+import { storedVariablesSelector } from "@/state/actions";
+import { defaultVariables } from "@/state/flow";
 import { WarningOutlined } from "@ant-design/icons";
-import { storedVariablesSelector } from "../state/actions";
 
 type TextInputProps = {
   addonBeforeOptions?: { value: string }[];

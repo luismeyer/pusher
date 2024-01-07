@@ -5,12 +5,12 @@ import {
   connectEndAtom,
   connectStartAtom,
   connectTypeAtom,
-} from "../state/connect";
+} from "@/state/connect";
 import {
   areConnectedSelector,
   parentActionSelector,
   relationAtom,
-} from "../state/relation";
+} from "@/state/relation";
 
 export const useConnect = (id: string) => {
   const [connectStart, setConnectStart] = useRecoilState(connectStartAtom);

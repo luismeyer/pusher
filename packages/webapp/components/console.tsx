@@ -1,11 +1,12 @@
 "use client";
 
-import { hydrationDoneAtom } from "@/state/hydration";
 import { Layout, theme } from "antd";
 import { useEffect } from "react";
 import { useRecoilState } from "recoil";
-import { Canvas } from "./canvas";
 
+import { hydrationDoneAtom } from "@/state/hydration";
+
+import { Canvas } from "./canvas";
 import { SideBar } from "./sideBar";
 import { TopBar } from "./topBar";
 import { Zoom } from "./zoom";

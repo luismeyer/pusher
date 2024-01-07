@@ -1,17 +1,17 @@
 import { useRef } from "react";
 import { useRecoilCallback } from "recoil";
 
-import { actionIdsAtom } from "../state/actions";
-import { dataAtom } from "../state/data";
-import { flowAtom } from "../state/flow";
-import { relationAtom } from "../state/relation";
+import { actionIdsAtom } from "@/state/actions";
+import { dataAtom } from "@/state/data";
+import { flowAtom } from "@/state/flow";
+import { positionAtom } from "@/state/position";
+import { relationAtom } from "@/state/relation";
 import {
   Action,
   Flow,
   isDecisionAction,
   isNavigationAction,
 } from "@pusher/shared";
-import { positionAtom } from "../state/position";
 
 export const useStoreFlow = () => {
   // this ref is a workaround. When setting the actionsIds inside

@@ -4,11 +4,11 @@ import { Card, Space, theme } from "antd";
 import React, { useCallback, useEffect, useMemo, useRef } from "react";
 import { useRecoilCallback, useRecoilState, useRecoilValue } from "recoil";
 
-import { useConnect } from "../hooks/useConnect";
-import { dragIdAtom } from "../state/drag";
-import { positionAtom } from "../state/position";
-import { sizeAtom } from "../state/size";
-import { zoomAtom } from "../state/zoom";
+import { useConnect } from "@/hooks/useConnect";
+import { dragIdAtom } from "@/state/drag";
+import { positionAtom } from "@/state/position";
+import { sizeAtom } from "@/state/size";
+import { zoomAtom } from "@/state/zoom";
 import styles from "@/styles/action.module.css";
 
 import { ActionButtons } from "./actionButton";

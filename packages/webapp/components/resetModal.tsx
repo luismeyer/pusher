@@ -8,8 +8,8 @@ import {
   actionIdsAtom,
   useDeleteAction,
   useResetAction,
-} from "../state/actions";
-import { flowAtom } from "../state/flow";
+} from "@/state/actions";
+import { flowAtom } from "@/state/flow";
 
 type ResetModalProps = {
   open: boolean;

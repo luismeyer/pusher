@@ -1,7 +1,8 @@
 import { useCallback } from "react";
 import { useRecoilState } from "recoil";
 
-import { authOpenAtom } from "../state/auth";
+import { authOpenAtom } from "@/state/auth";
+
 import { loadToken } from "../utils/auth";
 
 const apiBaseUrl = process.env.NEXT_PUBLIC_API_URL;
