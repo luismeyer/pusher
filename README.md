@@ -33,12 +33,6 @@ Deploy the AWS Stack:
 pnpm run -w @pusher/aws deploy
 ```
 
-Deploy the Webapp to Vercel:
-
-```sh
-vercel deploy --prod
-```
-
 ## Infrastructure
 
 The main parts of the Pusher App are the Runner and the Scheduler AWS Lambda Functions. If you want to host your own Pusher Instance you just need these two Functions. The Scheduler runs on a cron schedule that is defined during the deployment. It reads all Flows out of a DynamoDB Database and Filters the Flows that are not runnable. The Scheduler then invokes the Runner Function providing the Flow as the Payload. The Runner Function executes the Flow by spinning up a Headless Browser and traveling the actionTree.

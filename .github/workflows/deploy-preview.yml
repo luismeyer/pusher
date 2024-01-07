@@ -24,23 +24,6 @@ jobs:
       - name: Build
         run: pnpm run build
 
-      - name: Deploy Vercel
-        id: deploy
-        run: |
-          vercel deploy --yes --token=${{ secrets.VERCEL_TOKEN }} >deployment-url.txt 2>error.txt
-
-          # check the exit code
-          code=$?
-
-          if [ $code -eq 0 ]; then
-            deploymentUrl=`cat deployment-url.txt`
-            echo "url=$deploymentUrl" >> "$GITHUB_OUTPUT"
-          else
-            echo "There was a deployment error"
-            cat error.txt
-            exit 1
-          fi
-
       - name: Create or Update Comment
         id: pr-comment
         uses: actions/github-script@v6

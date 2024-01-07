@@ -40,9 +40,6 @@ jobs:
           PUSHER_AUTH_TOKEN: ${{ secrets.PUSHER_AUTH_TOKEN }}
         run: pnpm run -w @pusher/aws deploy -- --require-approval=never
 
-      - name: Deploy Vercel
-        run: vercel deploy --prod --yes --token=${{ secrets.VERCEL_TOKEN }}
-
       - name: Setup
         env:
           BUCKET_NAME: ${{ secrets.BUCKET_NAME }}
