@@ -1,5 +1,4 @@
 import { Button, Dropdown, Space } from "antd";
-import { MenuClickEventHandler } from "rc-menu/lib/interface";
 import React, { useCallback, useMemo } from "react";
 import {
   useRecoilState,
@@ -16,7 +15,6 @@ import {
 } from "@/state/connect";
 import { dataAtom } from "@/state/data";
 import { relationAtom } from "@/state/relation";
-import styles from "@/styles/action.module.css";
 import {
   ApiOutlined,
   DeleteOutlined,
@@ -67,46 +65,6 @@ export const ActionButtons: React.FC<ActionButtonsProps> = ({
     [connectStart, id, setConnectStart, setConnectType]
   );
 
-  const handleConnectClickTrue: MenuClickEventHandler = useCallback(
-    (info) => {
-      // prevent click on canvas or line
-      info.domEvent.stopPropagation();
-
-      if (trueNextAction && falseNextAction) {
-        setRelation((pre) => ({ ...pre, trueNextAction: undefined }));
-        return;
-      }
-
-      if (trueNextAction) {
-        resetRelation();
-        return;
-      }
-
-      startConnect("true");
-    },
-    [falseNextAction, resetRelation, setRelation, startConnect, trueNextAction]
-  );
-
-  const handleConnectClickFalse: MenuClickEventHandler = useCallback(
-    (info) => {
-      // prevent click on canvas or line
-      info.domEvent.stopPropagation();
-
-      if (falseNextAction && trueNextAction) {
-        setRelation((pre) => ({ ...pre, falseNextAction: undefined }));
-        return;
-      }
-
-      if (falseNextAction) {
-        resetRelation();
-        return;
-      }
-
-      startConnect("false");
-    },
-    [falseNextAction, resetRelation, setRelation, startConnect, trueNextAction]
-  );
-
   const handleConnectClick: ButtonClickHandler = useCallback(
     (event) => {
       // prevent click on canvas or line
@@ -146,13 +104,49 @@ export const ActionButtons: React.FC<ActionButtonsProps> = ({
                 {
                   label: "If true",
                   key: 1,
-                  onClick: handleConnectClickTrue,
+                  onClick: (info) => {
+                    // prevent click on canvas or line
+                    info.domEvent.stopPropagation();
+
+                    if (trueNextAction && falseNextAction) {
+                      setRelation((pre) => ({
+                        ...pre,
+                        trueNextAction: undefined,
+                      }));
+                      return;
+                    }
+
+                    if (trueNextAction) {
+                      resetRelation();
+                      return;
+                    }
+
+                    startConnect("true");
+                  },
                   danger: Boolean(trueNextAction),
                 },
                 {
                   label: "If false",
                   key: 2,
-                  onClick: handleConnectClickFalse,
+                  onClick: (info) => {
+                    // prevent click on canvas or line
+                    info.domEvent.stopPropagation();
+
+                    if (falseNextAction && trueNextAction) {
+                      setRelation((pre) => ({
+                        ...pre,
+                        falseNextAction: undefined,
+                      }));
+                      return;
+                    }
+
+                    if (falseNextAction) {
+                      resetRelation();
+                      return;
+                    }
+
+                    startConnect("false");
+                  },
                   danger: Boolean(falseNextAction),
                 },
               ],

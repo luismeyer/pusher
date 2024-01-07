@@ -12,6 +12,7 @@
     "compile:watch": "tsc --build --watch --preserveWatchOutput"
   },
   "dependencies": {
+    "@aws-sdk/client-lambda": "^3.289.0",
     "@pusher/shared": "*",
     "@vendia/serverless-express": "^4.10.1",
     "cors": "^2.8.5",
