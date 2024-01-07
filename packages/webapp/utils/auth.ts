@@ -1,13 +1,9 @@
 const key = "phr-token";
 
 export const storeToken = (token: string) => {
-  localStorage.setItem(key, token);
-};
-
-export const loadToken = () => {
-  return localStorage.getItem(key);
+  document.cookie = `${key}=${token}`;
 };
 
 export const clearToken = () => {
-  localStorage.removeItem(key);
+  document.cookie = `${key}=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;`;
 };

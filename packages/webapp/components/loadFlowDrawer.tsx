@@ -2,8 +2,6 @@
 
 import { Divider, Drawer, Space } from "antd";
 
-import { useValidateFlowString } from "@/hooks/useValidateFlow";
-
 import { ImportExport } from "./importExport";
 import { LoadFlow } from "./loadFlow";
 
@@ -18,8 +16,6 @@ export const LoadFlowDrawer: React.FC<LoadFlowModalProps> = ({
   open,
   setOpen,
 }) => {
-  const {} = useValidateFlowString();
-
   return (
     <Drawer
       placement="left"

@@ -10,10 +10,7 @@ if (process.env.IS_LOCAL) {
   DDBClient.params = {
     region: "localhost",
     endpoint: `http://localhost:3003`,
-    credentials: {
-      accessKeyId: "LOCAL",
-      secretAccessKey: "LOCAL",
-    },
+    credentials: { accessKeyId: "LOCAL", secretAccessKey: "LOCAL" },
   };
 }
 

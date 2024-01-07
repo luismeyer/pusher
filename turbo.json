@@ -3,22 +3,22 @@
   "globalDotEnv": [".envrc"],
   "pipeline": {
     "compile": {
-      "inputs": ["src/**/*.ts", "src/**/*.tsx"],
+      "inputs": ["./**/*.ts", "./**/*.tsx"],
       "outputs": ["lib/**"],
       "dependsOn": ["^compile"]
     },
     "compile:watch": {
-      "inputs": ["src/**/*.ts", "src/**/*.tsx"],
+      "inputs": ["./**/*.ts", "./**/*.tsx"],
       "outputs": ["lib/**"],
       "persistent": true
     },
     "build": {
-      "inputs": ["src/**/*"],
+      "inputs": ["./**/*.ts", "./**/*.tsx"],
       "outputs": ["dist/**", ".next/**"],
       "dependsOn": ["compile"]
     },
     "build:watch": {
-      "inputs": ["src/**/*"],
+      "inputs": ["./**/*.ts", "./**/*.tsx"],
       "outputs": ["dist/**", ".next/**"],
       "persistent": true
     },

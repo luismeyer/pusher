@@ -38,7 +38,7 @@ export const flowSelector = selector<Flow | undefined>({
   },
 });
 
-export const flowParamsSelector = selector({
+export const serializedFlowSelector = selector({
   key: "FlowParam",
   get: ({ get }) => {
     const flow = get(flowSelector);
@@ -47,10 +47,7 @@ export const flowParamsSelector = selector({
       return undefined;
     }
 
-    const params = new URLSearchParams();
-    params.set("flow", encodeURIComponent(JSON.stringify(flow)));
-
-    return params;
+    return encodeURIComponent(JSON.stringify(flow));
   },
 });
 

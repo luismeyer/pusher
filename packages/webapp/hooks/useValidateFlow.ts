@@ -1,9 +1,10 @@
 import { useCallback } from "react";
 import { v4 } from "uuid";
 
-import { Flow, ValidateResponse } from "@pusher/shared";
+import { Flow } from "@pusher/shared";
 
-import { useFetchApi } from "./useFetchApi";
+import { useActionCall } from "./useActionCall";
+import { validateAction } from "@/app/api/validate.action";
 
 type ValidateFlowResult =
   | {
@@ -16,7 +17,7 @@ type ValidateFlowResult =
     };
 
 export const useValidateFlowString = () => {
-  const fetchApi = useFetchApi();
+  const validate = useActionCall(validateAction);
 
   const validateFlow = useCallback(
     async (flowString: string): Promise<ValidateFlowResult> => {
@@ -26,10 +27,7 @@ export const useValidateFlowString = () => {
           id: v4(),
         };
 
-        const params = new URLSearchParams();
-        params.set("flow", encodeURIComponent(JSON.stringify(flow)));
-
-        return fetchApi<ValidateResponse>("validate", params).then((res) => {
+        return validate(JSON.stringify(flow)).then((res) => {
           if (res?.isValid) {
             return { valid: true, flow };
           }
@@ -40,7 +38,7 @@ export const useValidateFlowString = () => {
         return { valid: false, error: "Invalid JSON" };
       }
     },
-    [fetchApi]
+    [validate]
   );
 
   return validateFlow;

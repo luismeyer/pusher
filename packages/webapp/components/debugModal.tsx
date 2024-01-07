@@ -4,11 +4,11 @@ import { Modal, Spin, Typography } from "antd";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useRecoilCallback } from "recoil";
 
-import { useFetchApi } from "@/hooks/useFetchApi";
 import { useWindowSize } from "@/hooks/useWindowSize";
-import { flowParamsSelector } from "@/state/flow";
+import { serializedFlowSelector } from "@/state/flow";
 import { LoadingOutlined } from "@ant-design/icons";
-import { RunnerResult } from "@pusher/shared";
+import { debugAction } from "@/app/api/debug.action";
+import { useActionCall } from "@/hooks/useActionCall";
 
 type DebugModalProps = {
   open: boolean;
@@ -22,25 +22,27 @@ export const DebugModal: React.FC<DebugModalProps> = ({ setOpen, open }) => {
 
   const [error, setError] = useState<string | undefined>();
 
-  const getFlowParams = useRecoilCallback(({ snapshot }) => async () => {
-    return await snapshot.getPromise(flowParamsSelector);
-  });
+  const debug = useActionCall(debugAction);
 
-  const fetchApi = useFetchApi();
+  const getSerializedFlow = useRecoilCallback(
+    ({ snapshot }) =>
+      () =>
+        snapshot.getPromise(serializedFlowSelector)
+  );
 
   const debugFlow = useCallback(async () => {
     setOpen(true);
     setLoadig(true);
 
-    const flowParams = await getFlowParams();
+    const serializedFlow = await getSerializedFlow();
 
-    if (!flowParams) {
+    if (!serializedFlow) {
       setError("Your flow has no actions");
       setLoadig(false);
       return;
     }
 
-    const response = await fetchApi<RunnerResult>("debug", flowParams);
+    const response = await debug(serializedFlow);
 
     if (!response) {
       setOpen(false);
@@ -61,7 +63,7 @@ export const DebugModal: React.FC<DebugModalProps> = ({ setOpen, open }) => {
     }
 
     setLoadig(false);
-  }, [fetchApi, getFlowParams, setOpen, video]);
+  }, [debug, getSerializedFlow, setOpen, video]);
 
   // handle open updates
   useEffect(() => {

@@ -1,13 +1,9 @@
-import { APIGatewayProxyResult } from "aws-lambda";
 import { Application } from "express";
 import { join } from "path";
 import { Lambda, LambdaMode } from "runl";
 
-import { ApiFunction } from "../createApi";
 import { FunctionOptions } from "../createFunction";
 import { RunnerFunction } from "../createRunner";
-import { getQueryStringParameters } from "./getQuerystringParameters";
-import { getRequestHeaders } from "./getRequestHeaders";
 
 const createLambda = (options: FunctionOptions) => {
   const {
@@ -76,41 +72,6 @@ const createInvokeRoute = (app: Application, options: FunctionOptions) => {
   );
 };
 
-const createProxyRoute = (app: Application, options: FunctionOptions) => {
-  app.all("*", async (request, response) => {
-    const lambda = createLambda(options);
-
-    const requestBody =
-      typeof request.body === `string` && request.body ? request.body : null;
-
-    const result = await lambda.execute<APIGatewayProxyResult>({
-      ...getQueryStringParameters(request),
-      ...getRequestHeaders(request),
-      requestContext: {
-        protocol: request.protocol,
-        httpMethod: request.method,
-        path: request.path,
-        resourcePath: request.path,
-      },
-      path: request.path,
-      httpMethod: request.method,
-      body: requestBody && Buffer.from(requestBody).toString(`base64`),
-      isBase64Encoded: Boolean(requestBody),
-    });
-
-    return response
-      .type("json")
-      .status(result.statusCode)
-      .header(result.headers)
-      .send(result.body);
-  });
-};
-
-export const createLambdaEndpoints = (
-  invocationApp: Application,
-  proxyApp: Application
-) => {
+export const createLambdaEndpoints = (invocationApp: Application) => {
   createInvokeRoute(invocationApp, RunnerFunction);
-
-  createProxyRoute(proxyApp, ApiFunction);
 };

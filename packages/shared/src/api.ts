@@ -1,4 +1,5 @@
 import { Flow } from "./flow";
+import { RunnerResult } from "./runner";
 
 export type SubmitErrorResponse = {
   type: "error";
@@ -26,3 +27,5 @@ export type LoadResponse = LoadErrorResponse | LoadSuccessResponse;
 export type ValidateResponse =
   | { isValid: true }
   | { isValid: false; error?: string };
+
+export type DebugResponse = RunnerResult | { type: "error"; message: string };

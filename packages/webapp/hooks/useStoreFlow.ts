@@ -20,6 +20,7 @@ export const useStoreFlow = () => {
   // all actions are setup before they are rendered
   const actionIds = useRef<string[]>([]);
 
+  // recursive function to store all actions data in localstorage
   const storeAction = useRecoilCallback(({ set }) => async (action: Action) => {
     let actionData = action;
 

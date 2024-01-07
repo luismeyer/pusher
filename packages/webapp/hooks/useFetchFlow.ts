@@ -1,16 +1,15 @@
 import { useCallback, useState } from "react";
 
-import { LoadResponse } from "@pusher/shared";
-
-import { useFetchApi } from "./useFetchApi";
 import { useStoreFlow } from "./useStoreFlow";
+import { loadAction } from "@/app/api/load.action";
+import { useActionCall } from "./useActionCall";
 
 export const useFetchFlow = () => {
   const [loading, setLoading] = useState(false);
 
-  const fetchApi = useFetchApi();
-
   const storeFlow = useStoreFlow();
+
+  const load = useActionCall(loadAction);
 
   const fetchFlow = useCallback(
     async (id: string) => {
@@ -20,10 +19,7 @@ export const useFetchFlow = () => {
 
       setLoading(true);
 
-      const response = await fetchApi<LoadResponse>(
-        "load",
-        new URLSearchParams({ id })
-      );
+      const response = await load(id);
 
       if (response?.type === "success") {
         await storeFlow(response.flow);
@@ -33,7 +29,7 @@ export const useFetchFlow = () => {
 
       return response;
     },
-    [fetchApi, loading, storeFlow]
+    [load, loading, storeFlow]
   );
 
   return {

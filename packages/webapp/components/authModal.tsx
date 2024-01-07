@@ -4,10 +4,11 @@ import { App, Input, Modal, Space } from "antd";
 import React, { useCallback, useState } from "react";
 import { useRecoilState } from "recoil";
 
-import { useFetchApi } from "@/hooks/useFetchApi";
 import { authOpenAtom } from "@/state/auth";
 
 import { clearToken, storeToken } from "../utils/auth";
+import { tokenAction } from "@/app/api/token.action";
+import { useActionCall } from "@/hooks/useActionCall";
 
 export const AuthModal: React.FC = () => {
   const { message } = App.useApp();
@@ -16,27 +17,24 @@ export const AuthModal: React.FC = () => {
 
   const [token, setToken] = useState<string | undefined>();
 
-  const fetchApi = useFetchApi();
-
-  const isValidToken = useCallback(async () => {
-    const response = await fetchApi("token");
-
-    return Boolean(response);
-  }, [fetchApi]);
+  const isValidToken = useActionCall(tokenAction);
 
   const testToken = useCallback(
     async (apiToken: string) => {
       storeToken(apiToken);
 
-      return isValidToken().then((valid) => {
-        if (!valid) {
-          message.open({ type: "error", content: "Wrong Token" });
+      const valid = await isValidToken();
 
-          clearToken();
-        }
+      if (!valid) {
+        message.open({ type: "error", content: "Wrong Token" });
 
-        setOpen(!valid);
-      });
+        clearToken();
+        setToken("");
+
+        return;
+      }
+
+      setOpen(!valid);
     },
     [isValidToken, message, setOpen]
   );

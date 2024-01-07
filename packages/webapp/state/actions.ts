@@ -84,7 +84,7 @@ export const useAddAction = () => {
 
       setData(data);
 
-      setId(generateId);
+      setId(generateId());
     },
     [generateId, id, setActions, setData]
   );

@@ -4,9 +4,9 @@ import { App, Modal, Space, Typography } from "antd";
 import { useCallback } from "react";
 import { useRecoilCallback, useRecoilValue } from "recoil";
 
-import { useFetchApi } from "@/hooks/useFetchApi";
-import { flowAtom, flowParamsSelector } from "@/state/flow";
-import { SubmitResponse } from "@pusher/shared";
+import { flowAtom, serializedFlowSelector } from "@/state/flow";
+import { useActionCall } from "@/hooks/useActionCall";
+import { submitAction } from "@/app/api/submit.action";
 
 type SubmitModalProps = {
   open: boolean;
@@ -18,27 +18,27 @@ export const SubmitModal: React.FC<SubmitModalProps> = ({ setOpen, open }) => {
 
   const flowData = useRecoilValue(flowAtom);
 
-  const getFlowParams = useRecoilCallback(
+  const getSerializedFlow = useRecoilCallback(
     ({ snapshot }) =>
       async () => {
-        return await snapshot.getPromise(flowParamsSelector);
+        return await snapshot.getPromise(serializedFlowSelector);
       },
     []
   );
 
-  const fetchApi = useFetchApi();
+  const submit = useActionCall(submitAction);
 
   const submitFlow = useCallback(async () => {
     setOpen(false);
 
-    const flowParams = await getFlowParams();
+    const serializedFlow = await getSerializedFlow();
 
-    if (!flowParams) {
+    if (!serializedFlow) {
       message.open({ type: "error", content: "Your flow has no actions" });
       return;
     }
 
-    const response = await fetchApi<SubmitResponse>("submit", flowParams);
+    const response = await submit(serializedFlow);
 
     if (response?.type === "success") {
       message.open({ type: "success", content: "Uploaded you flow!" });
@@ -50,7 +50,7 @@ export const SubmitModal: React.FC<SubmitModalProps> = ({ setOpen, open }) => {
         content: response?.message ?? "Something went wrong",
       });
     }
-  }, [fetchApi, getFlowParams, message, setOpen]);
+  }, [getSerializedFlow, message, setOpen, submit]);
 
   return (
     <Modal
