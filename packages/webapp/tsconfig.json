@@ -17,10 +17,25 @@
     "incremental": true,
     "downlevelIteration": true,
     "paths": {
-      "@/*": ["./src/*"]
-    }
+      "@/*": ["./*"]
+    },
+    "plugins": [
+      {
+        "name": "next"
+      }
+    ]
   },
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", "public/**/*"],
+  "include": [
+    "next-env.d.ts",
+    "**/*.ts",
+    "**/*.tsx",
+    "public/**/*",
+    ".next/types/**/*.ts"
+  ],
   "exclude": ["node_modules"],
-  "references": [{ "path": "../shared" }]
+  "references": [
+    {
+      "path": "../shared"
+    }
+  ]
 }
