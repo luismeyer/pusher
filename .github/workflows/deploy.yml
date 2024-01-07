@@ -40,7 +40,7 @@ jobs:
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           PUSHER_AUTH_TOKEN: ${{ secrets.PUSHER_AUTH_TOKEN }}
-        run: pnpm run -w @pusher/aws deploy -- --require-approval=never
+        run: pnpm run --filter @pusher/aws deploy -- --require-approval=never
 
       - name: Setup
         env:

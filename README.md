@@ -30,7 +30,7 @@ Build the App first with `pnpm run build` and
 Deploy the AWS Stack:
 
 ```sh
-pnpm run -w @pusher/aws deploy
+pnpm run --filter @pusher/aws deploy
 ```
 
 ## Infrastructure
