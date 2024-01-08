@@ -51,6 +51,7 @@ jobs:
           WEBSOCKET_APP_ID: ${{ secrets.WEBSOCKET_APP_ID }}
           WEBSOCKET_SECRET: ${{ secrets.WEBSOCKET_SECRET }}
           NEXT_PUBLIC_WEBSOCKET_KEY: ${{ secrets.NEXT_PUBLIC_WEBSOCKET_KEY }}
+          CHROMIUM_URL: ${{ vars.CHROMIUM_URL }}
         run: pnpm run --filter @pusher/aws deploy -- --require-approval=never
 
       - name: Setup
