@@ -7,7 +7,7 @@ export const createBrowser = async () => {
   const executablePath = process.env.IS_LOCAL
     ? pup.executablePath()
     : await chromium.executablePath(
-        "https://github.com/Sparticuz/chromium/releases/download/v110.0.1/chromium-v110.0.1-pack.tar"
+        "https://github.com/Sparticuz/chromium/releases/download/v110.0.1/chromium-v119.0.2-pack.tar"
       );
 
   return puppeteer.launch({
@@ -15,6 +15,6 @@ export const createBrowser = async () => {
     defaultViewport: chromium.defaultViewport,
     executablePath,
     ignoreHTTPSErrors: true,
-    headless: "new",
+    headless: chromium.headless,
   });
 };
