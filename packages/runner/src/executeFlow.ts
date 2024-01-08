@@ -19,5 +19,5 @@ export const executeFlow = async (page: Page, flow: Flow) => {
     return;
   }
 
-  return await executeActions(page, flow.actionTree);
+  return executeActions(page, flow.actionTree);
 };

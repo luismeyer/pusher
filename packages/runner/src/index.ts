@@ -35,12 +35,16 @@ export const handler = async ({
       result = { type: "error", message: error.message };
     });
 
+  console.info("Finished flow execution: ", result);
+
   // if debug mode and the recorder has been started successfully
   if (stopRecorder) {
     const videoPath = await stopRecorder();
+    console.info("Stopped recording: ", videoPath);
 
     if (videoPath) {
       const videoUrl = await uploadFileToS3(videoPath, flow.id);
+      console.info("Uploaded video to S3: ", videoUrl);
 
       if (videoUrl) {
         result = { type: "debug", videoUrl, errorMessage: result.message };
@@ -52,7 +56,10 @@ export const handler = async ({
 
   if (debug) {
     await sendWebsocketEvent("done", result, flow);
+    console.info("Send websocket done event");
   }
+
+  console.info("Returning result: ", result);
 
   return result;
 };

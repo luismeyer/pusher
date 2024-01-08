@@ -63,6 +63,7 @@ export const executeActions = async (
   let decision = undefined;
 
   const action = replaceVariables(rawAction, variables);
+  console.info("Executing action: ", action);
 
   let newVariables = variables ?? {};
 
