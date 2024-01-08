@@ -21,3 +21,5 @@ export NEXTAUTH_URL=https://phr.vercel.app
 export WEBSOCKET_APP_ID=secret
 export WEBSOCKET_SECRET=secret
 export NEXT_PUBLIC_WEBSOCKET_KEY=notsecret
+
+export CHROMIUM_URL=https://github.com/Sparticuz/chromium/releases/download/v119.0.2/chromium-v119.0.2-layer.zip
