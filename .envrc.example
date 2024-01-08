@@ -13,6 +13,7 @@ export IS_LOCAL=true
 
 export PUSHER_AUTH_TOKEN=secret
 
-export GITHUB_ID=secret
-export GITHUB_SECRET=secret
+export NEXTAUTH_GITHUB_ID=secret
+export NEXTAUTH_GITHUB_SECRET=secret
 export NEXTAUTH_SECRET=secret
+export NEXTAUTH_URL=https://phr.vercel.app
