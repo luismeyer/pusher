@@ -53,6 +53,7 @@ export const handler = async ({
   }
 
   await browser.close();
+  console.info("Closed browser");
 
   if (debug) {
     await sendWebsocketEvent("done", result, flow);
