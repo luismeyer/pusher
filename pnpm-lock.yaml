@@ -100,6 +100,12 @@ importers:
         specifier: ^0.17.11
         version: 0.17.19
 
+  packages/layers/chromium:
+    dependencies:
+      '@sparticuz/chromium':
+        specifier: ^119.0.2
+        version: 119.0.2
+
   packages/runner:
     dependencies:
       '@aws-sdk/client-s3':
@@ -108,9 +114,6 @@ importers:
       '@pusher/shared':
         specifier: '*'
         version: link:../shared
-      '@sparticuz/chromium-min':
-        specifier: ^119.0.2
-        version: 119.0.2
       duenamodb:
         specifier: ^1.3.5
         version: 1.3.5
@@ -133,6 +136,9 @@ importers:
       '@pusher/esbuild':
         specifier: '*'
         version: link:../esbuild
+      '@sparticuz/chromium':
+        specifier: ^119.0.2
+        version: 119.0.2
       '@types/node-telegram-bot-api':
         specifier: ^0.61.2
         version: 0.61.11
@@ -2058,15 +2064,14 @@ packages:
       '@smithy/types': 2.8.0
       tslib: 2.6.2
 
-  /@sparticuz/chromium-min@119.0.2:
-    resolution: {integrity: sha512-66ztqT2MScSzbK3Jv6tViEqc2prgKLOX2lst2l89GlKl64Y4Mh72ZlEppjkXybjAVNb1B5IqFVtq67t++En9kA==}
+  /@sparticuz/chromium@119.0.2:
+    resolution: {integrity: sha512-VB6tHW13YpQ7HqyhKG1KU8Z1RIb/kfHMg8j/4ft5rk8mMvEm2YkBYFCHnj+yb0P/RPLcdgX3+VC58GuJilOtww==}
     engines: {node: '>= 16'}
     dependencies:
       follow-redirects: 1.15.4
       tar-fs: 3.0.4
     transitivePeerDependencies:
       - debug
-    dev: false
 
   /@swc/helpers@0.5.2:
     resolution: {integrity: sha512-E4KcWTpoLHqwPHLxidpOqQbcrZVgi0rsmmZXUle1jXmJfuIf/UWpczUJ7MZZ5tlxytgJXyp0w4PGkkeLiuIdZw==}
@@ -4072,7 +4077,6 @@ packages:
     peerDependenciesMeta:
       debug:
         optional: true
-    dev: false
 
   /for-each@0.3.3:
     resolution: {integrity: sha512-jqYfLp7mo9vIyQf8ykW2v7A+2N4QjeCeI5+Dz9XraiO1ign81wjiH7Fb9vSOWvQfNtmSa4H2RoQTrrXivdUZmw==}

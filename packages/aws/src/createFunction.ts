@@ -1,5 +1,5 @@
 import { Duration, Stack } from "aws-cdk-lib";
-import { Code, Function, Runtime } from "aws-cdk-lib/aws-lambda";
+import { Code, Function, Runtime, LayerVersion } from "aws-cdk-lib/aws-lambda";
 import { extname } from "path";
 
 export type FunctionOptions = {
@@ -10,6 +10,7 @@ export type FunctionOptions = {
   timeoutMins?: number;
   memorySize?: number;
   environment: Record<string, string>;
+  layers?: LayerVersion[];
 };
 
 export const createFunction = (stack: Stack, options: FunctionOptions) => {
@@ -21,6 +22,7 @@ export const createFunction = (stack: Stack, options: FunctionOptions) => {
     memorySize,
     environment,
     functionName,
+    layers,
   } = options;
 
   const handler = fileName.replace(
@@ -36,5 +38,6 @@ export const createFunction = (stack: Stack, options: FunctionOptions) => {
     timeout: timeoutMins ? Duration.minutes(timeoutMins) : undefined,
     memorySize,
     environment,
+    layers,
   });
 };
