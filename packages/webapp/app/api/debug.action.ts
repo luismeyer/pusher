@@ -29,11 +29,15 @@ export const debugAction = async (flow: string): Promise<DebugResponse> => {
     return { type: "error", message: "Flow parsing error" };
   }
 
-  const result = await callRunner(flowPayload);
+  try {
+    await callRunner(flowPayload);
 
-  if (result) {
-    return result;
+    return { type: "success" };
+  } catch (e) {
+    if (e instanceof Error) {
+      return { type: "error", message: e.message };
+    }
+
+    return { type: "error", message: "Flow running error" };
   }
-
-  return { type: "error", message: "Could not parse payload" };
 };

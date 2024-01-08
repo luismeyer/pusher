@@ -27,11 +27,5 @@ export const callRunner = async (flow: Flow) => {
     Payload: Buffer.from(JSON.stringify(payload)),
   });
 
-  const result = await client.send(command);
-
-  if (result.Payload) {
-    const response = Buffer.from(result.Payload).toString("utf8");
-
-    return JSON.parse(response) as RunnerResult;
-  }
+  await client.send(command);
 };

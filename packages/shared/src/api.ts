@@ -28,4 +28,6 @@ export type ValidateResponse =
   | { isValid: true }
   | { isValid: false; error?: string };
 
-export type DebugResponse = RunnerResult | { type: "error"; message: string };
+export type DebugResponse =
+  | { type: "success" }
+  | { type: "error"; message: string };
