@@ -100,7 +100,7 @@ importers:
         specifier: ^0.17.11
         version: 0.17.19
 
-  packages/layers/chromium:
+  packages/layers/chromium/nodejs:
     dependencies:
       '@sparticuz/chromium':
         specifier: ^119.0.2
