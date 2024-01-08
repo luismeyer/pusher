@@ -23,7 +23,7 @@ export const callRunner = async (flow: Flow) => {
 
   const command = new InvokeCommand({
     FunctionName: RUNNER_FUNCTION_NAME,
-    InvocationType: "RequestResponse",
+    InvocationType: "Event",
     Payload: Buffer.from(JSON.stringify(payload)),
   });
 

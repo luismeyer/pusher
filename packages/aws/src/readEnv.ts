@@ -28,6 +28,13 @@ if (!pusherAuthToken) {
   throw new Error("PUSHER_AUTH_TOKEN Env variable is not set");
 }
 
+const { WEBSOCKET_APP_ID, NEXT_PUBLIC_WEBSOCKET_KEY, WEBSOCKET_SECRET } =
+  process.env;
+
+if (!WEBSOCKET_APP_ID || !NEXT_PUBLIC_WEBSOCKET_KEY || !WEBSOCKET_SECRET) {
+  throw new Error("Missing websocket environment variables");
+}
+
 export const Environment = {
   bucketName,
   tableName,
@@ -35,4 +42,7 @@ export const Environment = {
   telegramToken,
   intervalIndexName,
   pusherAuthToken,
+  webSocketAppId: WEBSOCKET_APP_ID,
+  webSocketKey: NEXT_PUBLIC_WEBSOCKET_KEY,
+  webSocketSecret: WEBSOCKET_SECRET,
 };

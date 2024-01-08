@@ -6,3 +6,4 @@ export * from "./runner";
 export * from "./bucket";
 export * from "./api";
 export * from "./keyboard";
+export * from "./websocket";

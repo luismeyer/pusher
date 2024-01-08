@@ -4,6 +4,7 @@ import { createBrowser } from "./createBrowser";
 import { startRecorder, StopRecorderFunction } from "./createRecorder";
 import { executeFlow } from "./executeFlow";
 import { increaseFails } from "./increaseFails";
+import { sendWebsocketEvent } from "./sendWebsocketEvent";
 import { uploadFileToS3 } from "./uploadFileToS3";
 
 export const handler = async ({
@@ -48,6 +49,10 @@ export const handler = async ({
   }
 
   await browser.close();
+
+  if (debug) {
+    await sendWebsocketEvent("done", result, flow);
+  }
 
   return result;
 };

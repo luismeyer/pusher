@@ -17,6 +17,7 @@
     "duenamodb": "^1.3.5",
     "next": "^14.0.4",
     "next-auth": "^4.24.5",
+    "pusher-js": "^8.4.0-rc2",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "recoil": "^0.7.7",

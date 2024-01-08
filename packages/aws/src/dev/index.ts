@@ -33,9 +33,6 @@ const main = async () => {
   // catches "kill pid" (for example: nodemon restart)
   process.on("SIGUSR1", handleExit);
   process.on("SIGUSR2", handleExit);
-
-  //catches uncaught exceptions
-  process.on("uncaughtException", handleExit);
 };
 
 main();

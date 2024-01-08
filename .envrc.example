@@ -17,3 +17,7 @@ export NEXTAUTH_GITHUB_ID=secret
 export NEXTAUTH_GITHUB_SECRET=secret
 export NEXTAUTH_SECRET=secret
 export NEXTAUTH_URL=https://phr.vercel.app
+
+export WEBSOCKET_APP_ID=secret
+export WEBSOCKET_SECRET=secret
+export NEXT_PUBLIC_WEBSOCKET_KEY=notsecret

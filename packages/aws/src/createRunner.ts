@@ -15,6 +15,9 @@ export const RunnerFunction: FunctionOptions = {
     TELEGRAM_TOKEN: Environment.telegramToken,
     BUCKET_NAME: Environment.bucketName,
     TABLE_NAME: Environment.tableName,
+    WEBSOCKET_APP_ID: Environment.webSocketAppId,
+    NEXT_PUBLIC_WEBSOCKET_KEY: Environment.webSocketKey,
+    WEBSOCKET_SECRET: Environment.webSocketSecret,
   },
 };
 

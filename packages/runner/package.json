@@ -19,7 +19,8 @@
     "node-fetch": "^3.3.1",
     "node-telegram-bot-api": "^0.61.0",
     "puppeteer-core": "^19.7.3",
-    "puppeteer-screen-recorder": "^2.1.2"
+    "puppeteer-screen-recorder": "^2.1.2",
+    "pusher": "^5.2.0"
   },
   "devDependencies": {
     "@pusher/esbuild": "*",
