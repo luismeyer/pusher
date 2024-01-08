@@ -27,6 +27,9 @@ jobs:
           run_install: true
 
       - name: Build
+        env:
+          NEXTAUTH_GITHUB_ID: ${{ secrets.NEXTAUTH_GITHUB_ID }}
+          NEXTAUTH_GITHUB_SECRET: ${{ secrets.NEXTAUTH_GITHUB_SECRET }}
         run: pnpm run build
 
       - name: Deploy AWS
