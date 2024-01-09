@@ -1,6 +1,6 @@
 "use client";
 
-import { Button, Drawer, List } from "antd";
+import { Drawer, List } from "antd";
 import { useCallback } from "react";
 import { useRecoilState } from "recoil";
 
@@ -8,6 +8,7 @@ import { flowAtom } from "@/state/flow";
 import { PlusCircleOutlined } from "@ant-design/icons";
 
 import { ExecutionsInput } from "./executionInput";
+import { Button } from "./ui/button";
 
 type ExecutionsDrawerProps = {
   open: boolean;
@@ -52,11 +53,8 @@ export const ExecutionsDrawer: React.FC<ExecutionsDrawerProps> = ({
           marginTop: 25,
         }}
       >
-        <Button
-          type="primary"
-          onClick={addExecution}
-          icon={<PlusCircleOutlined />}
-        >
+        <Button className="flex gap-2 items-center" onClick={addExecution}>
+          <PlusCircleOutlined />
           Add Execution
         </Button>
       </div>

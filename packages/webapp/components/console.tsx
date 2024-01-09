@@ -28,8 +28,8 @@ export const Console: React.FC = () => {
   } = theme.useToken();
 
   return (
-    <Layout style={{ height: "100vh" }}>
-      <Header style={{ height: "auto", backgroundColor: "#072448" }}>
+    <Layout className="h-screen">
+      <Header style={{ height: "auto", backgroundColor: "" }}>
         <TopBar />
       </Header>
 

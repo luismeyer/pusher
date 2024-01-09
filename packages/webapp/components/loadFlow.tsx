@@ -1,11 +1,13 @@
 "use client";
 
-import { App, Button, Input, Space } from "antd";
+import { App, Input, Space } from "antd";
 import Title from "antd/lib/typography/Title";
 import { useCallback, useState } from "react";
 
 import { useFetchFlow } from "@/hooks/useFetchFlow";
 import { CloudDownloadOutlined, LoadingOutlined } from "@ant-design/icons";
+
+import { Button } from "./ui/button";
 
 type LoadFlowModalProps = {
   setOpen: (open: boolean) => void;
@@ -58,20 +60,16 @@ export const LoadFlow: React.FC<LoadFlowModalProps> = ({
       />
 
       <Space>
-        <Button disabled={loading} onClick={() => setOpen(false)}>
-          Cancel
-        </Button>
-
-        <Button disabled={loading} onClick={reloadFlow}>
+        <Button variant="secondary" disabled={loading} onClick={reloadFlow}>
           Reload current Flow
         </Button>
 
         <Button
+          className="flex gap-2"
           disabled={!id || loading}
-          icon={loading ? <LoadingOutlined /> : <CloudDownloadOutlined />}
-          type="primary"
           onClick={() => id && loadFlow(id)}
         >
+          {loading ? <LoadingOutlined /> : <CloudDownloadOutlined />}
           Load
         </Button>
       </Space>

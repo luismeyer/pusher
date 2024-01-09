@@ -1,7 +1,6 @@
 "use client";
 
-import { Button, Dropdown, Space } from "antd";
-import React, { useCallback, useMemo } from "react";
+import React, { useMemo } from "react";
 import {
   useRecoilState,
   useRecoilValue,
@@ -23,6 +22,16 @@ import {
   DisconnectOutlined,
 } from "@ant-design/icons";
 import { isDecisionAction } from "@pusher/shared";
+
+import { Button } from "./ui/button";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "./ui/dropdown-menu";
 
 type ActionButtonsProps = {
   id: string;
@@ -49,115 +58,54 @@ export const ActionButtons: React.FC<ActionButtonsProps> = ({
 
   const setConnectType = useSetRecoilState(connectTypeAtom);
 
-  const handleDeleteClick = useCallback(async () => {
+  const handleDeleteClick = async () => {
     await deleteAction(id);
-  }, [deleteAction, id]);
+  };
 
-  const startConnect = useCallback(
-    (connectType: ConnectType) => {
-      if (connectStart) {
-        return;
-      }
+  const startConnect = (connectType: ConnectType) => {
+    if (connectStart) {
+      return;
+    }
 
-      // start connect
+    // start connect
 
-      setConnectStart(id);
-      setConnectType(connectType);
-    },
-    [connectStart, id, setConnectStart, setConnectType]
-  );
+    setConnectStart(id);
+    setConnectType(connectType);
+  };
 
-  const handleConnectClick: ButtonClickHandler = useCallback(
-    (event) => {
-      // prevent click on canvas or line
-      event.stopPropagation();
+  const handleConnectClick: ButtonClickHandler = (event) => {
+    // prevent click on canvas or line
+    event.stopPropagation();
 
-      if (nextAction) {
-        resetRelation();
-        return;
-      }
+    if (nextAction) {
+      resetRelation();
+      return;
+    }
 
-      startConnect("default");
-    },
-    [nextAction, resetRelation, startConnect]
-  );
+    startConnect("default");
+  };
 
   const decisionAction = useMemo(() => isDecisionAction(data), [data]);
 
   return (
-    <Space size="small">
+    <div className="flex gap-2">
       {!decisionAction && (
         <Button
-          type="dashed"
-          shape="round"
-          danger={Boolean(nextAction)}
+          variant={nextAction ? "destructive" : "secondary"}
           disabled={disabled}
           onClick={handleConnectClick}
-          icon={nextAction ? <DisconnectOutlined /> : <ApiOutlined />}
-        />
+        >
+          {nextAction ? <DisconnectOutlined /> : <ApiOutlined />}
+        </Button>
       )}
 
       {decisionAction && (
-        <>
-          <Dropdown
-            disabled={disabled}
-            menu={{
-              items: [
-                {
-                  label: "If true",
-                  key: 1,
-                  onClick: (info) => {
-                    // prevent click on canvas or line
-                    info.domEvent.stopPropagation();
-
-                    if (trueNextAction && falseNextAction) {
-                      setRelation((pre) => ({
-                        ...pre,
-                        trueNextAction: undefined,
-                      }));
-                      return;
-                    }
-
-                    if (trueNextAction) {
-                      resetRelation();
-                      return;
-                    }
-
-                    startConnect("true");
-                  },
-                  danger: Boolean(trueNextAction),
-                },
-                {
-                  label: "If false",
-                  key: 2,
-                  onClick: (info) => {
-                    // prevent click on canvas or line
-                    info.domEvent.stopPropagation();
-
-                    if (falseNextAction && trueNextAction) {
-                      setRelation((pre) => ({
-                        ...pre,
-                        falseNextAction: undefined,
-                      }));
-                      return;
-                    }
-
-                    if (falseNextAction) {
-                      resetRelation();
-                      return;
-                    }
-
-                    startConnect("false");
-                  },
-                  danger: Boolean(falseNextAction),
-                },
-              ],
-            }}
-          >
+        <DropdownMenu>
+          <DropdownMenuTrigger>
             <Button
-              danger={Boolean(falseNextAction && trueNextAction)}
-              type="dashed"
-              shape="round"
+              variant={
+                falseNextAction && trueNextAction ? "destructive" : "secondary"
+              }
             >
               {falseNextAction && trueNextAction ? (
                 <DisconnectOutlined />
@@ -165,18 +113,73 @@ export const ActionButtons: React.FC<ActionButtonsProps> = ({
                 <ApiOutlined />
               )}
             </Button>
-          </Dropdown>
-        </>
+          </DropdownMenuTrigger>
+
+          <DropdownMenuContent>
+            <DropdownMenuLabel>Connections</DropdownMenuLabel>
+
+            <DropdownMenuSeparator />
+
+            <DropdownMenuItem
+              className="cursor-pointer"
+              onClick={(event: React.MouseEvent) => {
+                event.stopPropagation();
+
+                if (trueNextAction && falseNextAction) {
+                  setRelation((pre) => ({
+                    ...pre,
+                    trueNextAction: undefined,
+                  }));
+
+                  return;
+                }
+
+                if (trueNextAction) {
+                  resetRelation();
+                  return;
+                }
+
+                startConnect("true");
+              }}
+            >
+              If true
+            </DropdownMenuItem>
+
+            <DropdownMenuItem
+              className="cursor-pointer"
+              onClick={(event: React.MouseEvent) => {
+                event.stopPropagation();
+
+                if (falseNextAction && trueNextAction) {
+                  setRelation((pre) => ({
+                    ...pre,
+                    falseNextAction: undefined,
+                  }));
+
+                  return;
+                }
+
+                if (falseNextAction) {
+                  resetRelation();
+                  return;
+                }
+
+                startConnect("false");
+              }}
+            >
+              If false
+            </DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
       )}
 
       <Button
-        type="dashed"
-        shape="round"
-        danger
+        variant="destructive"
         disabled={disabled}
-        icon={<DeleteOutlined />}
         onClick={handleDeleteClick}
-      />
-    </Space>
+      >
+        <DeleteOutlined />
+      </Button>
+    </div>
   );
 };

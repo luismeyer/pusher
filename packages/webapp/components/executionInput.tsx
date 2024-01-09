@@ -1,6 +1,6 @@
 "use client";
 
-import { Button, Col, Input, Row, theme, Tooltip } from "antd";
+import { Col, Input, Row, theme, Tooltip } from "antd";
 import { useCallback, useMemo } from "react";
 import { useRecoilState, useRecoilValue } from "recoil";
 
@@ -10,6 +10,7 @@ import { Execution } from "@pusher/shared";
 
 import { removeItemFromArray, replaceItemInArray } from "../utils/array";
 import { VariablesInput } from "./variablesInput";
+import { Button } from "./ui/button";
 
 type ExecutionsInputProps = {
   index: number;
@@ -93,7 +94,7 @@ export const ExecutionsInput: React.FC<ExecutionsInputProps> = ({
         </Col>
 
         <Col>
-          <Button danger onClick={() => deleteExecution(index)}>
+          <Button variant="destructive" onClick={() => deleteExecution(index)}>
             Delete
           </Button>
         </Col>

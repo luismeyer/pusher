@@ -1,6 +1,6 @@
 "use client";
 
-import { Badge, Button } from "antd";
+import { Badge } from "antd";
 import Title from "antd/lib/typography/Title";
 import Image from "next/image";
 import Link from "next/link";
@@ -11,6 +11,7 @@ import React, {
   useRef,
   useState,
 } from "react";
+import { Button } from "./ui/button";
 
 const Texts = [
   "google.com",
@@ -179,9 +180,9 @@ export const Stage: React.FC = () => {
               {restText}
             </Title>
 
-            <Link href="./console">
-              <Button type="primary">Open Console</Button>
-            </Link>
+            <Button asChild>
+              <Link href="/console">Open Console</Link>
+            </Button>
           </div>
 
           <Image

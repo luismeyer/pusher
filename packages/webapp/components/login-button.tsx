@@ -1,9 +1,9 @@
 "use client";
 
-import { Button } from "antd";
-
 import { signIn } from "next-auth/react";
 import { useState } from "react";
+
+import { Button } from "./ui/button";
 
 export const LoginButton = () => {
   const [loading, setLoading] = useState(false);

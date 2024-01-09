@@ -1,15 +1,6 @@
 "use client";
 
-import {
-  Button,
-  Col,
-  Input,
-  InputNumber,
-  Row,
-  Segmented,
-  Space,
-  Switch,
-} from "antd";
+import { Col, Input, InputNumber, Row, Segmented, Space, Switch } from "antd";
 import { useMemo, useState } from "react";
 import { useRecoilState } from "recoil";
 
@@ -21,6 +12,7 @@ import { ExecutionsDrawer } from "./executionsDrawer";
 import { LoadFlowDrawer } from "./loadFlowDrawer";
 import { ResetModal } from "./resetModal";
 import { SubmitModal } from "./submitModal";
+import { Button } from "./ui/button";
 
 export const TopBar: React.FC = () => {
   const [flowData, setFlowData] = useRecoilState(flowAtom);
@@ -97,8 +89,8 @@ export const TopBar: React.FC = () => {
           <Row gutter={[8, 8]}>
             <Col span={8}>
               <Button
-                type="default"
-                block
+                className="w-full"
+                variant="secondary"
                 onClick={() => setIsLoadFlowOpen(true)}
               >
                 Load
@@ -107,8 +99,8 @@ export const TopBar: React.FC = () => {
 
             <Col span={8}>
               <Button
-                type="default"
-                block
+                className="w-full"
+                variant="secondary"
                 onClick={() => setIsExecutionsOpen(true)}
               >
                 Executions
@@ -117,9 +109,8 @@ export const TopBar: React.FC = () => {
 
             <Col span={8}>
               <Button
-                block
-                type="default"
-                danger
+                className="w-full"
+                variant="destructive"
                 onClick={() => setIsResetOpen(true)}
               >
                 Reset
@@ -143,15 +134,19 @@ export const TopBar: React.FC = () => {
             </Col>
 
             <Col span={12}>
-              <Button block type="default" onClick={() => setIsDebugOpen(true)}>
+              <Button
+                variant="secondary"
+                className="w-full"
+                onClick={() => setIsDebugOpen(true)}
+              >
                 Test
               </Button>
             </Col>
 
             <Col span={12}>
               <Button
-                block
-                type="primary"
+                className="w-full"
+                variant="secondary"
                 onClick={() => setIsSubmitOpen(true)}
               >
                 Submit

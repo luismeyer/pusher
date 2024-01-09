@@ -1,6 +1,6 @@
 "use client";
 
-import { App, Button, Input, Space } from "antd";
+import { App, Input, Space } from "antd";
 import Text from "antd/lib/typography/Text";
 import Title from "antd/lib/typography/Title";
 import { useCallback, useState } from "react";
@@ -9,6 +9,7 @@ import { useRecoilCallback } from "recoil";
 import { useStoreFlow } from "@/hooks/useStoreFlow";
 import { useValidateFlowString } from "@/hooks/useValidateFlow";
 import { flowSelector } from "@/state/flow";
+import { Button } from "./ui/button";
 
 const { TextArea } = Input;
 
@@ -102,7 +103,7 @@ export const ImportExport: React.FC<LoadFlowModalProps> = ({ setOpen }) => {
 
       <Space>
         <Button
-          type="primary"
+          variant="secondary"
           disabled={!importExport || loading}
           onClick={importFlow}
         >
@@ -110,7 +111,7 @@ export const ImportExport: React.FC<LoadFlowModalProps> = ({ setOpen }) => {
         </Button>
 
         <Button
-          type="primary"
+          variant="secondary"
           disabled={!!importExport || loading}
           onClick={exportFlow}
         >

@@ -9,14 +9,7 @@ export default async function LoginPage() {
   }
 
   return (
-    <main
-      style={{
-        display: "flex",
-        height: "100vh",
-        alignItems: "center",
-        justifyContent: "center",
-      }}
-    >
+    <main className="flex h-screen items-center justify-center">
       <LoginButton />
     </main>
   );

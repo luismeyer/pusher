@@ -6,10 +6,16 @@ import { writeFile } from "fs/promises";
 import { tmpdir } from "os";
 
 import { AwsStack } from "./stack";
+import { existsSync } from "fs";
 
 export const chromiumLayerPath = tmpdir() + "/chromium-layer.zip";
 
 const loadChromium = async () => {
+  if (existsSync(chromiumLayerPath)) {
+    console.info("Chromium layer already exists");
+    return;
+  }
+
   console.info("Loading chromium layer");
 
   const { CHROMIUM_URL } = process.env;

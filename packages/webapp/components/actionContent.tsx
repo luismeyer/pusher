@@ -1,14 +1,21 @@
 "use client";
 
-import { InputNumber, Select, Space } from "antd";
 import { useMemo } from "react";
 import { useRecoilState } from "recoil";
 
 import { dataAtom } from "@/state/data";
 import { InfoCircleOutlined } from "@ant-design/icons";
-import { Keys } from "@pusher/shared";
 
-import { TextInput } from "./textInput";
+import { Input } from "./ui/input";
+import { Label } from "./ui/label";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "./ui/select";
+import { Keys } from "@pusher/shared";
 
 type ActionContentProps = {
   id: string;
@@ -21,48 +28,53 @@ export const ActionContent: React.FC<ActionContentProps> = ({ id }) => {
     let components: JSX.Element[] = [];
 
     if ("selector" in data) {
-      const prefixOptions = [{ value: "#" }, { value: "." }, { value: "" }];
-
       components = [
         ...components,
-        <TextInput
+        <Input
           id={id}
           key={components.length}
           value={data.selector}
-          addonBeforeOptions={prefixOptions}
           placeholder="Enter CSS Selector"
-          onChange={(value) => setData((pre) => ({ ...pre, selector: value }))}
-        />,
-      ];
-    }
-
-    if ("timeInSeconds" in data) {
-      components = [
-        ...components,
-        <InputNumber
-          id={id}
-          key={components.length}
-          value={data.timeInSeconds}
-          addonAfter="Seconds"
-          onChange={(value) =>
-            setData((pre) => ({ ...pre, timeInSeconds: value ?? 0 }))
+          onChange={(event) =>
+            setData((pre) => ({ ...pre, selector: event.target.value }))
           }
         />,
       ];
     }
 
-    if ("pageUrl" in data) {
-      const prefixOptions = [{ value: "https://" }, { value: "http://" }];
+    if ("timeInSeconds" in data) {
+      const key = "seconds" + id;
 
       components = [
         ...components,
-        <TextInput
+        <div key={key} className="grid w-full gap-1.5">
+          <Label htmlFor={key}>Time in seconds</Label>
+          <Input
+            id={key}
+            type="number"
+            value={data.timeInSeconds}
+            onChange={(value) =>
+              setData((pre) => ({
+                ...pre,
+                timeInSeconds: Number(value.target.value) ?? 0,
+              }))
+            }
+          />
+        </div>,
+      ];
+    }
+
+    if ("pageUrl" in data) {
+      components = [
+        ...components,
+        <Input
           id={id}
           key={components.length}
           value={data.pageUrl}
           placeholder="google.com"
-          addonBeforeOptions={prefixOptions}
-          onChange={(value) => setData((pre) => ({ ...pre, pageUrl: value }))}
+          onChange={(value) =>
+            setData((pre) => ({ ...pre, pageUrl: value.target.value }))
+          }
         />,
       ];
     }
@@ -80,12 +92,14 @@ export const ActionContent: React.FC<ActionContentProps> = ({ id }) => {
 
       components = [
         ...components,
-        <TextInput
+        <Input
           id={id}
           key={components.length}
           value={data.text}
           placeholder={placeholder}
-          onChange={(value) => setData((pre) => ({ ...pre, text: value }))}
+          onChange={(value) =>
+            setData((pre) => ({ ...pre, text: value.target.value }))
+          }
         />,
       ];
     }
@@ -93,19 +107,23 @@ export const ActionContent: React.FC<ActionContentProps> = ({ id }) => {
     if (data.type === "telegram") {
       components = [
         ...components,
-        <TextInput
+        <Input
           id={id}
           key={components.length}
           value={data.chatId}
           placeholder="Enter Telegram ChatId"
-          onChange={(value) => setData((pre) => ({ ...pre, chatId: value }))}
+          onChange={(value) =>
+            setData((pre) => ({ ...pre, chatId: value.target.value }))
+          }
         />,
-        <TextInput
+        <Input
           id={id}
           key={components.length + 1}
           value={data.message}
           placeholder="Enter Telegram Message"
-          onChange={(value) => setData((pre) => ({ ...pre, message: value }))}
+          onChange={(value) =>
+            setData((pre) => ({ ...pre, message: value.target.value }))
+          }
         />,
       ];
     }
@@ -113,13 +131,13 @@ export const ActionContent: React.FC<ActionContentProps> = ({ id }) => {
     if (data.type === "storeTextContent") {
       components = [
         ...components,
-        <TextInput
+        <Input
           id={id}
           key={components.length}
           value={data.variableName}
           placeholder="Enter VariableName to store the TextContent"
           onChange={(value) =>
-            setData((pre) => ({ ...pre, variableName: value }))
+            setData((pre) => ({ ...pre, variableName: value.target.value }))
           }
         />,
       ];
@@ -129,18 +147,21 @@ export const ActionContent: React.FC<ActionContentProps> = ({ id }) => {
       components = [
         ...components,
         <Select
-          id={id}
           key={components.length}
-          showSearch
-          placeholder="Select a person"
-          optionFilterProp="children"
-          value={data.key}
-          onChange={(value) => setData((pre) => ({ ...pre, key: value }))}
-          filterOption={(input, option) =>
-            (option?.label ?? "").toLowerCase().includes(input.toLowerCase())
-          }
-          options={Keys.map((key) => ({ value: key, label: key }))}
-        />,
+          onValueChange={(value) => setData((pre) => ({ ...pre, key: value }))}
+        >
+          <SelectTrigger className="w-full">
+            <SelectValue placeholder="Select a key" />
+          </SelectTrigger>
+
+          <SelectContent>
+            {Keys.map((key, index) => (
+              <SelectItem key={key + index} value={key}>
+                {key}
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>,
       ];
     }
 
@@ -148,13 +169,13 @@ export const ActionContent: React.FC<ActionContentProps> = ({ id }) => {
   }, [data, id, setData]);
 
   return (
-    <div style={{ display: "grid", gap: 8 }}>
+    <div className="grid gap-2">
       {inputs.length === 0 && (
-        <Space direction="vertical" align="center" size={0}>
-          <InfoCircleOutlined style={{ fontSize: 18, fontWeight: "bold" }} />
+        <div className="flex flex-col items-center">
+          <InfoCircleOutlined />
 
           <span>No Input needed here</span>
-        </Space>
+        </div>
       )}
 
       {inputs}
