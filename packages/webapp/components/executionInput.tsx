@@ -1,16 +1,22 @@
 "use client";
 
-import { Col, Input, Row, theme, Tooltip } from "antd";
+import { AlertTriangle } from "lucide-react";
 import { useCallback, useMemo } from "react";
 import { useRecoilState, useRecoilValue } from "recoil";
 
 import { defaultVariables, executionsSelector } from "@/state/flow";
-import { WarningOutlined } from "@ant-design/icons";
 import { Execution } from "@pusher/shared";
 
 import { removeItemFromArray, replaceItemInArray } from "../utils/array";
-import { VariablesInput } from "./variablesInput";
 import { Button } from "./ui/button";
+import { Input } from "./ui/input";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "./ui/tooltip";
+import { VariablesInput } from "./variablesInput";
 
 type ExecutionsInputProps = {
   index: number;
@@ -43,10 +49,6 @@ export const ExecutionsInput: React.FC<ExecutionsInputProps> = ({
     [executions, updateExecution]
   );
 
-  const {
-    token: { colorWarning },
-  } = theme.useToken();
-
   const minimumVariables = useRecoilValue(defaultVariables);
 
   const missingVariables = useMemo(
@@ -55,50 +57,38 @@ export const ExecutionsInput: React.FC<ExecutionsInputProps> = ({
   );
 
   return (
-    <div
-      style={{
-        display: "flex",
-        flexDirection: "column",
-        width: "100%",
-        gap: 12,
-      }}
-    >
-      <Row align="middle" gutter={10}>
-        <Col>
-          <h3>Execution {index + 1}</h3>
-        </Col>
+    <div className="flex flex-col w-full gap-4">
+      <div className="flex items-center gap-2">
+        <h3 className="text-xl">Execution {index + 1}</h3>
 
-        <Col>
-          {missingVariables.length > 0 && (
-            <Tooltip
-              title={`Missing Value for: ${missingVariables.join(", ")}`}
-            >
-              <WarningOutlined style={{ color: colorWarning }} />
-            </Tooltip>
-          )}
-        </Col>
-      </Row>
+        <TooltipProvider>
+          <Tooltip>
+            {missingVariables.length > 0 && (
+              <TooltipTrigger asChild>
+                <AlertTriangle className="text-yellow-400" size={18} />
+              </TooltipTrigger>
+            )}
 
-      <Row align="middle" justify="space-between">
-        <Col span={12}>
-          <Input
-            value={execution.name}
-            placeholder={"Execution Name"}
-            onChange={(e) =>
-              updateExecution(index, {
-                ...execution,
-                name: e.target.value,
-              })
-            }
-          />
-        </Col>
+            <TooltipContent>
+              Missing Value for: {missingVariables.join(", ")}
+            </TooltipContent>
+          </Tooltip>
+        </TooltipProvider>
+      </div>
 
-        <Col>
-          <Button variant="destructive" onClick={() => deleteExecution(index)}>
-            Delete
-          </Button>
-        </Col>
-      </Row>
+      <div className="flex gap-4">
+        <Input
+          value={execution.name}
+          placeholder={"Execution Name"}
+          onChange={(e) =>
+            updateExecution(index, { ...execution, name: e.target.value })
+          }
+        />
+
+        <Button variant="destructive" onClick={() => deleteExecution(index)}>
+          Delete
+        </Button>
+      </div>
 
       <VariablesInput
         variables={execution.variables}

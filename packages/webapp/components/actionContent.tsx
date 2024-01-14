@@ -5,17 +5,11 @@ import { useRecoilState } from "recoil";
 
 import { dataAtom } from "@/state/data";
 import { InfoCircleOutlined } from "@ant-design/icons";
+import { Keys } from "@pusher/shared";
 
+import { Combobox } from "./ui/combobox";
 import { Input } from "./ui/input";
 import { Label } from "./ui/label";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "./ui/select";
-import { Keys } from "@pusher/shared";
 
 type ActionContentProps = {
   id: string;
@@ -146,22 +140,11 @@ export const ActionContent: React.FC<ActionContentProps> = ({ id }) => {
     if (data.type === "keyboard") {
       components = [
         ...components,
-        <Select
+        <Combobox
           key={components.length}
-          onValueChange={(value) => setData((pre) => ({ ...pre, key: value }))}
-        >
-          <SelectTrigger className="w-full">
-            <SelectValue placeholder="Select a key" />
-          </SelectTrigger>
-
-          <SelectContent>
-            {Keys.map((key, index) => (
-              <SelectItem key={key + index} value={key}>
-                {key}
-              </SelectItem>
-            ))}
-          </SelectContent>
-        </Select>,
+          label="Search key..."
+          data={Keys.map((item) => ({ value: item, label: item }))}
+        />,
       ];
     }
 

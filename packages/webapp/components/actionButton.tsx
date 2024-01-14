@@ -91,7 +91,7 @@ export const ActionButtons: React.FC<ActionButtonsProps> = ({
     <div className="flex gap-2">
       {!decisionAction && (
         <Button
-          variant={nextAction ? "destructive" : "secondary"}
+          variant={nextAction ? "destructive" : "outline"}
           disabled={disabled}
           onClick={handleConnectClick}
         >

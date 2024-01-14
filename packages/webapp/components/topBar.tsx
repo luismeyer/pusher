@@ -1,6 +1,5 @@
 "use client";
 
-import { Col, Input, InputNumber, Row, Segmented, Space, Switch } from "antd";
 import { useMemo, useState } from "react";
 import { useRecoilState } from "recoil";
 
@@ -13,6 +12,10 @@ import { LoadFlowDrawer } from "./loadFlowDrawer";
 import { ResetModal } from "./resetModal";
 import { SubmitModal } from "./submitModal";
 import { Button } from "./ui/button";
+import { Input } from "./ui/input";
+import { Label } from "./ui/label";
+import { Switch } from "./ui/switch";
+import { ToggleGroup, ToggleGroupItem } from "./ui/toggle-group";
 
 export const TopBar: React.FC = () => {
   const [flowData, setFlowData] = useRecoilState(flowAtom);
@@ -23,136 +26,122 @@ export const TopBar: React.FC = () => {
   const [isExecutionsOpen, setIsExecutionsOpen] = useState(false);
   const [isResetOpen, setIsResetOpen] = useState(false);
 
-  const failsStatus = useMemo((): "error" | "warning" | undefined => {
-    if (flowData.fails >= 3) {
-      return "error";
-    }
-
-    if (flowData.fails > 0) {
-      return "warning";
-    }
-  }, [flowData.fails]);
-
   return (
     <>
-      <div
-        style={{
-          color: "white",
-          lineHeight: "initial",
-          display: "flex",
-          justifyContent: "space-between",
-          gap: "10px",
-          alignItems: "center",
-          padding: "24px 0",
-        }}
-      >
-        <Space direction="vertical">
-          <Row gutter={[8, 8]}>
-            <Col>
-              <p>Name</p>
-              <Input
-                placeholder="Name"
-                value={flowData.name}
-                onChange={(e) =>
-                  setFlowData((pre) => ({ ...pre, name: e.target.value }))
+      <div className="flex justify-between gap-5 items-center p-4">
+        <div className="grid grid-cols-3 gap-2 w-1/2">
+          <div>
+            <Label htmlFor="name">Name</Label>
+            <Input
+              id="name"
+              placeholder="Name"
+              value={flowData.name}
+              onChange={(e) =>
+                setFlowData((pre) => ({ ...pre, name: e.target.value }))
+              }
+            />
+          </div>
+
+          <div>
+            <Label className="text-black" htmlFor="fails">
+              Fails
+            </Label>
+            <Input
+              id="fails"
+              value={flowData.fails}
+              onChange={(e) =>
+                setFlowData((pre) => ({
+                  ...pre,
+                  fails: Number(e.target.value ?? 0),
+                }))
+              }
+            />
+          </div>
+
+          <div>
+            <Label className="text-black" htmlFor="interval">
+              Interval
+            </Label>
+            <ToggleGroup
+              id="interval"
+              className="w-full"
+              type="single"
+              variant="outline"
+              value={flowData.interval}
+              onValueChange={(value) => {
+                if (isInterval(value)) {
+                  setFlowData((pre) => ({ ...pre, interval: value }));
                 }
-              />
-            </Col>
+              }}
+            >
+              {["6h", "12h"].map((interval) => (
+                <ToggleGroupItem
+                  className="w-full"
+                  key={interval}
+                  value={interval}
+                  aria-label="Toggle bold"
+                >
+                  {interval}
+                </ToggleGroupItem>
+              ))}
+            </ToggleGroup>
+          </div>
 
-            <Col>
-              <p>Fails</p>
-              <InputNumber
-                value={flowData.fails}
-                status={failsStatus}
-                onChange={(update) =>
-                  setFlowData((pre) => ({ ...pre, fails: update ?? 0 }))
-                }
-              />
-            </Col>
+          <Button
+            className="w-full"
+            variant="outline"
+            onClick={() => setIsLoadFlowOpen(true)}
+          >
+            Load
+          </Button>
 
-            <Col>
-              <p>Interval</p>
-              <Segmented
-                options={["6h", "12h"]}
-                value={flowData.interval}
-                onChange={(e) => {
-                  const value = e.toString();
+          <Button
+            className="w-full"
+            variant="outline"
+            onClick={() => setIsExecutionsOpen(true)}
+          >
+            Executions
+          </Button>
 
-                  if (isInterval(value)) {
-                    setFlowData((pre) => ({ ...pre, interval: value }));
-                  }
-                }}
-              />
-            </Col>
-          </Row>
+          <Button
+            className="w-full"
+            variant="destructive"
+            onClick={() => setIsResetOpen(true)}
+          >
+            Reset
+          </Button>
+        </div>
 
-          <Row gutter={[8, 8]}>
-            <Col span={8}>
-              <Button
-                className="w-full"
-                variant="secondary"
-                onClick={() => setIsLoadFlowOpen(true)}
-              >
-                Load
-              </Button>
-            </Col>
+        <div className="grid gap-2">
+          <div className="flex gap-2 justify-center items-center">
+            <Switch
+              id="disabled"
+              onCheckedChange={(update) =>
+                setFlowData((pre) => ({ ...pre, disabled: !update }))
+              }
+            />
+            <Label htmlFor="disabled">
+              {flowData.disabled ? "disabled" : "enabled"}
+            </Label>
+          </div>
 
-            <Col span={8}>
-              <Button
-                className="w-full"
-                variant="secondary"
-                onClick={() => setIsExecutionsOpen(true)}
-              >
-                Executions
-              </Button>
-            </Col>
+          <div className="flex gap-2">
+            <Button
+              variant="outline"
+              className="w-full"
+              onClick={() => setIsDebugOpen(true)}
+            >
+              Test
+            </Button>
 
-            <Col span={8}>
-              <Button
-                className="w-full"
-                variant="destructive"
-                onClick={() => setIsResetOpen(true)}
-              >
-                Reset
-              </Button>
-            </Col>
-          </Row>
-        </Space>
-
-        <div>
-          <Row gutter={[8, 8]}>
-            <Col span={24}>
-              <Switch
-                style={{ width: "100%" }}
-                checkedChildren="Enabled"
-                unCheckedChildren="Disabled"
-                checked={!flowData.disabled}
-                onChange={(update) =>
-                  setFlowData((pre) => ({ ...pre, disabled: !update }))
-                }
-              />
-            </Col>
-
-            <Col span={12}>
-              <Button
-                variant="secondary"
-                className="w-full"
-                onClick={() => setIsDebugOpen(true)}
-              >
-                Test
-              </Button>
-            </Col>
-
-            <Col span={12}>
-              <Button
-                className="w-full"
-                variant="secondary"
-                onClick={() => setIsSubmitOpen(true)}
-              >
-                Submit
-              </Button>
-            </Col>
-          </Row>
+            <Button
+              className="w-full"
+              variant="default"
+              onClick={() => setIsSubmitOpen(true)}
+            >
+              Submit
+            </Button>
+          </div>
         </div>
       </div>
 
@@ -162,13 +151,13 @@ export const TopBar: React.FC = () => {
         setOpen={setIsLoadFlowOpen}
       />
 
-      <DebugModal open={isDebugOpen} setOpen={setIsDebugOpen} />
+      {/* <DebugModal open={isDebugOpen} setOpen={setIsDebugOpen} /> */}
 
-      <SubmitModal open={isSubmitOpen} setOpen={setIsSubmitOpen} />
+      {/* <SubmitModal open={isSubmitOpen} setOpen={setIsSubmitOpen} /> */}
 
       <ExecutionsDrawer open={isExecutionsOpen} setOpen={setIsExecutionsOpen} />
 
-      <ResetModal open={isResetOpen} setOpen={setIsResetOpen} />
+      {/* <ResetModal open={isResetOpen} setOpen={setIsResetOpen} /> */}
     </>
   );
 };

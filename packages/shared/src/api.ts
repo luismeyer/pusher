@@ -1,5 +1,8 @@
 import { Flow } from "./flow";
-import { RunnerResult } from "./runner";
+
+export type AuthResponse<T> =
+  | { type: "unauthorized" }
+  | { type: "authorized"; data: T };
 
 export type SubmitErrorResponse = {
   type: "error";
@@ -25,8 +28,8 @@ export type LoadSuccessResponse = {
 export type LoadResponse = LoadErrorResponse | LoadSuccessResponse;
 
 export type ValidateResponse =
-  | { isValid: true }
-  | { isValid: false; error?: string };
+  | { type: "success" }
+  | { type: "error"; message?: string };
 
 export type DebugResponse =
   | { type: "success" }

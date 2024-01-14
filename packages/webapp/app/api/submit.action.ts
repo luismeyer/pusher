@@ -1,16 +1,22 @@
 "use server";
 
-import { Flow, SubmitResponse } from "@pusher/shared";
+import { AuthResponse, Flow, SubmitResponse } from "@pusher/shared";
 
 import { auth } from "./auth";
 import { saveFlow } from "./flowDB";
+import { res } from "./response";
 import { validateFlow } from "./validateFlow";
 
-export const submitAction = async (flow: string): Promise<SubmitResponse> => {
-  auth();
+export const submitAction = async (
+  flow: string
+): Promise<AuthResponse<SubmitResponse>> => {
+  const isAuthed = await auth();
+  if (!isAuthed) {
+    return res.unauth;
+  }
 
   if (typeof flow !== "string") {
-    return { type: "error", message: "Wrong flow parameter" };
+    return res.json({ type: "error", message: "Wrong flow parameter" });
   }
 
   let flowPayload: Flow;
@@ -23,13 +29,13 @@ export const submitAction = async (flow: string): Promise<SubmitResponse> => {
     validateFlow(flowPayload);
   } catch (e) {
     if (e instanceof Error) {
-      return { type: "error", message: e.message };
+      return res.json({ type: "error", message: e.message });
     }
 
-    return { type: "error", message: "Flow parsing error" };
+    return res.json({ type: "error", message: "Flow parsing error" });
   }
 
   await saveFlow(flowPayload);
 
-  return { type: "success" };
+  return res.json({ type: "success" });
 };

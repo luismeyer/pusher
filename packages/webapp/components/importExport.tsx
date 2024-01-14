@@ -103,7 +103,7 @@ export const ImportExport: React.FC<LoadFlowModalProps> = ({ setOpen }) => {
 
       <Space>
         <Button
-          variant="secondary"
+          variant="outline"
           disabled={!importExport || loading}
           onClick={importFlow}
         >
@@ -111,7 +111,7 @@ export const ImportExport: React.FC<LoadFlowModalProps> = ({ setOpen }) => {
         </Button>
 
         <Button
-          variant="secondary"
+          variant="outline"
           disabled={!!importExport || loading}
           onClick={exportFlow}
         >

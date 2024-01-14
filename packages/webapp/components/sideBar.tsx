@@ -115,12 +115,14 @@ export const SideBar: React.FC = () => {
   );
 
   return (
-    <Menu
-      mode="inline"
-      defaultOpenKeys={["navigation", "decisions", "output"]}
-      style={{ height: "100%" }}
-      selectable={false}
-      items={items}
-    />
+    <div className="w-[300px] h-full">
+      <Menu
+        mode="inline"
+        defaultOpenKeys={["navigation", "decisions", "output"]}
+        style={{ height: "100%" }}
+        selectable={false}
+        items={items}
+      />
+    </div>
   );
 };

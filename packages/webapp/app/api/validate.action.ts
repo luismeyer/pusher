@@ -1,14 +1,18 @@
 "use server";
 
-import { ValidateResponse } from "@pusher/shared";
+import { AuthResponse, ValidateResponse } from "@pusher/shared";
 import { auth } from "./auth";
+import { res } from "./response";
 
 import { validateFlow } from "./validateFlow";
 
 export const validateAction = async (
   flow: string
-): Promise<ValidateResponse> => {
-  auth();
+): Promise<AuthResponse<ValidateResponse>> => {
+  const isAuthed = await auth();
+  if (!isAuthed) {
+    return res.unauth;
+  }
 
   try {
     const decodedFlow = decodeURIComponent(flow);
@@ -17,12 +21,12 @@ export const validateAction = async (
 
     validateFlow(flowPayload);
 
-    return { isValid: true };
+    return res.json({ type: "success" });
   } catch (e) {
     if (e instanceof Error) {
-      return { isValid: false, error: e.message };
+      return res.json({ type: "error", message: e.message });
     }
 
-    return { isValid: false, error: "Invalid Flow" };
+    return res.json({ type: "error", message: "Invalid Flow" });
   }
 };
