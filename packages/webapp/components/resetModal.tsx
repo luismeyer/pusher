@@ -1,6 +1,5 @@
 "use client";
 
-import { Modal, Space, Typography } from "antd";
 import { useRecoilCallback, useRecoilValue } from "recoil";
 import { v4 } from "uuid";
 
@@ -10,6 +9,16 @@ import {
   useResetAction,
 } from "@/state/actions";
 import { flowAtom } from "@/state/flow";
+
+import { Button } from "./ui/button";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from "./ui/dialog";
 
 type ResetModalProps = {
   open: boolean;
@@ -39,28 +48,35 @@ export const ResetModal: React.FC<ResetModalProps> = ({ setOpen, open }) => {
   );
 
   return (
-    <Modal
-      title="Reset"
-      open={open}
-      onCancel={() => setOpen(false)}
-      cancelText="Cancel"
-      onOk={reset}
-      okButtonProps={{ danger: true }}
-      okText="Reset"
-    >
-      <Space direction="vertical">
-        <Typography.Text>
-          Are you sure you want to reset this flow? All unsaved in this Flow
-          changes will be lost.
-        </Typography.Text>
+    <Dialog open={open} onOpenChange={(value) => setOpen(value)}>
+      <DialogContent>
+        <DialogHeader>
+          <DialogTitle>Reset</DialogTitle>
 
-        <Typography.Text>
-          Save you Flow id to edit it later:
-          <p>
-            <Typography.Text type="warning">{flow.id}</Typography.Text>
-          </p>
-        </Typography.Text>
-      </Space>
-    </Modal>
+          <DialogDescription>
+            Are you sure you want to reset this flow? All unsaved in this Flow
+            changes will be lost.
+          </DialogDescription>
+        </DialogHeader>
+
+        <span className="text-yellow-600 text-sm">
+          Save you Flow id to edit it later: <br /> {flow.id}
+        </span>
+
+        <DialogFooter>
+          <Button
+            type="button"
+            onClick={() => setOpen(false)}
+            variant="outline"
+          >
+            Cancel
+          </Button>
+
+          <Button variant="destructive" type="button" onClick={reset}>
+            Reset
+          </Button>
+        </DialogFooter>
+      </DialogContent>
+    </Dialog>
   );
 };

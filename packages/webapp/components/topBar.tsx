@@ -11,11 +11,24 @@ import { ExecutionsDrawer } from "./executionsDrawer";
 import { LoadFlowDrawer } from "./loadFlowDrawer";
 import { ResetModal } from "./resetModal";
 import { SubmitModal } from "./submitModal";
-import { Button } from "./ui/button";
 import { Input } from "./ui/input";
 import { Label } from "./ui/label";
-import { Switch } from "./ui/switch";
 import { ToggleGroup, ToggleGroupItem } from "./ui/toggle-group";
+import {
+  Menubar,
+  MenubarCheckboxItem,
+  MenubarContent,
+  MenubarItem,
+  MenubarMenu,
+  MenubarRadioGroup,
+  MenubarRadioItem,
+  MenubarSeparator,
+  MenubarSub,
+  MenubarSubContent,
+  MenubarSubTrigger,
+  MenubarTrigger,
+} from "./ui/menubar";
+import { useAddAction } from "@/state/actions";
 
 export const TopBar: React.FC = () => {
   const [flowData, setFlowData] = useRecoilState(flowAtom);
@@ -25,6 +38,106 @@ export const TopBar: React.FC = () => {
   const [isLoadFlowOpen, setIsLoadFlowOpen] = useState(false);
   const [isExecutionsOpen, setIsExecutionsOpen] = useState(false);
   const [isResetOpen, setIsResetOpen] = useState(false);
+
+  const { addAction, id } = useAddAction();
+
+  const items = useMemo(
+    () => [
+      {
+        label: "Navigation",
+        key: "navigation",
+        children: [
+          {
+            key: "click",
+            label: "Click",
+            onClick: () => addAction({ id, type: "click", selector: "" }),
+          },
+          {
+            key: "scroll",
+            label: "Scroll To Bottom",
+            onClick: () => addAction({ id, type: "scrollToBottom" }),
+          },
+          {
+            key: "timeout",
+            label: "Timeout",
+            onClick: () => addAction({ id, type: "timeout", timeInSeconds: 0 }),
+          },
+          {
+            key: "wait",
+            label: "Wait For Element",
+            onClick: () => addAction({ id, type: "waitFor", selector: "" }),
+          },
+          {
+            key: "open",
+            label: "Open Page",
+            onClick: () => addAction({ id, type: "openPage", pageUrl: "" }),
+          },
+          {
+            key: "type",
+            label: "Type Text",
+            onClick: () =>
+              addAction({ id, type: "type", selector: "", text: "" }),
+          },
+          {
+            key: "store",
+            label: "Store Text Content",
+            onClick: () =>
+              addAction({
+                id,
+                type: "storeTextContent",
+                selector: "",
+                variableName: "",
+              }),
+          },
+          {
+            key: "keyboard",
+            label: "Keyboard Input",
+            onClick: () =>
+              addAction({
+                id,
+                type: "keyboard",
+                key: "Enter",
+              }),
+          },
+        ],
+      },
+      {
+        label: "Decision",
+        key: "decisions",
+        children: [
+          {
+            key: "exists",
+            label: "Element Exists",
+            onClick: () => addAction({ id, type: "exists", selector: "" }),
+          },
+          {
+            key: "contetnMatches",
+            label: "Text Content Matches",
+            onClick: () =>
+              addAction({
+                id,
+                type: "textContentMatches",
+                selector: "",
+                text: "",
+              }),
+          },
+        ],
+      },
+      {
+        label: "Output",
+        key: "output",
+        children: [
+          {
+            key: "11",
+            label: "Telegram",
+            onClick: () =>
+              addAction({ id, type: "telegram", chatId: "", message: "" }),
+          },
+        ],
+      },
+    ],
+    [addAction, id]
+  );
 
   return (
     <>
@@ -57,92 +170,89 @@ export const TopBar: React.FC = () => {
               }
             />
           </div>
+        </div>
 
-          <div>
-            <Label className="text-black" htmlFor="interval">
-              Interval
-            </Label>
-            <ToggleGroup
-              id="interval"
-              className="w-full"
-              type="single"
-              variant="outline"
-              value={flowData.interval}
-              onValueChange={(value) => {
-                if (isInterval(value)) {
-                  setFlowData((pre) => ({ ...pre, interval: value }));
+        <Menubar>
+          <MenubarMenu>
+            <MenubarTrigger>File</MenubarTrigger>
+
+            <MenubarContent>
+              <MenubarItem onClick={() => setIsResetOpen(true)}>
+                Reset
+              </MenubarItem>
+
+              <MenubarItem onClick={() => setIsDebugOpen(true)}>
+                Test
+              </MenubarItem>
+
+              <MenubarSeparator />
+
+              <MenubarCheckboxItem
+                checked={!flowData.disabled}
+                onCheckedChange={(update) =>
+                  setFlowData((pre) => ({ ...pre, disabled: !update }))
                 }
-              }}
-            >
-              {["6h", "12h"].map((interval) => (
-                <ToggleGroupItem
-                  className="w-full"
-                  key={interval}
-                  value={interval}
-                  aria-label="Toggle bold"
-                >
-                  {interval}
-                </ToggleGroupItem>
+              >
+                {flowData.disabled ? "Disabled" : "Enabled"}
+              </MenubarCheckboxItem>
+
+              <MenubarItem onClick={() => setIsSubmitOpen(true)}>
+                Submit
+              </MenubarItem>
+            </MenubarContent>
+          </MenubarMenu>
+
+          <MenubarMenu>
+            <MenubarTrigger>Settings</MenubarTrigger>
+
+            <MenubarContent>
+              <MenubarItem onClick={() => setIsLoadFlowOpen(true)}>
+                Load
+              </MenubarItem>
+
+              <MenubarItem onClick={() => setIsExecutionsOpen(true)}>
+                Executions
+              </MenubarItem>
+
+              <MenubarSeparator />
+
+              <MenubarRadioGroup
+                value={flowData.interval}
+                onValueChange={(value) => {
+                  if (isInterval(value)) {
+                    setFlowData((pre) => ({ ...pre, interval: value }));
+                  }
+                }}
+              >
+                {["6h", "12h"].map((interval) => (
+                  <MenubarRadioItem key={interval} value={interval}>
+                    {interval}
+                  </MenubarRadioItem>
+                ))}
+              </MenubarRadioGroup>
+            </MenubarContent>
+          </MenubarMenu>
+
+          <MenubarMenu>
+            <MenubarTrigger>Actions</MenubarTrigger>
+
+            <MenubarContent>
+              {items.map((group) => (
+                <MenubarSub key={group.key}>
+                  <MenubarSubTrigger>{group.label}</MenubarSubTrigger>
+
+                  <MenubarSubContent>
+                    {group.children.map((item) => (
+                      <MenubarItem key={item.key} onClick={item.onClick}>
+                        {item.label}
+                      </MenubarItem>
+                    ))}
+                  </MenubarSubContent>
+                </MenubarSub>
               ))}
-            </ToggleGroup>
-          </div>
-
-          <Button
-            className="w-full"
-            variant="outline"
-            onClick={() => setIsLoadFlowOpen(true)}
-          >
-            Load
-          </Button>
-
-          <Button
-            className="w-full"
-            variant="outline"
-            onClick={() => setIsExecutionsOpen(true)}
-          >
-            Executions
-          </Button>
-
-          <Button
-            className="w-full"
-            variant="destructive"
-            onClick={() => setIsResetOpen(true)}
-          >
-            Reset
-          </Button>
-        </div>
-
-        <div className="grid gap-2">
-          <div className="flex gap-2 justify-center items-center">
-            <Switch
-              id="disabled"
-              onCheckedChange={(update) =>
-                setFlowData((pre) => ({ ...pre, disabled: !update }))
-              }
-            />
-            <Label htmlFor="disabled">
-              {flowData.disabled ? "disabled" : "enabled"}
-            </Label>
-          </div>
-
-          <div className="flex gap-2">
-            <Button
-              variant="outline"
-              className="w-full"
-              onClick={() => setIsDebugOpen(true)}
-            >
-              Test
-            </Button>
-
-            <Button
-              className="w-full"
-              variant="default"
-              onClick={() => setIsSubmitOpen(true)}
-            >
-              Submit
-            </Button>
-          </div>
-        </div>
+            </MenubarContent>
+          </MenubarMenu>
+        </Menubar>
       </div>
 
       <LoadFlowDrawer
@@ -151,13 +261,13 @@ export const TopBar: React.FC = () => {
         setOpen={setIsLoadFlowOpen}
       />
 
-      {/* <DebugModal open={isDebugOpen} setOpen={setIsDebugOpen} /> */}
+      <DebugModal open={isDebugOpen} setOpen={setIsDebugOpen} />
 
-      {/* <SubmitModal open={isSubmitOpen} setOpen={setIsSubmitOpen} /> */}
+      <SubmitModal open={isSubmitOpen} setOpen={setIsSubmitOpen} />
 
       <ExecutionsDrawer open={isExecutionsOpen} setOpen={setIsExecutionsOpen} />
 
-      {/* <ResetModal open={isResetOpen} setOpen={setIsResetOpen} /> */}
+      <ResetModal open={isResetOpen} setOpen={setIsResetOpen} />
     </>
   );
 };

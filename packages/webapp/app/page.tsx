@@ -4,7 +4,7 @@ import { Stage } from "@/components/stage";
 
 export default function Home() {
   return (
-    <main>
+    <main className="grid gap-40">
       <Stage />
 
       <HowItWorks />

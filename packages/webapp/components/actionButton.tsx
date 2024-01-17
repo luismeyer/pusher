@@ -101,7 +101,7 @@ export const ActionButtons: React.FC<ActionButtonsProps> = ({
 
       {decisionAction && (
         <DropdownMenu>
-          <DropdownMenuTrigger>
+          <DropdownMenuTrigger asChild>
             <Button
               variant={
                 falseNextAction && trueNextAction ? "destructive" : "secondary"

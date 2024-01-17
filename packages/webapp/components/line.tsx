@@ -1,6 +1,5 @@
 "use client";
 
-import { theme } from "antd";
 import React, { useCallback, useMemo } from "react";
 
 import { useCancelConnect } from "@/hooks/useCancelConnect";
@@ -21,10 +20,6 @@ type State = {
 };
 
 export const Line: React.FC<LineProps> = ({ data }) => {
-  const {
-    token: { colorPrimary, colorSuccess, colorError },
-  } = theme.useToken();
-
   const calculateBorder = useCallback(
     ({ ax, ay, bx, by }: LineData, width: number, height: number) => {
       let border: Border = "bottomleft";
@@ -97,13 +92,13 @@ export const Line: React.FC<LineProps> = ({ data }) => {
   const color = useMemo(() => {
     switch (data.type) {
       case "default":
-        return colorPrimary;
+        return "rgb(37 99 235)";
       case "false":
-        return colorError;
+        return "rgb(220 38 38)";
       case "true":
-        return colorSuccess;
+        return "rgb(22 163 74)";
     }
-  }, [colorError, colorPrimary, colorSuccess, data.type]);
+  }, [data.type]);
 
   const border = `1px solid ${color}`;
 

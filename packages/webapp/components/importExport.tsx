@@ -1,24 +1,22 @@
 "use client";
 
-import { App, Input, Space } from "antd";
-import Text from "antd/lib/typography/Text";
-import Title from "antd/lib/typography/Title";
-import { useCallback, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { useRecoilCallback } from "recoil";
 
 import { useStoreFlow } from "@/hooks/useStoreFlow";
 import { useValidateFlowString } from "@/hooks/useValidateFlow";
 import { flowSelector } from "@/state/flow";
 import { Button } from "./ui/button";
-
-const { TextArea } = Input;
+import { toast } from "sonner";
+import { Textarea } from "./ui/textarea";
+import { Label } from "./ui/label";
 
 type LoadFlowModalProps = {
   setOpen: (open: boolean) => void;
 };
 
 export const ImportExport: React.FC<LoadFlowModalProps> = ({ setOpen }) => {
-  const { message } = App.useApp();
+  const textAreaRef = useRef<HTMLTextAreaElement>(null);
 
   const [loading, setLoading] = useState(false);
 
@@ -65,6 +63,7 @@ export const ImportExport: React.FC<LoadFlowModalProps> = ({ setOpen }) => {
 
     const res = await validateFlow(importExport);
 
+    console.log({ res });
     if (res.valid) {
       await storeFlow(res.flow);
 
@@ -72,52 +71,61 @@ export const ImportExport: React.FC<LoadFlowModalProps> = ({ setOpen }) => {
     }
 
     if (!res.valid && res.error) {
-      message.error(res.error);
+      toast.error(res.error);
     } else {
       setOpen(false);
     }
 
     setImportExport("");
     setLoading(false);
-  }, [importExport, message, setOpen, storeFlow, validateFlow]);
+  }, [importExport, setOpen, storeFlow, validateFlow]);
+
+  useEffect(() => {
+    if (textAreaRef.current) {
+      textAreaRef.current.style.height = `${textAreaRef.current.scrollHeight}px`;
+    }
+  }, [importExport]);
 
   return (
-    <Space direction="vertical" style={{ display: "flex" }}>
-      <Title level={4}>Import and Export</Title>
+    <div className="flex flex-col gap-4">
+      <h4 className="text-xl">Import and Export</h4>
 
-      <Text type="warning">{warn}</Text>
+      <div className="flex flex-col gap-2">
+        <div className="flex gap-2">
+          <Button
+            variant="outline"
+            disabled={!importExport || loading}
+            onClick={importFlow}
+          >
+            Import
+          </Button>
 
-      <TextArea
-        allowClear
-        autoSize
-        value={importExport}
-        onChange={(e) => {
-          if (!e.target.value) {
-            setWarn("");
-          }
+          <Button
+            variant="outline"
+            disabled={!!importExport || loading}
+            onClick={exportFlow}
+          >
+            Export
+          </Button>
+        </div>
 
-          setImportExport(e.target.value);
-        }}
-        placeholder="Paste exported flow here"
-      />
+        {warn && <Label htmlFor="import-export-text">{warn}</Label>}
 
-      <Space>
-        <Button
-          variant="outline"
-          disabled={!importExport || loading}
-          onClick={importFlow}
-        >
-          Import
-        </Button>
+        <Textarea
+          className="resize-y"
+          ref={textAreaRef}
+          value={importExport}
+          id="import-export-text"
+          onChange={(e) => {
+            if (!e.target.value) {
+              setWarn("");
+            }
 
-        <Button
-          variant="outline"
-          disabled={!!importExport || loading}
-          onClick={exportFlow}
-        >
-          Export
-        </Button>
-      </Space>
-    </Space>
+            setImportExport(e.target.value);
+          }}
+          placeholder="Paste exported flow here"
+        />
+      </div>
+    </div>
   );
 };

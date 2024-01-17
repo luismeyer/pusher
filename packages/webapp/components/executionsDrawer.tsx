@@ -7,15 +7,7 @@ import { flowAtom } from "@/state/flow";
 
 import { ExecutionsInput } from "./executionInput";
 import { Button } from "./ui/button";
-import {
-  Drawer,
-  DrawerClose,
-  DrawerContent,
-  DrawerDescription,
-  DrawerFooter,
-  DrawerHeader,
-  DrawerTitle,
-} from "./ui/drawer";
+import { Drawer, DrawerContent, DrawerHeader, DrawerTitle } from "./ui/drawer";
 import { PlusCircle } from "lucide-react";
 
 type ExecutionsDrawerProps = {
@@ -38,12 +30,14 @@ export const ExecutionsDrawer: React.FC<ExecutionsDrawerProps> = ({
 
   return (
     <Drawer onOpenChange={setOpen} open={open}>
-      <DrawerContent>
-        <DrawerHeader>
-          <DrawerTitle>Executions Configuration</DrawerTitle>
-        </DrawerHeader>
+      <DrawerContent className="h-4/5 flex flex-col">
+        <div className="p-4 pb-8 grid gap-8 sm:w-1/2 self-center overflow-auto">
+          <DrawerHeader className="p-0">
+            <DrawerTitle className="text-2xl">
+              Executions Configuration
+            </DrawerTitle>
+          </DrawerHeader>
 
-        <div className="p-4 pb-8 grid gap-8">
           {flow.executions?.map((execution, index) => (
             <ExecutionsInput
               key={execution.name + index}
@@ -62,37 +56,4 @@ export const ExecutionsDrawer: React.FC<ExecutionsDrawerProps> = ({
       </DrawerContent>
     </Drawer>
   );
-
-  // return (
-  //   <Drawer
-  //     title="Executions Configuration"
-  //     placement="left"
-  //     size="large"
-  //     onClose={() => setOpen(false)}
-  //     open={open}
-  //   >
-  //     <List
-  //       itemLayout="horizontal"
-  //       dataSource={flow.executions}
-  //       renderItem={(item, index) => (
-  //         <List.Item>
-  //           {<ExecutionsInput execution={item} index={index} />}
-  //         </List.Item>
-  //       )}
-  //     />
-
-  //     <div
-  //       style={{
-  //         display: "flex",
-  //         justifyContent: "center",
-  //         marginTop: 25,
-  //       }}
-  //     >
-  //       <Button className="flex gap-2 items-center" onClick={addExecution}>
-  //         <PlusCircleOutlined />
-  //         Add Execution
-  //       </Button>
-  //     </div>
-  //   </Drawer>
-  // );
 };
