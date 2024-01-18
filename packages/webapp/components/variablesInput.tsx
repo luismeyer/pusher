@@ -1,11 +1,10 @@
 "use client";
 
-import { Col, Input, InputRef, Row } from "antd";
+import { ChevronsRightIcon } from "lucide-react";
 import { useCallback, useEffect, useRef, useState } from "react";
 
-import { DoubleRightOutlined } from "@ant-design/icons";
-
 import { removeItemFromArray, replaceItemInArray } from "../utils/array";
+import { Input } from "./ui/input";
 
 type VariablesInputProps = {
   executionIndex: number;
@@ -22,7 +21,7 @@ export const VariablesInput: React.FC<VariablesInputProps> = ({
 
   const [input, setInput] = useState<string>();
 
-  const inputRef = useRef<InputRef | null>(null);
+  const inputRef = useRef<HTMLInputElement | null>(null);
 
   const [variablesList, setVariablesList] = useState<[string, string][]>(
     Object.entries(variables)
@@ -79,84 +78,71 @@ export const VariablesInput: React.FC<VariablesInputProps> = ({
   return (
     <>
       {variablesList.map(([name, value], variableIndex) => (
-        <Row
-          gutter={6}
-          key={variableIndex}
-          justify="space-between"
-          align="middle"
-        >
-          <Col span={11}>
-            <Input
-              autoFocus={
-                autofocus.current === "name" &&
-                variableIndex === variablesList.length - 1
-              }
-              value={name}
-              placeholder={"Variable Name"}
-              onChange={(e) =>
-                updateVariable({ variableIndex, name: e.target.value })
-              }
-            />
-          </Col>
+        <div className="flex gap-4" key={variableIndex}>
+          <Input
+            autoFocus={
+              autofocus.current === "name" &&
+              variableIndex === variablesList.length - 1
+            }
+            value={name}
+            placeholder={"Variable Name"}
+            onChange={(e) =>
+              updateVariable({ variableIndex, name: e.target.value })
+            }
+          />
 
-          <Col>
-            <DoubleRightOutlined />
-          </Col>
+          <div className="flex items-center">
+            <ChevronsRightIcon />
+          </div>
 
-          <Col span={11}>
-            <Input
-              autoFocus={
-                autofocus.current === "value" &&
-                variableIndex === variablesList.length - 1
-              }
-              value={value}
-              placeholder={"Variable Value"}
-              onChange={(e) =>
-                updateVariable({ variableIndex, value: e.target.value })
-              }
-            />
-          </Col>
-        </Row>
+          <Input
+            autoFocus={
+              autofocus.current === "value" &&
+              variableIndex === variablesList.length - 1
+            }
+            value={value}
+            placeholder={"Variable Value"}
+            onChange={(e) =>
+              updateVariable({ variableIndex, value: e.target.value })
+            }
+          />
+        </div>
       ))}
 
-      <Row gutter={6} justify="space-between" align="middle">
-        <Col span={11}>
-          <Input
-            ref={(ref) => (inputRef.current = ref)}
-            placeholder={"Variable Name"}
-            value={input}
-            onChange={(e) => {
-              if (!e.target.value) {
-                return;
-              }
+      <div className="flex gap-4">
+        <Input
+          ref={(ref) => (inputRef.current = ref)}
+          placeholder={"Variable Name"}
+          value={input}
+          onChange={(e) => {
+            if (!e.target.value) {
+              return;
+            }
 
-              autofocus.current = "name";
-              addVariable({ name: e.target.value });
-              setInput("");
-            }}
-          />
-        </Col>
+            autofocus.current = "name";
+            addVariable({ name: e.target.value });
+            setInput("");
+          }}
+        />
 
-        <Col>
-          <DoubleRightOutlined />
-        </Col>
+        <div className="flex items-center">
+          <ChevronsRightIcon />
+        </div>
 
-        <Col span={11}>
-          <Input
-            placeholder={"Variable Value"}
-            value={input}
-            onChange={(e) => {
-              if (!e.target.value) {
-                return;
-              }
+        <Input
+          placeholder={"Variable Value"}
+          value={input}
+          onChange={(e) => {
+            if (!e.target.value) {
+              return;
+            }
 
-              autofocus.current = "value";
-              addVariable({ value: e.target.value });
-              setInput("");
-            }}
-          />
-        </Col>
-      </Row>
+            autofocus.current = "value";
+            addVariable({ value: e.target.value });
+            setInput("");
+          }}
+        />
+      </div>
     </>
   );
 };

@@ -1,7 +1,5 @@
 "use client";
 
-import { Badge } from "antd";
-import Title from "antd/lib/typography/Title";
 import Image from "next/image";
 import Link from "next/link";
 import React, {
@@ -140,19 +138,6 @@ export const Stage: React.FC = () => {
 
       <div
         style={{
-          position: "absolute",
-          top: 20,
-          left: "50%",
-          transform: "translateX(-50%)",
-        }}
-      >
-        <Badge count={100}>
-          <h1 style={{ color: "white" }}>Pusher</h1>
-        </Badge>
-      </div>
-
-      <div
-        style={{
           height,
           padding: "0 0 10vh 10vw",
           position: "relative",
@@ -167,20 +152,14 @@ export const Stage: React.FC = () => {
             height: "100%",
           }}
         >
-          <div>
-            <Title
-              level={1}
-              style={{
-                color: "white",
-                fontSize: "3.5vw",
-              }}
-            >
+          <div className="grid gap-8">
+            <h1 className="text-6xl text-white">
               {title}
               {cursor && "|"}
               {restText}
-            </Title>
+            </h1>
 
-            <Button asChild>
+            <Button className="w-fit" asChild>
               <Link href="/console">Open Console</Link>
             </Button>
           </div>

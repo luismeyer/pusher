@@ -4,12 +4,13 @@ import { useMemo } from "react";
 import { useRecoilState } from "recoil";
 
 import { dataAtom } from "@/state/data";
-import { InfoCircleOutlined } from "@ant-design/icons";
 import { Keys } from "@pusher/shared";
 
 import { Combobox } from "./ui/combobox";
 import { Input } from "./ui/input";
 import { Label } from "./ui/label";
+import { EMPTY, TextInput } from "./textInput";
+import { InfoIcon } from "lucide-react";
 
 type ActionContentProps = {
   id: string;
@@ -22,16 +23,30 @@ export const ActionContent: React.FC<ActionContentProps> = ({ id }) => {
     let components: JSX.Element[] = [];
 
     if ("selector" in data) {
+      const prefixOptions = [
+        {
+          label: "none",
+          value: EMPTY,
+        },
+        {
+          label: "# (id)",
+          value: "#",
+        },
+        {
+          label: ". (class)",
+          value: ".",
+        },
+      ];
+
       components = [
         ...components,
-        <Input
+        <TextInput
           id={id}
           key={components.length}
           value={data.selector}
           placeholder="Enter CSS Selector"
-          onChange={(event) =>
-            setData((pre) => ({ ...pre, selector: event.target.value }))
-          }
+          addonBeforeOptions={prefixOptions}
+          onChange={(value) => setData((pre) => ({ ...pre, selector: value }))}
         />,
       ];
     }
@@ -59,16 +74,17 @@ export const ActionContent: React.FC<ActionContentProps> = ({ id }) => {
     }
 
     if ("pageUrl" in data) {
+      const prefixOptions = [{ value: "https://" }, { value: "http://" }];
+
       components = [
         ...components,
-        <Input
+        <TextInput
           id={id}
           key={components.length}
           value={data.pageUrl}
           placeholder="google.com"
-          onChange={(value) =>
-            setData((pre) => ({ ...pre, pageUrl: value.target.value }))
-          }
+          addonBeforeOptions={prefixOptions}
+          onChange={(value) => setData((pre) => ({ ...pre, pageUrl: value }))}
         />,
       ];
     }
@@ -86,14 +102,12 @@ export const ActionContent: React.FC<ActionContentProps> = ({ id }) => {
 
       components = [
         ...components,
-        <Input
+        <TextInput
           id={id}
           key={components.length}
           value={data.text}
           placeholder={placeholder}
-          onChange={(value) =>
-            setData((pre) => ({ ...pre, text: value.target.value }))
-          }
+          onChange={(value) => setData((pre) => ({ ...pre, text: value }))}
         />,
       ];
     }
@@ -101,23 +115,19 @@ export const ActionContent: React.FC<ActionContentProps> = ({ id }) => {
     if (data.type === "telegram") {
       components = [
         ...components,
-        <Input
+        <TextInput
           id={id}
           key={components.length}
           value={data.chatId}
           placeholder="Enter Telegram ChatId"
-          onChange={(value) =>
-            setData((pre) => ({ ...pre, chatId: value.target.value }))
-          }
+          onChange={(value) => setData((pre) => ({ ...pre, chatId: value }))}
         />,
-        <Input
+        <TextInput
           id={id}
           key={components.length + 1}
           value={data.message}
           placeholder="Enter Telegram Message"
-          onChange={(value) =>
-            setData((pre) => ({ ...pre, message: value.target.value }))
-          }
+          onChange={(value) => setData((pre) => ({ ...pre, message: value }))}
         />,
       ];
     }
@@ -125,13 +135,13 @@ export const ActionContent: React.FC<ActionContentProps> = ({ id }) => {
     if (data.type === "storeTextContent") {
       components = [
         ...components,
-        <Input
+        <TextInput
           id={id}
           key={components.length}
           value={data.variableName}
           placeholder="Enter VariableName to store the TextContent"
           onChange={(value) =>
-            setData((pre) => ({ ...pre, variableName: value.target.value }))
+            setData((pre) => ({ ...pre, variableName: value }))
           }
         />,
       ];
@@ -155,7 +165,7 @@ export const ActionContent: React.FC<ActionContentProps> = ({ id }) => {
     <div className="grid gap-2">
       {inputs.length === 0 && (
         <div className="flex flex-col items-center">
-          <InfoCircleOutlined />
+          <InfoIcon />
 
           <span>No Input needed here</span>
         </div>

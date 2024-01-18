@@ -1,8 +1,7 @@
 "use client";
 
+import { Github } from "lucide-react";
 import Link from "next/link";
-
-import { GithubOutlined } from "@ant-design/icons";
 
 export const Footer: React.FC = () => {
   return (
@@ -12,7 +11,7 @@ export const Footer: React.FC = () => {
         target="_blank"
         href="https://github.com/luismeyer/pusher"
       >
-        <GithubOutlined />
+        <Github />
         Repository
       </Link>
     </div>

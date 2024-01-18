@@ -16,11 +16,7 @@ import {
 } from "@/state/connect";
 import { dataAtom } from "@/state/data";
 import { relationAtom } from "@/state/relation";
-import {
-  ApiOutlined,
-  DeleteOutlined,
-  DisconnectOutlined,
-} from "@ant-design/icons";
+
 import { isDecisionAction } from "@pusher/shared";
 
 import { Button } from "./ui/button";
@@ -32,6 +28,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "./ui/dropdown-menu";
+import { LinkIcon, TrashIcon, UnlinkIcon } from "lucide-react";
 
 type ActionButtonsProps = {
   id: string;
@@ -91,11 +88,12 @@ export const ActionButtons: React.FC<ActionButtonsProps> = ({
     <div className="flex gap-2">
       {!decisionAction && (
         <Button
+          size="icon"
           variant={nextAction ? "destructive" : "outline"}
           disabled={disabled}
           onClick={handleConnectClick}
         >
-          {nextAction ? <DisconnectOutlined /> : <ApiOutlined />}
+          {nextAction ? <UnlinkIcon /> : <LinkIcon />}
         </Button>
       )}
 
@@ -103,14 +101,15 @@ export const ActionButtons: React.FC<ActionButtonsProps> = ({
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <Button
+              size="icon"
               variant={
                 falseNextAction && trueNextAction ? "destructive" : "secondary"
               }
             >
               {falseNextAction && trueNextAction ? (
-                <DisconnectOutlined />
+                <UnlinkIcon />
               ) : (
-                <ApiOutlined />
+                <LinkIcon />
               )}
             </Button>
           </DropdownMenuTrigger>
@@ -174,11 +173,12 @@ export const ActionButtons: React.FC<ActionButtonsProps> = ({
       )}
 
       <Button
+        size="icon"
         variant="destructive"
         disabled={disabled}
         onClick={handleDeleteClick}
       >
-        <DeleteOutlined />
+        <TrashIcon />
       </Button>
     </div>
   );

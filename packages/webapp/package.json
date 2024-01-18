@@ -9,8 +9,6 @@
     "start": "next start"
   },
   "dependencies": {
-    "@ant-design/icons": "^5.0.1",
-    "@ant-design/nextjs-registry": "^1.0.0",
     "@aws-sdk/client-lambda": "^3.289.0",
     "@pusher/shared": "*",
     "@radix-ui/react-dialog": "^1.0.5",
@@ -25,7 +23,6 @@
     "@radix-ui/react-toggle": "^1.0.3",
     "@radix-ui/react-toggle-group": "^1.0.4",
     "@radix-ui/react-tooltip": "^1.0.7",
-    "antd": "^5.12.8",
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.1.0",
     "cmdk": "^0.2.0",
