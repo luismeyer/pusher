@@ -1,6 +1,5 @@
 "use client";
 
-import { App, Input, Modal, Space } from "antd";
 import React, { useCallback, useState } from "react";
 import { useRecoilState } from "recoil";
 
@@ -9,60 +8,73 @@ import { authOpenAtom } from "@/state/auth";
 import { clearToken, storeToken } from "../utils/auth";
 import { tokenAction } from "@/app/api/token.action";
 import { useActionCall } from "@/hooks/useActionCall";
+import { toast } from "sonner";
+
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "./ui/dialog";
+import { Button } from "./ui/button";
+import { Input } from "./ui/input";
 
 export const AuthModal: React.FC = () => {
-  const { message } = App.useApp();
-
   const [open, setOpen] = useRecoilState(authOpenAtom);
 
   const [token, setToken] = useState<string | undefined>();
 
   const isValidToken = useActionCall(tokenAction);
 
-  const testToken = useCallback(
-    async (apiToken: string) => {
-      storeToken(apiToken);
+  const testToken = useCallback(async () => {
+    if (!token) {
+      return;
+    }
 
-      const valid = await isValidToken();
+    storeToken(token);
 
-      if (!valid) {
-        message.open({ type: "error", content: "Wrong Token" });
+    const valid = await isValidToken();
 
-        clearToken();
-        setToken("");
+    if (!valid) {
+      toast.error("Wrong Token", {});
 
-        return;
-      }
+      clearToken();
+      setToken("");
 
-      setOpen(!valid);
-    },
-    [isValidToken, message, setOpen]
-  );
+      return;
+    }
+
+    setOpen(!valid);
+  }, [isValidToken, setOpen, token]);
 
   return (
-    <Modal
-      open={open}
-      title="Login"
-      centered
-      okText="Submit Token"
-      cancelText="Continue without Api"
-      onOk={() => testToken(token ?? "")}
-      onCancel={() => setOpen(false)}
-    >
-      <Space direction="vertical">
-        <p>
-          Because Pusher is still under development the Api is only available
-          for certain users. You can still use the Webapp though.
-        </p>
+    <Dialog open={open} onOpenChange={(newOpen) => setOpen(newOpen)}>
+      <DialogContent>
+        <DialogHeader>
+          <DialogTitle>Not authorized</DialogTitle>
+
+          <DialogDescription>
+            Because Pusher is still under development the Api is only available
+            for certain users. You can still use the Webapp though.
+          </DialogDescription>
+        </DialogHeader>
 
         <Input
-          type="password"
-          autoComplete="password"
-          placeholder="Your PHR Token"
+          placeholder="pusher api token"
           value={token}
           onChange={(e) => setToken(e.target.value)}
+          type="password"
         />
-      </Space>
-    </Modal>
+
+        <DialogFooter>
+          <Button type="button" onClick={testToken}>
+            Login
+          </Button>
+        </DialogFooter>
+      </DialogContent>
+    </Dialog>
   );
 };

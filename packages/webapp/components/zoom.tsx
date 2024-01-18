@@ -1,36 +1,44 @@
 "use client";
 
-import { FloatButton } from "antd";
 import React from "react";
 import { useRecoilState } from "recoil";
 
 import { zoomAtom } from "@/state/zoom";
-import { MinusOutlined, PlusOutlined } from "@ant-design/icons";
+import { Button } from "./ui/button";
+import clsx from "clsx";
+import { MinusIcon, PlusIcon } from "lucide-react";
 
 export const Zoom: React.FC = () => {
   const [zoom, setZoom] = useRecoilState(zoomAtom);
 
   return (
     <>
-      <FloatButton.Group shape="square" style={{ right: 35, bottom: 35 }}>
+      <div className="fixed grid" style={{ right: 35, bottom: 35 }}>
         {zoom !== 1 && (
-          <FloatButton
-            shape="square"
-            description={(zoom * 100).toFixed() + "%"}
+          <Button
+            className="text-[10px] p-0 rounded-b-none"
             onClick={() => setZoom(1)}
-          />
+          >
+            {(zoom * 100).toFixed()}%
+          </Button>
         )}
 
-        <FloatButton
-          icon={<PlusOutlined />}
+        <Button
+          className={clsx("rounded-none", { "rounded-t": zoom === 1 })}
+          size="icon"
           onClick={() => setZoom((pre) => pre + 0.1)}
-        />
+        >
+          <PlusIcon />
+        </Button>
 
-        <FloatButton
-          icon={<MinusOutlined />}
+        <Button
+          className="rounded-t-none"
+          size="icon"
           onClick={() => setZoom((pre) => pre - 0.1)}
-        />
-      </FloatButton.Group>
+        >
+          <MinusIcon />
+        </Button>
+      </div>
     </>
   );
 };

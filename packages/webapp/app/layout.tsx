@@ -2,7 +2,7 @@ import "./globals.css";
 
 import { Inter } from "next/font/google";
 
-import { AntdRegistry } from "@ant-design/nextjs-registry";
+import { Toaster } from "@/components/ui/sonner";
 
 import { Providers } from "./providers";
 
@@ -22,9 +22,9 @@ export default async function RootLayout({
   return (
     <html lang="en">
       <body className={inter.className}>
-        <AntdRegistry>
-          <Providers>{children}</Providers>
-        </AntdRegistry>
+        <Providers>{children}</Providers>
+
+        <Toaster />
       </body>
     </html>
   );

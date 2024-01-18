@@ -1,20 +1,26 @@
 "use client";
 
-import { Modal, Spin, Typography } from "antd";
 import Pusher from "pusher-js";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useRecoilCallback } from "recoil";
 
 import { debugAction } from "@/app/api/debug.action";
 import { useActionCall } from "@/hooks/useActionCall";
-import { useWindowSize } from "@/hooks/useWindowSize";
 import { flowSelector, serializedFlowSelector } from "@/state/flow";
-import { LoadingOutlined } from "@ant-design/icons";
 import {
   runnerChannel,
   RunnerDoneEvent,
   RunnerPayloadMap,
 } from "@pusher/shared";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from "./ui/dialog";
+import { Button } from "./ui/button";
 
 type DebugModalProps = {
   open: boolean;
@@ -50,7 +56,7 @@ export const DebugModal: React.FC<DebugModalProps> = ({ setOpen, open }) => {
   );
 
   const debugFlow = useCallback(async () => {
-    setOpen(true);
+    setError(undefined);
     setLoadig(true);
 
     const serializedFlow = await getSerializedFlow();
@@ -58,6 +64,21 @@ export const DebugModal: React.FC<DebugModalProps> = ({ setOpen, open }) => {
 
     if (!serializedFlow || !flow) {
       setError("Your flow has no actions");
+      setLoadig(false);
+      return;
+    }
+
+    const res = await debug(serializedFlow);
+
+    // unauthorized
+    if (!res) {
+      setOpen(false);
+      setLoadig(false);
+      return;
+    }
+
+    if (res?.type === "error") {
+      setError(res?.message ?? "Something went wrong");
       setLoadig(false);
       return;
     }
@@ -92,14 +113,12 @@ export const DebugModal: React.FC<DebugModalProps> = ({ setOpen, open }) => {
         pusher.unsubscribe(channelName);
       }
     );
-
-    await debug(serializedFlow);
   }, [debug, getFlow, getSerializedFlow, setOpen, video]);
 
   // handle open updates
   useEffect(() => {
     if (open && !video && !loading && !error) {
-      debugFlow();
+      void debugFlow();
     }
 
     if (!open) {
@@ -107,36 +126,57 @@ export const DebugModal: React.FC<DebugModalProps> = ({ setOpen, open }) => {
     }
   }, [debugFlow, error, loading, open, video]);
 
-  const windowSize = useWindowSize();
-
   const videoRef = useRef<HTMLVideoElement>(null);
 
   return (
-    <Modal
-      title="Debug Flow"
-      open={open}
-      cancelButtonProps={{ disabled: loading }}
-      onCancel={() => setOpen(false)}
-      cancelText="Close"
-      okButtonProps={{ disabled: loading }}
-      onOk={debugFlow}
-      okText="Debug"
-      width={windowSize.width * 0.5}
-      style={{ minWidth: 500 }}
-    >
-      <Spin
-        spinning={loading}
-        indicator={<LoadingOutlined style={{ fontSize: 48 }} spin />}
-      >
-        <video style={{ width: "100%" }} ref={videoRef} src={video} controls />
+    <Dialog open={open} onOpenChange={(value) => setOpen(value)}>
+      <DialogContent>
+        <DialogHeader>
+          <DialogTitle>Debug Flow</DialogTitle>
 
-        {error && (
-          <Typography.Text type="danger">
-            <b>Error: </b>
-            {error}
-          </Typography.Text>
-        )}
-      </Spin>
-    </Modal>
+          <DialogDescription>
+            Your flow runs in the cloud with a screen recorder. You can watch
+            the video and see what went wrong.
+          </DialogDescription>
+        </DialogHeader>
+
+        <div className="relative h-[260px] w-full rounded-lg overflow-hidden">
+          {loading || error ? (
+            <div className="absolute w-full h-full grid place-content-center bg-gray-100 z-1 p-8">
+              {error ? (
+                <p>
+                  <b>Error: </b>
+                  {error}
+                </p>
+              ) : (
+                "loading..."
+              )}
+            </div>
+          ) : (
+            <video
+              className="border w-full h-full"
+              ref={videoRef}
+              src={video}
+              controls={!loading}
+            />
+          )}
+        </div>
+
+        <DialogFooter>
+          <Button
+            type="button"
+            onClick={() => setOpen(false)}
+            disabled={loading}
+            variant="outline"
+          >
+            Cancel
+          </Button>
+
+          <Button disabled={loading} type="button" onClick={debugFlow}>
+            Debug
+          </Button>
+        </DialogFooter>
+      </DialogContent>
+    </Dialog>
   );
 };

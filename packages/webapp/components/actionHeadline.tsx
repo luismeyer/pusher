@@ -30,24 +30,12 @@ export const ActionHeader: React.FC<ActionHeaderProps> = ({ id }) => {
   const data = useRecoilValue(dataAtom(id));
 
   return (
-    <div
-      style={{
-        display: "flex",
-        flexDirection: "column",
-      }}
-    >
-      <h3>
+    <div className="flex flex-col">
+      <h3 className="text-lg">
         {index}. {TypeLabels[data.type]}
       </h3>
 
-      <span
-        style={{
-          fontSize: "8px",
-          fontWeight: "lighter",
-        }}
-      >
-        {id}
-      </span>
+      <span className="text-xs font-light">{id}</span>
     </div>
   );
 };

@@ -251,6 +251,6 @@ export const Keys = [
   "EndCall",
   "VolumeDown",
   "VolumeUp",
-] as const;
+];
 
-export type Key = typeof Keys[number];
+export type Key = (typeof Keys)[number];

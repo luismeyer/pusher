@@ -47,12 +47,11 @@ export const Canvas: React.FC = () => {
       ref={canvasRef}
       onMouseMove={handleDrag}
       onClick={cancelConnect}
+      className="relative overflow-auto h-full bg-white rounded-lg"
       style={{
         transform: `scale(${zoom}) translate(calc(50% - 50% / ${zoom}), calc(50% - 50% / ${zoom}))`,
         width: `calc(100% / ${zoom})`,
         height: `calc(100% / ${zoom})`,
-        position: "relative",
-        overflow: "scroll",
       }}
     >
       {actionIds.map((id) => (

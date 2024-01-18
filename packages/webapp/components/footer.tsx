@@ -1,23 +1,19 @@
 "use client";
 
-import { Button, Layout } from "antd";
-
-import { GithubOutlined } from "@ant-design/icons";
-
-const { Footer: AntdFooter } = Layout;
+import { Github } from "lucide-react";
+import Link from "next/link";
 
 export const Footer: React.FC = () => {
   return (
-    <AntdFooter style={{ display: "flex", justifyContent: "center" }}>
-      <Button
-        style={{ fontSize: 16 }}
-        icon={<GithubOutlined />}
-        type="link"
-        href="https://github.com/luismeyer/pusher"
+    <div className="flex w-full items-center justify-center p-8 bg-gray-100">
+      <Link
+        className="flex gap-2"
         target="_blank"
+        href="https://github.com/luismeyer/pusher"
       >
+        <Github />
         Repository
-      </Button>
-    </AntdFooter>
+      </Link>
+    </div>
   );
 };

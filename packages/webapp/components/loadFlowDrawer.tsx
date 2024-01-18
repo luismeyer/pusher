@@ -1,9 +1,8 @@
 "use client";
 
-import { Divider, Drawer, Space } from "antd";
-
 import { ImportExport } from "./importExport";
 import { LoadFlow } from "./loadFlow";
+import { Drawer, DrawerContent, DrawerHeader, DrawerTitle } from "./ui/drawer";
 
 type LoadFlowModalProps = {
   open: boolean;
@@ -17,20 +16,20 @@ export const LoadFlowDrawer: React.FC<LoadFlowModalProps> = ({
   setOpen,
 }) => {
   return (
-    <Drawer
-      placement="left"
-      size="large"
-      title="Load, Import or Export a Flow"
-      open={open}
-      onClose={() => setOpen(false)}
-    >
-      <Space direction="vertical" style={{ display: "flex" }}>
-        <LoadFlow defaultId={defaultId} setOpen={setOpen} />
+    <Drawer onOpenChange={setOpen} open={open}>
+      <DrawerContent className="h-4/5 flex flex-col">
+        <DrawerHeader>
+          <DrawerTitle className="text-2xl">
+            Load, Import or Export a Flow
+          </DrawerTitle>
+        </DrawerHeader>
 
-        <Divider />
+        <div className="grid p-4 gap-8 grid-cols-2 overflow-auto">
+          <LoadFlow defaultId={defaultId} setOpen={setOpen} />
 
-        <ImportExport setOpen={setOpen} />
-      </Space>
+          <ImportExport setOpen={setOpen} />
+        </div>
+      </DrawerContent>
     </Drawer>
   );
 };

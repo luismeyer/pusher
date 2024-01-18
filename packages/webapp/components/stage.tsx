@@ -1,7 +1,5 @@
 "use client";
 
-import { Badge, Button } from "antd";
-import Title from "antd/lib/typography/Title";
 import Image from "next/image";
 import Link from "next/link";
 import React, {
@@ -11,6 +9,7 @@ import React, {
   useRef,
   useState,
 } from "react";
+import { Button } from "./ui/button";
 
 const Texts = [
   "google.com",
@@ -21,7 +20,7 @@ const Texts = [
 export const Stage: React.FC = () => {
   const [text, setText] = useState("");
 
-  const [restText, setRestText] = useState("");
+  const [restText, setRestText] = useState("\u00A0".repeat(Texts[0].length));
 
   const pointerIndex = useRef(0);
 
@@ -139,19 +138,6 @@ export const Stage: React.FC = () => {
 
       <div
         style={{
-          position: "absolute",
-          top: 20,
-          left: "50%",
-          transform: "translateX(-50%)",
-        }}
-      >
-        <Badge count={100}>
-          <h1 style={{ color: "white" }}>Pusher</h1>
-        </Badge>
-      </div>
-
-      <div
-        style={{
           height,
           padding: "0 0 10vh 10vw",
           position: "relative",
@@ -166,22 +152,16 @@ export const Stage: React.FC = () => {
             height: "100%",
           }}
         >
-          <div>
-            <Title
-              level={1}
-              style={{
-                color: "white",
-                fontSize: "3.5vw",
-              }}
-            >
+          <div className="grid gap-8">
+            <h1 className="text-6xl text-white">
               {title}
               {cursor && "|"}
               {restText}
-            </Title>
+            </h1>
 
-            <Link href="./console">
-              <Button type="primary">Open Console</Button>
-            </Link>
+            <Button variant="outline" className="w-fit" asChild>
+              <Link href="/console">Open Console</Link>
+            </Button>
           </div>
 
           <Image

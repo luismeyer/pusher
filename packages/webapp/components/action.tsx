@@ -1,6 +1,5 @@
 "use client";
 
-import { Card, Space, theme } from "antd";
 import React, { useCallback, useEffect, useMemo, useRef } from "react";
 import { useRecoilCallback, useRecoilState, useRecoilValue } from "recoil";
 
@@ -9,11 +8,12 @@ import { dragIdAtom } from "@/state/drag";
 import { positionAtom } from "@/state/position";
 import { sizeAtom } from "@/state/size";
 import { zoomAtom } from "@/state/zoom";
-import styles from "@/styles/action.module.css";
 
 import { ActionButtons } from "./actionButton";
 import { ActionContent } from "./actionContent";
 import { ActionHeader } from "./actionHeadline";
+import { Card, CardContent, CardHeader } from "./ui/card";
+import clsx from "clsx";
 
 type ActionProps = {
   id: string;
@@ -49,10 +49,6 @@ export const Action: React.FC<ActionProps> = ({ id }) => {
     relation: { nextAction },
     parentAction,
   } = useConnect(id);
-
-  const {
-    token: { colorPrimary, colorBorder },
-  } = theme.useToken();
 
   // start drag or connect
   const handleMouseDown: React.MouseEventHandler<HTMLDivElement> =
@@ -101,14 +97,6 @@ export const Action: React.FC<ActionProps> = ({ id }) => {
     }
   }, [allowConnect, isConnecting]);
 
-  const borderColor = useMemo(() => {
-    if (nextAction || parentAction) {
-      return colorPrimary;
-    }
-
-    return colorBorder;
-  }, [nextAction, parentAction, colorBorder, colorPrimary]);
-
   const handleKeyDown = useCallback(
     (event: KeyboardEvent) => {
       if (event.key !== "Escape") {
@@ -129,39 +117,24 @@ export const Action: React.FC<ActionProps> = ({ id }) => {
   }, [handleKeyDown]);
 
   return (
-    <div
-      key={id}
+    <Card
       ref={ref}
       onMouseDown={handleMouseDown}
       onMouseUp={stopDrag}
-      className={styles.action}
-      style={{
-        position: "absolute",
-        borderRadius: 5,
-        top: position.y,
-        left: position.x,
-        cursor,
-      }}
+      className={clsx("z-10 hover:z-20 absolute rounded-md hover:shadow-lg", {
+        "border-blue-600": nextAction || parentAction,
+      })}
+      style={{ top: position.y, left: position.x, cursor }}
     >
-      <Card
-        hoverable
-        style={{
-          transition: "border-color 0.5s",
-          zIndex: 2,
-          borderColor,
-          cursor,
-        }}
-        bordered={true}
-        title={
-          <Space align="center" size="large">
-            <ActionHeader id={id} />
+      <CardHeader className="flex flex-row gap-4">
+        <ActionHeader id={id} />
 
-            <ActionButtons id={id} disabled={isConnecting} />
-          </Space>
-        }
-      >
+        <ActionButtons id={id} disabled={isConnecting} />
+      </CardHeader>
+
+      <CardContent>
         <ActionContent id={id} />
-      </Card>
-    </div>
+      </CardContent>
+    </Card>
   );
 };

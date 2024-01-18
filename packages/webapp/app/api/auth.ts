@@ -10,14 +10,14 @@ export const auth = async () => {
 
   const isTokenValid = PUSHER_AUTH_TOKEN === token;
 
-  if (!isTokenValid) {
-    throw new Error("Unauthorized");
+  if (isTokenValid) {
+    return true;
   }
 
-  const session = await getServerSession();
-  if (!session?.user) {
-    throw new Error("Unauthorized");
-  }
+  // const session = await getServerSession();
+  // if (session?.user) {
+  //   return true;
+  // }
 
-  return session.user;
+  return false;
 };

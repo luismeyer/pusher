@@ -1,15 +1,23 @@
 "use client";
 
-import { Input, Select, Tooltip } from "antd";
 import React, { useCallback, useMemo } from "react";
 import { useRecoilValue } from "recoil";
 
 import { storedVariablesSelector } from "@/state/actions";
 import { defaultVariables } from "@/state/flow";
-import { WarningOutlined } from "@ant-design/icons";
+import { Input } from "./ui/input";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "./ui/select";
+
+export const EMPTY = "EMPTY";
 
 type TextInputProps = {
-  addonBeforeOptions?: { value: string }[];
+  addonBeforeOptions?: { label?: string; value: string }[];
   placeholder?: string;
   onChange: (value: string) => void;
   value: string;
@@ -48,22 +56,35 @@ export const TextInput: React.FC<TextInputProps> = ({
 
   const handleInputChange = useCallback(
     (options: { prefix?: string; value?: string }) => {
-      onChange((options.prefix ?? prefix) + (options.value ?? value));
+      const parsedPrefix = (options.prefix ?? prefix).replace(EMPTY, "");
+
+      onChange(parsedPrefix + (options.value ?? value));
     },
     [onChange, prefix, value]
   );
 
   const addonBefore = useMemo(() => {
     if (!addonBeforeOptions) {
-      return;
+      return null;
     }
 
     return (
       <Select
         value={prefix}
-        options={addonBeforeOptions}
-        onChange={(value) => handleInputChange({ prefix: value })}
-      />
+        onValueChange={(value) => handleInputChange({ prefix: value })}
+      >
+        <SelectTrigger className="w-fit">
+          <SelectValue placeholder="Prefix" />
+        </SelectTrigger>
+
+        <SelectContent>
+          {addonBeforeOptions.map(({ value, label }) => (
+            <SelectItem key={value} value={value}>
+              {label ?? value}
+            </SelectItem>
+          ))}
+        </SelectContent>
+      </Select>
     );
   }, [addonBeforeOptions, handleInputChange, prefix]);
 
@@ -90,22 +111,19 @@ export const TextInput: React.FC<TextInputProps> = ({
   }, [storedVariables, variableNames, variables]);
 
   return (
-    <Input
-      status={error ? "error" : undefined}
-      addonBefore={addonBefore}
-      suffix={
-        error ? (
-          <Tooltip title={error ? `Wrong variable: "${error}"` : undefined}>
-            <WarningOutlined />{" "}
-          </Tooltip>
-        ) : (
-          // render empty div to keep the input focused
-          <div />
-        )
-      }
-      placeholder={placeholder}
-      value={value}
-      onChange={(e) => handleInputChange({ value: e.target.value })}
-    />
+    <div className="grid gap-1">
+      <div className="flex gap-1">
+        {addonBefore}
+        <Input
+          placeholder={placeholder}
+          value={value}
+          onChange={(e) => handleInputChange({ value: e.target.value })}
+        />
+      </div>
+
+      {error && (
+        <span className="text-yellow-600">Wrong variable: {error}</span>
+      )}
+    </div>
   );
 };

@@ -1,14 +1,16 @@
 "use client";
 
-import { InputNumber, Select, Space } from "antd";
 import { useMemo } from "react";
 import { useRecoilState } from "recoil";
 
 import { dataAtom } from "@/state/data";
-import { InfoCircleOutlined } from "@ant-design/icons";
 import { Keys } from "@pusher/shared";
 
-import { TextInput } from "./textInput";
+import { Combobox } from "./ui/combobox";
+import { Input } from "./ui/input";
+import { Label } from "./ui/label";
+import { EMPTY, TextInput } from "./textInput";
+import { InfoIcon } from "lucide-react";
 
 type ActionContentProps = {
   id: string;
@@ -21,7 +23,20 @@ export const ActionContent: React.FC<ActionContentProps> = ({ id }) => {
     let components: JSX.Element[] = [];
 
     if ("selector" in data) {
-      const prefixOptions = [{ value: "#" }, { value: "." }, { value: "" }];
+      const prefixOptions = [
+        {
+          label: "none",
+          value: EMPTY,
+        },
+        {
+          label: "# (id)",
+          value: "#",
+        },
+        {
+          label: ". (class)",
+          value: ".",
+        },
+      ];
 
       components = [
         ...components,
@@ -29,25 +44,32 @@ export const ActionContent: React.FC<ActionContentProps> = ({ id }) => {
           id={id}
           key={components.length}
           value={data.selector}
-          addonBeforeOptions={prefixOptions}
           placeholder="Enter CSS Selector"
+          addonBeforeOptions={prefixOptions}
           onChange={(value) => setData((pre) => ({ ...pre, selector: value }))}
         />,
       ];
     }
 
     if ("timeInSeconds" in data) {
+      const key = "seconds" + id;
+
       components = [
         ...components,
-        <InputNumber
-          id={id}
-          key={components.length}
-          value={data.timeInSeconds}
-          addonAfter="Seconds"
-          onChange={(value) =>
-            setData((pre) => ({ ...pre, timeInSeconds: value ?? 0 }))
-          }
-        />,
+        <div key={key} className="grid w-full gap-1.5">
+          <Label htmlFor={key}>Time in seconds</Label>
+          <Input
+            id={key}
+            type="number"
+            value={data.timeInSeconds}
+            onChange={(value) =>
+              setData((pre) => ({
+                ...pre,
+                timeInSeconds: Number(value.target.value) ?? 0,
+              }))
+            }
+          />
+        </div>,
       ];
     }
 
@@ -128,18 +150,10 @@ export const ActionContent: React.FC<ActionContentProps> = ({ id }) => {
     if (data.type === "keyboard") {
       components = [
         ...components,
-        <Select
-          id={id}
+        <Combobox
           key={components.length}
-          showSearch
-          placeholder="Select a person"
-          optionFilterProp="children"
-          value={data.key}
-          onChange={(value) => setData((pre) => ({ ...pre, key: value }))}
-          filterOption={(input, option) =>
-            (option?.label ?? "").toLowerCase().includes(input.toLowerCase())
-          }
-          options={Keys.map((key) => ({ value: key, label: key }))}
+          label="Search key..."
+          data={Keys.map((item) => ({ value: item, label: item }))}
         />,
       ];
     }
@@ -148,13 +162,13 @@ export const ActionContent: React.FC<ActionContentProps> = ({ id }) => {
   }, [data, id, setData]);
 
   return (
-    <div style={{ display: "grid", gap: 8 }}>
+    <div className="grid gap-2">
       {inputs.length === 0 && (
-        <Space direction="vertical" align="center" size={0}>
-          <InfoCircleOutlined style={{ fontSize: 18, fontWeight: "bold" }} />
+        <div className="flex flex-col items-center">
+          <InfoIcon />
 
           <span>No Input needed here</span>
-        </Space>
+        </div>
       )}
 
       {inputs}

@@ -28,11 +28,11 @@ export const useValidateFlowString = () => {
         };
 
         return validate(JSON.stringify(flow)).then((res) => {
-          if (res?.isValid) {
+          if (res?.type === "success") {
             return { valid: true, flow };
           }
 
-          return { valid: false, error: res?.error };
+          return { valid: false, error: res?.message };
         });
       } catch (error) {
         return { valid: false, error: "Invalid JSON" };

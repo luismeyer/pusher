@@ -1,23 +1,25 @@
-import { useRecoilState } from "recoil";
+import { useSetRecoilState } from "recoil";
 
 import { authOpenAtom } from "@/state/auth";
+import { AuthResponse } from "@pusher/shared";
 
-export const useActionCall = <A extends Array<unknown>, T>(
-  action: (...args: A) => Promise<T>
+export const useActionCall = <
+  Args extends Array<unknown>,
+  Response extends object
+>(
+  action: (...args: Args) => Promise<AuthResponse<Response>>
 ) => {
-  const [authOpen, setAuthOpen] = useRecoilState(authOpenAtom);
+  const setAuthOpen = useSetRecoilState(authOpenAtom);
 
-  return async (...args: A) => {
-    try {
-      const result = await action(...args);
+  return async (...args: Args) => {
+    const result = await action(...args);
 
-      return result;
-    } catch (e) {
-      console.log("catch error");
+    if (result.type === "unauthorized") {
+      setAuthOpen(true);
 
-      if (!authOpen) {
-        setAuthOpen(true);
-      }
+      return;
     }
+
+    return result.data;
   };
 };
