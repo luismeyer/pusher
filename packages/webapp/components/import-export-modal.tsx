@@ -2,27 +2,37 @@
 
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useRecoilCallback } from "recoil";
+import { toast } from "sonner";
 
 import { useStoreFlow } from "@/hooks/useStoreFlow";
 import { useValidateFlowString } from "@/hooks/useValidateFlow";
 import { flowSelector } from "@/state/flow";
-import { Button } from "./ui/button";
-import { toast } from "sonner";
-import { Textarea } from "./ui/textarea";
-import { Label } from "./ui/label";
 
-type LoadFlowModalProps = {
+import { Button } from "./ui/button";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from "./ui/dialog";
+import { Textarea } from "./ui/textarea";
+
+type ImportExportModalProps = {
+  open: boolean;
   setOpen: (open: boolean) => void;
 };
 
-export const ImportExport: React.FC<LoadFlowModalProps> = ({ setOpen }) => {
+export const ImportExportModal: React.FC<ImportExportModalProps> = ({
+  open,
+  setOpen,
+}) => {
   const textAreaRef = useRef<HTMLTextAreaElement>(null);
 
   const [loading, setLoading] = useState(false);
 
   const validateFlow = useValidateFlowString();
-
-  const [warn, setWarn] = useState<string>();
 
   const storeFlow = useStoreFlow();
 
@@ -50,8 +60,6 @@ export const ImportExport: React.FC<LoadFlowModalProps> = ({ setOpen }) => {
     );
 
     setImportExport(publicFlow);
-
-    setWarn("Make sure to remove all secret values from the Flow");
   }, [getFlow]);
 
   const importFlow = useCallback(async () => {
@@ -63,7 +71,6 @@ export const ImportExport: React.FC<LoadFlowModalProps> = ({ setOpen }) => {
 
     const res = await validateFlow(importExport);
 
-    console.log({ res });
     if (res.valid) {
       await storeFlow(res.flow);
 
@@ -81,17 +88,47 @@ export const ImportExport: React.FC<LoadFlowModalProps> = ({ setOpen }) => {
   }, [importExport, setOpen, storeFlow, validateFlow]);
 
   useEffect(() => {
-    if (textAreaRef.current) {
+    if (
+      textAreaRef.current &&
+      textAreaRef.current.scrollHeight < window.innerHeight * (3 / 4)
+    ) {
+      textAreaRef.current.style.height = "0";
       textAreaRef.current.style.height = `${textAreaRef.current.scrollHeight}px`;
     }
   }, [importExport]);
 
   return (
-    <div className="flex flex-col gap-4">
-      <h4 className="text-xl">Import and Export</h4>
+    <Dialog
+      open={open}
+      onOpenChange={(value) => {
+        setImportExport("");
+        setOpen(value);
+      }}
+    >
+      <DialogContent>
+        <DialogHeader>
+          <DialogTitle>Import and Export</DialogTitle>
 
-      <div className="flex flex-col gap-2">
-        <div className="flex gap-2">
+          <DialogDescription>
+            Import and Export your flow as JSON. Make sure to remove all secret
+            values from the Flow
+          </DialogDescription>
+        </DialogHeader>
+
+        <div className="flex flex-col gap-2">
+          <Textarea
+            className="resize-y"
+            ref={textAreaRef}
+            value={importExport}
+            id="import-export-text"
+            onChange={(e) => {
+              setImportExport(e.target.value);
+            }}
+            placeholder="Paste exported flow here"
+          />
+        </div>
+
+        <DialogFooter>
           <Button
             variant="outline"
             disabled={!importExport || loading}
@@ -107,25 +144,8 @@ export const ImportExport: React.FC<LoadFlowModalProps> = ({ setOpen }) => {
           >
             Export
           </Button>
-        </div>
-
-        {warn && <Label htmlFor="import-export-text">{warn}</Label>}
-
-        <Textarea
-          className="resize-y"
-          ref={textAreaRef}
-          value={importExport}
-          id="import-export-text"
-          onChange={(e) => {
-            if (!e.target.value) {
-              setWarn("");
-            }
-
-            setImportExport(e.target.value);
-          }}
-          placeholder="Paste exported flow here"
-        />
-      </div>
-    </div>
+        </DialogFooter>
+      </DialogContent>
+    </Dialog>
   );
 };

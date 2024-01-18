@@ -8,15 +8,25 @@ import { useFetchFlow } from "@/hooks/useFetchFlow";
 
 import { Button } from "./ui/button";
 import { Input } from "./ui/input";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from "./ui/dialog";
 
 type LoadFlowModalProps = {
   setOpen: (open: boolean) => void;
+  open: boolean;
   defaultId: string;
 };
 
-export const LoadFlow: React.FC<LoadFlowModalProps> = ({
+export const LoadFlowModal: React.FC<LoadFlowModalProps> = ({
   defaultId,
   setOpen,
+  open,
 }) => {
   const { loading, fetchFlow } = useFetchFlow();
 
@@ -45,11 +55,26 @@ export const LoadFlow: React.FC<LoadFlowModalProps> = ({
   }, [defaultId, loadFlow]);
 
   return (
-    <div className="flex flex-col gap-4">
-      <h4 className="text-xl">Load Flow</h4>
+    <Dialog
+      open={open}
+      onOpenChange={(value) => {
+        setOpen(value);
+      }}
+    >
+      <DialogContent>
+        <DialogHeader>
+          <DialogTitle>Load Flow</DialogTitle>
 
-      <div className="grid gap-2">
-        <div className="flex gap-2">
+          <DialogDescription>Load a Flow from the database</DialogDescription>
+        </DialogHeader>
+
+        <Input
+          placeholder="Flow Id"
+          value={id}
+          onChange={(e) => setId(e.target.value)}
+        />
+
+        <DialogFooter>
           <Button variant="outline" disabled={loading} onClick={reloadFlow}>
             Reload current Flow
           </Button>
@@ -67,14 +92,8 @@ export const LoadFlow: React.FC<LoadFlowModalProps> = ({
             )}
             Load
           </Button>
-        </div>
-
-        <Input
-          placeholder="Flow Id"
-          value={id}
-          onChange={(e) => setId(e.target.value)}
-        />
-      </div>
-    </div>
+        </DialogFooter>
+      </DialogContent>
+    </Dialog>
   );
 };

@@ -8,12 +8,11 @@ import { isInterval } from "@pusher/shared";
 
 import { DebugModal } from "./debugModal";
 import { ExecutionsDrawer } from "./executionsDrawer";
-import { LoadFlowDrawer } from "./loadFlowDrawer";
+
 import { ResetModal } from "./resetModal";
 import { SubmitModal } from "./submitModal";
 import { Input } from "./ui/input";
 import { Label } from "./ui/label";
-import { ToggleGroup, ToggleGroupItem } from "./ui/toggle-group";
 import {
   Menubar,
   MenubarCheckboxItem,
@@ -27,8 +26,19 @@ import {
   MenubarSubContent,
   MenubarSubTrigger,
   MenubarTrigger,
+  MenubarLabel,
 } from "./ui/menubar";
 import { useAddAction } from "@/state/actions";
+import clsx from "clsx";
+import { AlertCircleIcon } from "lucide-react";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "./ui/tooltip";
+import { ImportExportModal } from "./import-export-modal";
+import { LoadFlowModal } from "./load-flow-modal";
 
 export const TopBar: React.FC = () => {
   const [flowData, setFlowData] = useRecoilState(flowAtom);
@@ -38,6 +48,7 @@ export const TopBar: React.FC = () => {
   const [isLoadFlowOpen, setIsLoadFlowOpen] = useState(false);
   const [isExecutionsOpen, setIsExecutionsOpen] = useState(false);
   const [isResetOpen, setIsResetOpen] = useState(false);
+  const [isImportExportOpen, setImportExportOpen] = useState(false);
 
   const { addAction, id } = useAddAction();
 
@@ -141,35 +152,17 @@ export const TopBar: React.FC = () => {
 
   return (
     <>
-      <div className="flex justify-between gap-5 items-center p-4">
-        <div className="grid grid-cols-3 gap-2 w-1/2">
-          <div>
-            <Label htmlFor="name">Name</Label>
-            <Input
-              id="name"
-              placeholder="Name"
-              value={flowData.name}
-              onChange={(e) =>
-                setFlowData((pre) => ({ ...pre, name: e.target.value }))
-              }
-            />
-          </div>
-
-          <div>
-            <Label className="text-black" htmlFor="fails">
-              Fails
-            </Label>
-            <Input
-              id="fails"
-              value={flowData.fails}
-              onChange={(e) =>
-                setFlowData((pre) => ({
-                  ...pre,
-                  fails: Number(e.target.value ?? 0),
-                }))
-              }
-            />
-          </div>
+      <div className="fixed top-0 left-10 flex flex-col gap-4 z-10 bg-white p-6 rounded-b shadow-lg border-gray-300 border-1">
+        <div>
+          <Label htmlFor="name">Name</Label>
+          <Input
+            id="name"
+            placeholder="Name"
+            value={flowData.name}
+            onChange={(e) =>
+              setFlowData((pre) => ({ ...pre, name: e.target.value }))
+            }
+          />
         </div>
 
         <Menubar>
@@ -177,6 +170,20 @@ export const TopBar: React.FC = () => {
             <MenubarTrigger>File</MenubarTrigger>
 
             <MenubarContent>
+              <MenubarItem onClick={() => setIsLoadFlowOpen(true)}>
+                Load
+              </MenubarItem>
+
+              <MenubarItem onClick={() => setIsExecutionsOpen(true)}>
+                Executions
+              </MenubarItem>
+
+              <MenubarItem onClick={() => setImportExportOpen(true)}>
+                Import/Export
+              </MenubarItem>
+
+              <MenubarSeparator />
+
               <MenubarItem onClick={() => setIsResetOpen(true)}>
                 Reset
               </MenubarItem>
@@ -184,17 +191,6 @@ export const TopBar: React.FC = () => {
               <MenubarItem onClick={() => setIsDebugOpen(true)}>
                 Test
               </MenubarItem>
-
-              <MenubarSeparator />
-
-              <MenubarCheckboxItem
-                checked={!flowData.disabled}
-                onCheckedChange={(update) =>
-                  setFlowData((pre) => ({ ...pre, disabled: !update }))
-                }
-              >
-                {flowData.disabled ? "Disabled" : "Enabled"}
-              </MenubarCheckboxItem>
 
               <MenubarItem onClick={() => setIsSubmitOpen(true)}>
                 Submit
@@ -206,15 +202,51 @@ export const TopBar: React.FC = () => {
             <MenubarTrigger>Settings</MenubarTrigger>
 
             <MenubarContent>
-              <MenubarItem onClick={() => setIsLoadFlowOpen(true)}>
-                Load
+              <MenubarLabel className="flex items-center gap-1">
+                Status
+                <TooltipProvider>
+                  <Tooltip>
+                    <TooltipTrigger asChild>
+                      {flowData.fails > 0 && (
+                        <AlertCircleIcon
+                          className={clsx({
+                            "text-yellow-600": flowData.fails > 3,
+                            "text-red-600": flowData.fails <= 3,
+                          })}
+                        />
+                      )}
+                    </TooltipTrigger>
+
+                    <TooltipContent>
+                      {flowData.fails >= 3
+                        ? "Disabled after 3 failures"
+                        : `Running with ${flowData.fails} failure${
+                            flowData.fails > 1 ? "s" : ""
+                          }`}
+                    </TooltipContent>
+                  </Tooltip>
+                </TooltipProvider>
+              </MenubarLabel>
+
+              <MenubarItem
+                onClick={() => setFlowData((pre) => ({ ...pre, fails: 0 }))}
+              >
+                Reset Failures
               </MenubarItem>
 
-              <MenubarItem onClick={() => setIsExecutionsOpen(true)}>
-                Executions
-              </MenubarItem>
+              <MenubarCheckboxItem
+                className={clsx({ "text-yellow-600": flowData.disabled })}
+                checked={!flowData.disabled}
+                onCheckedChange={(update) =>
+                  setFlowData((pre) => ({ ...pre, disabled: !update }))
+                }
+              >
+                {flowData.disabled ? "Disabled" : "Enabled"}
+              </MenubarCheckboxItem>
 
               <MenubarSeparator />
+
+              <MenubarLabel>Interval</MenubarLabel>
 
               <MenubarRadioGroup
                 value={flowData.interval}
@@ -255,7 +287,12 @@ export const TopBar: React.FC = () => {
         </Menubar>
       </div>
 
-      <LoadFlowDrawer
+      <ImportExportModal
+        open={isImportExportOpen}
+        setOpen={setImportExportOpen}
+      />
+
+      <LoadFlowModal
         defaultId={flowData.id}
         open={isLoadFlowOpen}
         setOpen={setIsLoadFlowOpen}

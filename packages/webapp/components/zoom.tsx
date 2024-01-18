@@ -16,7 +16,8 @@ export const Zoom: React.FC = () => {
       <div className="fixed grid" style={{ right: 35, bottom: 35 }}>
         {zoom !== 1 && (
           <Button
-            className="text-[10px] p-0 rounded-b-none"
+            variant="outline"
+            className="text-[10px] p-0 rounded-b-none border-b-0"
             onClick={() => setZoom(1)}
           >
             {(zoom * 100).toFixed()}%
@@ -24,7 +25,10 @@ export const Zoom: React.FC = () => {
         )}
 
         <Button
-          className={clsx("rounded-none", { "rounded-t": zoom === 1 })}
+          variant="outline"
+          className={clsx("rounded-none border-b-0", {
+            "rounded-t": zoom === 1,
+          })}
           size="icon"
           onClick={() => setZoom((pre) => pre + 0.1)}
         >
@@ -32,6 +36,7 @@ export const Zoom: React.FC = () => {
         </Button>
 
         <Button
+          variant="outline"
           className="rounded-t-none"
           size="icon"
           onClick={() => setZoom((pre) => pre - 0.1)}
