@@ -20,7 +20,7 @@ const Texts = [
 export const Stage: React.FC = () => {
   const [text, setText] = useState("");
 
-  const [restText, setRestText] = useState("");
+  const [restText, setRestText] = useState("\u00A0".repeat(Texts[0].length));
 
   const pointerIndex = useRef(0);
 
@@ -159,7 +159,7 @@ export const Stage: React.FC = () => {
               {restText}
             </h1>
 
-            <Button className="w-fit" asChild>
+            <Button variant="outline" className="w-fit" asChild>
               <Link href="/console">Open Console</Link>
             </Button>
           </div>
