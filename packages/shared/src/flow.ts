@@ -38,6 +38,8 @@ export const isInterval = (text: string): text is Flow["interval"] =>
   text === "6h" || text === "12h";
 
 export type Flow = {
+  user?: string;
+  updatedAt?: string;
   name: string;
   id: string;
   fails: number;

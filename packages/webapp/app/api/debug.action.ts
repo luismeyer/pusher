@@ -1,22 +1,20 @@
 "use server";
 
-import { AuthResponse, DebugResponse, Flow } from "@pusher/shared";
+import { DebugResponse, Flow } from "@pusher/shared";
 
 import { callRunner } from "./callRunner";
 import { validateFlow } from "./validateFlow";
 import { auth } from "./auth";
 import { res } from "./response";
 
-export const debugAction = async (
-  flow: string
-): Promise<AuthResponse<DebugResponse>> => {
-  const isAuthed = await auth();
-  if (!isAuthed) {
+export const debugAction = async (flow: string): Promise<DebugResponse> => {
+  const user = await auth();
+  if (!user) {
     return res.unauth;
   }
 
   if (typeof flow !== "string") {
-    return res.json({ type: "error", message: "Wrong flow parameter" });
+    return res.error("Wrong flow parameter");
   }
 
   const decodedFlow = decodeURIComponent(flow);
@@ -29,21 +27,21 @@ export const debugAction = async (
     validateFlow(flowPayload);
   } catch (e) {
     if (e instanceof Error) {
-      return res.json({ type: "error", message: e.message });
+      return res.error(e.message);
     }
 
-    return res.json({ type: "error", message: "Flow parsing error" });
+    return res.error("Flow parsing error");
   }
 
   try {
     await callRunner(flowPayload);
 
-    return res.json({ type: "success" });
+    return res.success();
   } catch (e) {
     if (e instanceof Error) {
-      return res.json({ type: "error", message: e.message });
+      return res.error(e.message);
     }
 
-    return res.json({ type: "error", message: "Flow running error" });
+    return res.error("Flow running error");
   }
 };

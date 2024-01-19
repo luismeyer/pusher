@@ -39,6 +39,7 @@ import {
 } from "./ui/tooltip";
 import { ImportExportModal } from "./import-export-modal";
 import { LoadFlowModal } from "./load-flow-modal";
+import Link from "next/link";
 
 export const TopBar: React.FC = () => {
   const [flowData, setFlowData] = useRecoilState(flowAtom);
@@ -153,6 +154,8 @@ export const TopBar: React.FC = () => {
   return (
     <>
       <div className="fixed top-0 left-10 flex flex-col gap-4 z-10 bg-white p-6 rounded-b shadow-lg border-gray-300 border-1">
+        <Link href="/console">back</Link>
+
         <div>
           <Label htmlFor="name">Name</Label>
           <Input
@@ -229,6 +232,7 @@ export const TopBar: React.FC = () => {
               </MenubarLabel>
 
               <MenubarItem
+                disabled={flowData.fails === 0}
                 onClick={() => setFlowData((pre) => ({ ...pre, fails: 0 }))}
               >
                 Reset Failures
