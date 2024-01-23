@@ -31,6 +31,8 @@ jobs:
           NEXTAUTH_GITHUB_ID: ${{ secrets.NEXTAUTH_GITHUB_ID }}
           NEXTAUTH_GITHUB_SECRET: ${{ secrets.NEXTAUTH_GITHUB_SECRET }}
           NEXT_PUBLIC_WEBSOCKET_KEY: ${{ secrets.NEXT_PUBLIC_WEBSOCKET_KEY }}
+          TABLE_NAME: ${{ secrets.TABLE_NAME }}
+          USER_INDEX_NAME: ${{ secrets.USER_INDEX_NAME }}
         run: pnpm run build
 
       - name: Deploy AWS
