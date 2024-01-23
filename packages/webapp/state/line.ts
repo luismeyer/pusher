@@ -20,7 +20,7 @@ export const currentLineAtom = atom<Line | undefined>({
 });
 
 export const lineSelector = selectorFamily({
-  key: `LineSelector`,
+  key: "LineSelector",
   get:
     (id: string) =>
     ({ get }): Line[] => {

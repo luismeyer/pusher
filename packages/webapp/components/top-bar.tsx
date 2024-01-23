@@ -30,7 +30,7 @@ import {
 } from "./ui/menubar";
 import { useAddAction } from "@/state/actions";
 import clsx from "clsx";
-import { AlertCircleIcon } from "lucide-react";
+import { AlertCircleIcon, ChevronLeftIcon } from "lucide-react";
 import {
   Tooltip,
   TooltipContent,
@@ -39,6 +39,7 @@ import {
 } from "./ui/tooltip";
 import { ImportExportModal } from "./import-export-modal";
 import { LoadFlowModal } from "./load-flow-modal";
+import Link from "next/link";
 
 export const TopBar: React.FC = () => {
   const [flowData, setFlowData] = useRecoilState(flowAtom);
@@ -61,33 +62,62 @@ export const TopBar: React.FC = () => {
           {
             key: "click",
             label: "Click",
-            onClick: () => addAction({ id, type: "click", selector: "" }),
+            onClick: () =>
+              addAction({
+                id,
+                type: "click",
+                selector: "",
+              }),
           },
           {
             key: "scroll",
             label: "Scroll To Bottom",
-            onClick: () => addAction({ id, type: "scrollToBottom" }),
+            onClick: () =>
+              addAction({
+                id,
+                type: "scrollToBottom",
+              }),
           },
           {
             key: "timeout",
             label: "Timeout",
-            onClick: () => addAction({ id, type: "timeout", timeInSeconds: 0 }),
+            onClick: () =>
+              addAction({
+                id,
+                type: "timeout",
+                timeInSeconds: 0,
+              }),
           },
           {
             key: "wait",
             label: "Wait For Element",
-            onClick: () => addAction({ id, type: "waitFor", selector: "" }),
+            onClick: () =>
+              addAction({
+                id,
+                type: "waitFor",
+                selector: "",
+              }),
           },
           {
             key: "open",
             label: "Open Page",
-            onClick: () => addAction({ id, type: "openPage", pageUrl: "" }),
+            onClick: () =>
+              addAction({
+                id,
+                type: "openPage",
+                pageUrl: "",
+              }),
           },
           {
             key: "type",
             label: "Type Text",
             onClick: () =>
-              addAction({ id, type: "type", selector: "", text: "" }),
+              addAction({
+                id,
+                type: "type",
+                selector: "",
+                text: "",
+              }),
           },
           {
             key: "store",
@@ -153,6 +183,14 @@ export const TopBar: React.FC = () => {
   return (
     <>
       <div className="fixed top-0 left-10 flex flex-col gap-4 z-10 bg-white p-6 rounded-b shadow-lg border-gray-300 border-1">
+        <Link
+          href="/console"
+          className="flex items-center gap-1 hover:underline text-sm"
+        >
+          <ChevronLeftIcon />
+          back
+        </Link>
+
         <div>
           <Label htmlFor="name">Name</Label>
           <Input
@@ -229,6 +267,7 @@ export const TopBar: React.FC = () => {
               </MenubarLabel>
 
               <MenubarItem
+                disabled={flowData.fails === 0}
                 onClick={() => setFlowData((pre) => ({ ...pre, fails: 0 }))}
               >
                 Reset Failures

@@ -9,8 +9,8 @@ import { validateFlow } from "./validateFlow";
 export const validateAction = async (
   flow: string
 ): Promise<AuthResponse<ValidateResponse>> => {
-  const isAuthed = await auth();
-  if (!isAuthed) {
+  const user = await auth();
+  if (!user) {
     return res.unauth;
   }
 
@@ -21,12 +21,12 @@ export const validateAction = async (
 
     validateFlow(flowPayload);
 
-    return res.json({ type: "success" });
+    return res.success();
   } catch (e) {
     if (e instanceof Error) {
-      return res.json({ type: "error", message: e.message });
+      return res.error(e.message);
     }
 
-    return res.json({ type: "error", message: "Invalid Flow" });
+    return res.error("Invalid Flow");
   }
 };

@@ -1,25 +1,20 @@
-import { useSetRecoilState } from "recoil";
-
-import { authOpenAtom } from "@/state/auth";
 import { AuthResponse } from "@pusher/shared";
+import { redirect } from "next/navigation";
 
 export const useActionCall = <
   Args extends Array<unknown>,
-  Response extends object
+  Data,
+  Response extends AuthResponse<Data>
 >(
-  action: (...args: Args) => Promise<AuthResponse<Response>>
+  action: (...args: Args) => Promise<Response>
 ) => {
-  const setAuthOpen = useSetRecoilState(authOpenAtom);
-
   return async (...args: Args) => {
     const result = await action(...args);
 
     if (result.type === "unauthorized") {
-      setAuthOpen(true);
-
-      return;
+      redirect("/login");
     }
 
-    return result.data;
+    return result;
   };
 };

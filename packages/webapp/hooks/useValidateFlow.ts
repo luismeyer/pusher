@@ -32,6 +32,10 @@ export const useValidateFlowString = () => {
             return { valid: true, flow };
           }
 
+          if (res?.type === "unauthorized") {
+            return { valid: false, error: "Unauthorized" };
+          }
+
           return { valid: false, error: res?.message };
         });
       } catch (error) {

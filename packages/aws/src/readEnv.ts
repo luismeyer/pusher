@@ -23,9 +23,9 @@ if (!intervalIndexName) {
   throw new Error("INTERVAL_INDEX_NAME Env variable is not set");
 }
 
-const pusherAuthToken = process.env.PUSHER_AUTH_TOKEN;
-if (!pusherAuthToken) {
-  throw new Error("PUSHER_AUTH_TOKEN Env variable is not set");
+const userIndexName = process.env.USER_INDEX_NAME;
+if (!userIndexName) {
+  throw new Error("USER_INDEX_NAME Env variable is not set");
 }
 
 const { WEBSOCKET_APP_ID, NEXT_PUBLIC_WEBSOCKET_KEY, WEBSOCKET_SECRET } =
@@ -41,7 +41,7 @@ export const Environment = {
   runnerFunctionName,
   telegramToken,
   intervalIndexName,
-  pusherAuthToken,
+  userIndexName,
   webSocketAppId: WEBSOCKET_APP_ID,
   webSocketKey: NEXT_PUBLIC_WEBSOCKET_KEY,
   webSocketSecret: WEBSOCKET_SECRET,

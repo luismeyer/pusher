@@ -1,4 +1,9 @@
-import { createGetItem, createPutItem, DDBClient } from "duenamodb";
+import {
+  createGetItem,
+  createPutItem,
+  createQueryItems,
+  DDBClient,
+} from "duenamodb";
 
 import { Flow } from "@pusher/shared";
 
@@ -22,3 +27,13 @@ if (!TABLE_NAME) {
 export const saveFlow = createPutItem<Flow>(TABLE_NAME);
 
 export const getFlow = createGetItem<Flow, string>(TABLE_NAME, "id");
+
+const { USER_INDEX_NAME } = process.env;
+if (!USER_INDEX_NAME) {
+  throw new Error("Missing Env Variable: USER_INDEX_NAME");
+}
+
+export const flowsByUser = createQueryItems<Flow, string>(TABLE_NAME, {
+  name: USER_INDEX_NAME,
+  partitionKeyName: "user",
+});

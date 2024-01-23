@@ -9,7 +9,7 @@ import { Keys } from "@pusher/shared";
 import { Combobox } from "./ui/combobox";
 import { Input } from "./ui/input";
 import { Label } from "./ui/label";
-import { EMPTY, TextInput } from "./textInput";
+import { EMPTY, TextInput } from "./text-input";
 import { InfoIcon } from "lucide-react";
 
 type ActionContentProps = {
@@ -162,7 +162,7 @@ export const ActionContent: React.FC<ActionContentProps> = ({ id }) => {
   }, [data, id, setData]);
 
   return (
-    <div className="grid gap-2">
+    <div className="grid gap-2 w-full">
       {inputs.length === 0 && (
         <div className="flex flex-col items-center">
           <InfoIcon />

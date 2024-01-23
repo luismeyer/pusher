@@ -1,10 +1,12 @@
 import { getServerSession } from "next-auth";
+import Link from "next/link";
 import { redirect } from "next/navigation";
+import { Suspense } from "react";
+import { v4 } from "uuid";
 
-import { AuthModal } from "@/components/authModal";
-import { Canvas } from "@/components/canvas";
-import { TopBar } from "@/components/top-bar";
-import { Zoom } from "@/components/zoom";
+import { Flows } from "@/components/flows";
+
+import { flowsAction } from "../api/flows.action";
 
 export default async function ConsolePage() {
   const session = await getServerSession();
@@ -12,17 +14,24 @@ export default async function ConsolePage() {
     redirect("/login");
   }
 
+  const res = await flowsAction();
+
+  if (res.type === "unauthorized") {
+    redirect("/login");
+  }
+
+  if (res.type === "error") {
+    return <div>Error {res.message}</div>;
+  }
+
   return (
-    <main>
-      <AuthModal />
+    <main className="p-8 grid gap-8">
+      <h1 className="text-3xl">Your flows</h1>
+      <Link href={`/console/${v4()}`}>New flow</Link>
 
-      <TopBar />
-
-      <div className="p-4 bg-gray-100 h-screen w-screen">
-        <Canvas />
-      </div>
-
-      <Zoom />
+      <Suspense>
+        <Flows />
+      </Suspense>
     </main>
   );
 }

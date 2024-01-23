@@ -72,7 +72,7 @@ export const ImportExportModal: React.FC<ImportExportModalProps> = ({
     const res = await validateFlow(importExport);
 
     if (res.valid) {
-      await storeFlow(res.flow);
+      storeFlow(res.flow);
 
       setOpen(false);
     }

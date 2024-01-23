@@ -10,7 +10,7 @@ import { sizeAtom } from "@/state/size";
 import { zoomAtom } from "@/state/zoom";
 
 import { ActionButtons } from "./actionButton";
-import { ActionContent } from "./actionContent";
+import { ActionContent } from "./action-content";
 import { ActionHeader } from "./actionHeadline";
 import { Card, CardContent, CardHeader } from "./ui/card";
 import clsx from "clsx";
@@ -121,9 +121,12 @@ export const Action: React.FC<ActionProps> = ({ id }) => {
       ref={ref}
       onMouseDown={handleMouseDown}
       onMouseUp={stopDrag}
-      className={clsx("z-10 hover:z-20 absolute rounded-md hover:shadow-lg", {
-        "border-blue-600": nextAction || parentAction,
-      })}
+      className={clsx(
+        "z-10 hover:z-20 absolute rounded-md hover:shadow-lg min-w-[400px] min-h-[200px] grid grid-rows-[auto_1fr]",
+        {
+          "border-blue-600": nextAction || parentAction,
+        }
+      )}
       style={{ top: position.y, left: position.x, cursor }}
     >
       <CardHeader className="flex flex-row gap-4">
@@ -132,7 +135,7 @@ export const Action: React.FC<ActionProps> = ({ id }) => {
         <ActionButtons id={id} disabled={isConnecting} />
       </CardHeader>
 
-      <CardContent>
+      <CardContent className="flex items-center w-full">
         <ActionContent id={id} />
       </CardContent>
     </Card>

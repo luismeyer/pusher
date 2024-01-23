@@ -1,7 +1,5 @@
 import { atomFamily } from "recoil";
 
-import { localStorageEffect } from "./localStorage";
-
 type Position = {
   x: number;
   y: number;
@@ -9,9 +7,9 @@ type Position = {
 
 export const positionAtom = atomFamily<Position, string>({
   key: "Position",
-  effects: [localStorageEffect],
+  effects: [],
   default: {
-    x: 10,
-    y: 10,
+    x: 25,
+    y: 200,
   },
 });

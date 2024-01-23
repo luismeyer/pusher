@@ -45,7 +45,7 @@ export const createDDBServer = async () => {
     },
   });
 
-  const { tableName, intervalIndexName } = Environment;
+  const { tableName, intervalIndexName, userIndexName } = Environment;
 
   const tableExists = await client
     .send(new ListTablesCommand({}))
@@ -59,6 +59,8 @@ export const createDDBServer = async () => {
       intervalIndexKeyType,
       partitionKeyName,
       partitionKeyType,
+      userIndexKeyName,
+      userIndexKeyType,
     } = TableOptions;
 
     await client.send(
@@ -76,6 +78,10 @@ export const createDDBServer = async () => {
           {
             AttributeName: intervalIndexKeyName,
             AttributeType: intervalIndexKeyType,
+          },
+          {
+            AttributeName: userIndexKeyName,
+            AttributeType: userIndexKeyType,
           },
         ],
         KeySchema: [
@@ -95,6 +101,20 @@ export const createDDBServer = async () => {
             KeySchema: [
               {
                 AttributeName: intervalIndexKeyName,
+                KeyType: "HASH",
+              },
+            ],
+          },
+          {
+            IndexName: userIndexName,
+            Projection: { ProjectionType: "ALL" },
+            ProvisionedThroughput: {
+              ReadCapacityUnits: 1,
+              WriteCapacityUnits: 1,
+            },
+            KeySchema: [
+              {
+                AttributeName: userIndexKeyName,
                 KeyType: "HASH",
               },
             ],
