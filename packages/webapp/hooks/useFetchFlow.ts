@@ -21,8 +21,8 @@ export const useFetchFlow = () => {
 
       const response = await load(id);
 
-      if (response?.type === "success") {
-        await storeFlow(response.flow);
+      if (response?.type === "success" && response.data) {
+        storeFlow(response.data);
       }
 
       setLoading(false);
