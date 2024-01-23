@@ -30,7 +30,7 @@ export const LoadFlowModal: React.FC<LoadFlowModalProps> = ({
 }) => {
   const { loading, fetchFlow } = useFetchFlow();
 
-  const [id, setId] = useState<string | undefined>();
+  const [id, setId] = useState("");
 
   const loadFlow = useCallback(
     async (flowId: string) => {

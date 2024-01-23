@@ -1,68 +1,37 @@
 "use client";
 
-import React, { useEffect, useRef } from "react";
-import { useRecoilValue, useSetRecoilState } from "recoil";
+import React from "react";
+import { RecoilRoot } from "recoil";
 
-import { useCancelConnect } from "@/hooks/useCancelConnect";
-import { useDrag } from "@/hooks/useDrag";
-import { useWindowSize } from "@/hooks/useWindowSize";
-import { actionIdsAtom } from "@/state/actions";
-import { canvasAtom } from "@/state/canvas";
-import { zoomAtom } from "@/state/zoom";
+import { flowAtom, storeFlow } from "@/state/flow";
+import { Flow } from "@pusher/shared";
+import { Actions } from "./actions";
+import { TopBar } from "./top-bar";
+import { Zoom } from "./zoom";
 
-import { Action } from "./action";
-import { CurrentLine } from "./currentLine";
-import { Lines } from "./lines";
+type CanvasProps = {
+  flow?: Flow;
+  id: string;
+};
 
-export const Canvas: React.FC = () => {
-  const zoom = useRecoilValue(zoomAtom);
-
-  const actionIds = useRecoilValue(actionIdsAtom);
-
-  const canvasRef = useRef<HTMLDivElement>(null);
-
-  const handleDrag = useDrag();
-
-  const cancelConnect = useCancelConnect();
-
-  const setCanvas = useSetRecoilState(canvasAtom);
-  const windowSize = useWindowSize();
-
-  // saves the element height in the atom
-  useEffect(() => {
-    if (!canvasRef.current) {
-      return;
-    }
-
-    setCanvas({
-      width: canvasRef.current.scrollWidth,
-      height: canvasRef.current.scrollHeight,
-      offSetX: canvasRef.current.offsetLeft,
-      offSetY: canvasRef.current.offsetTop,
-    });
-  }, [setCanvas, windowSize]);
-
+export const Canvas: React.FC<CanvasProps> = ({ flow, id }) => {
   return (
-    <div
-      ref={canvasRef}
-      onMouseMove={handleDrag}
-      onClick={cancelConnect}
-      className="relative overflow-auto h-full bg-white rounded-lg"
-      style={{
-        transform: `scale(${zoom}) translate(calc(50% - 50% / ${zoom}), calc(50% - 50% / ${zoom}))`,
-        width: `calc(100% / ${zoom})`,
-        height: `calc(100% / ${zoom})`,
+    <RecoilRoot
+      initializeState={(snapshot) => {
+        if (!flow) {
+          snapshot.set(flowAtom, (pre) => ({ ...pre, id }));
+
+          return;
+        }
+
+        storeFlow(flow, snapshot.set);
       }}
     >
-      {actionIds.map((id) => (
-        <Action key={id} id={id} />
-      ))}
+      <TopBar />
 
-      {actionIds.map((id) => (
-        <Lines key={id} actionId={id} />
-      ))}
+      <Actions />
 
-      <CurrentLine />
-    </div>
+      <Zoom />
+    </RecoilRoot>
   );
 };

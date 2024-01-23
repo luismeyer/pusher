@@ -1,7 +1,5 @@
 import { atomFamily } from "recoil";
 
-import { localStorageEffect } from "./localStorage";
-
 type SizeAndPosition = {
   width: number;
   height: number;
@@ -9,9 +7,9 @@ type SizeAndPosition = {
 
 export const sizeAtom = atomFamily<SizeAndPosition, string>({
   key: "Size",
-  effects: [localStorageEffect],
+  effects: [],
   default: {
-    width: 0,
-    height: 0,
+    width: 400,
+    height: 200,
   },
 });

@@ -16,7 +16,6 @@ import {
 } from "@pusher/shared";
 
 import { dataAtom } from "./data";
-import { localStorageEffect } from "./localStorage";
 import { positionAtom } from "./position";
 import {
   firstParentSelector,
@@ -29,7 +28,7 @@ import { sizeAtom } from "./size";
 export const actionIdsAtom = atom<string[]>({
   key: "ActionsAtom",
   default: [],
-  effects: [localStorageEffect],
+  effects: [],
 });
 
 export const useResetAction = () => {

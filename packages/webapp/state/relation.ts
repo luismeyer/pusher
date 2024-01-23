@@ -1,7 +1,6 @@
 import { atomFamily, selectorFamily } from "recoil";
 
 import { actionIdsAtom } from "./actions";
-import { localStorageEffect } from "./localStorage";
 
 export type Relation = {
   nextAction?: string;
@@ -12,7 +11,7 @@ export type Relation = {
 
 export const relationAtom = atomFamily<Relation, string>({
   key: "Relation",
-  effects: [localStorageEffect],
+  effects: [],
   default: {
     nextAction: undefined,
     trueNextAction: undefined,

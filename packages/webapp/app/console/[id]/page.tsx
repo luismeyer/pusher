@@ -1,11 +1,17 @@
 import { getServerSession } from "next-auth";
 import { redirect } from "next/navigation";
 
-import { Canvas } from "@/components/canvas";
-import { TopBar } from "@/components/top-bar";
 import { Zoom } from "@/components/zoom";
+import { App } from "@/components/app";
+import { Suspense } from "react";
 
-export default async function ConsolePage() {
+type ConsolePage = {
+  params: {
+    id: string;
+  };
+};
+
+export default async function ConsolePage(props: ConsolePage) {
   const session = await getServerSession();
   if (!session?.user) {
     redirect("/login");
@@ -13,13 +19,11 @@ export default async function ConsolePage() {
 
   return (
     <main>
-      <TopBar />
-
       <div className="p-4 bg-gray-100 h-screen w-screen">
-        <Canvas />
+        <Suspense>
+          <App id={props.params.id} />
+        </Suspense>
       </div>
-
-      <Zoom />
     </main>
   );
 }

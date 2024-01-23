@@ -36,21 +36,21 @@ export const TextInput: React.FC<TextInputProps> = ({
   const storedVariables = useRecoilValue(storedVariablesSelector(id));
 
   const { prefix, value } = useMemo(() => {
+    if (!addonBeforeOptions) {
+      return { prefix: "", value: fullValue };
+    }
+
     const prefixInValue = addonBeforeOptions?.find(({ value }) =>
       fullValue.startsWith(value)
     );
 
     if (!prefixInValue) {
-      if (!addonBeforeOptions?.length) {
-        return { prefix: "", value: fullValue };
-      }
-
       return { prefix: addonBeforeOptions[0].value, value: fullValue };
     }
 
     return {
-      value: fullValue.replace(prefixInValue.value, ""),
       prefix: prefixInValue.value,
+      value: fullValue.replace(prefixInValue.value, ""),
     };
   }, [addonBeforeOptions, fullValue]);
 
@@ -62,31 +62,6 @@ export const TextInput: React.FC<TextInputProps> = ({
     },
     [onChange, prefix, value]
   );
-
-  const addonBefore = useMemo(() => {
-    if (!addonBeforeOptions) {
-      return null;
-    }
-
-    return (
-      <Select
-        value={prefix}
-        onValueChange={(value) => handleInputChange({ prefix: value })}
-      >
-        <SelectTrigger className="w-fit">
-          <SelectValue placeholder="Prefix" />
-        </SelectTrigger>
-
-        <SelectContent>
-          {addonBeforeOptions.map(({ value, label }) => (
-            <SelectItem key={value} value={value}>
-              {label ?? value}
-            </SelectItem>
-          ))}
-        </SelectContent>
-      </Select>
-    );
-  }, [addonBeforeOptions, handleInputChange, prefix]);
 
   const variableNames = useMemo(() => {
     const regex = /{{[\w|\s]*}}/g;
@@ -111,9 +86,27 @@ export const TextInput: React.FC<TextInputProps> = ({
   }, [storedVariables, variableNames, variables]);
 
   return (
-    <div className="grid gap-1">
+    <div className="grid gap-0.5">
       <div className="flex gap-1">
-        {addonBefore}
+        {addonBeforeOptions ? (
+          <Select
+            value={prefix}
+            onValueChange={(value) => handleInputChange({ prefix: value })}
+          >
+            <SelectTrigger className="w-fit">
+              <SelectValue placeholder="Prefix" />
+            </SelectTrigger>
+
+            <SelectContent>
+              {addonBeforeOptions.map(({ value, label }) => (
+                <SelectItem key={value} value={value}>
+                  {label ?? value}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+        ) : null}
+
         <Input
           placeholder={placeholder}
           value={value}
@@ -122,7 +115,7 @@ export const TextInput: React.FC<TextInputProps> = ({
       </div>
 
       {error && (
-        <span className="text-yellow-600">Wrong variable: {error}</span>
+        <span className="text-yellow-600 text-xs">Wrong variable: {error}</span>
       )}
     </div>
   );
