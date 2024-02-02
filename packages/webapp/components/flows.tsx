@@ -24,7 +24,7 @@ export async function Flows() {
   }
 
   return (
-    <div className="grid grid-cols-4 gap-4">
+    <div className="grid grid-cols-4 gap-8">
       {res.data?.map((flow) => (
         <Card key={flow.id} className="flex flex-col p-4 gap-5 w-full">
           <CardHeader className="p-0">

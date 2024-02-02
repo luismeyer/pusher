@@ -7,3 +7,4 @@ export * from "./bucket";
 export * from "./api";
 export * from "./keyboard";
 export * from "./websocket";
+export * from "./user";

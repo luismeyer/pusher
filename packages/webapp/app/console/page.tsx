@@ -5,6 +5,7 @@ import { Suspense } from "react";
 import { v4 } from "uuid";
 
 import { Flows } from "@/components/flows";
+import { Button } from "@/components/ui/button";
 
 import { flowsAction } from "../api/flows.action";
 
@@ -26,8 +27,13 @@ export default async function ConsolePage() {
 
   return (
     <main className="p-8 grid gap-8">
-      <h1 className="text-3xl">Your flows</h1>
-      <Link href={`/console/${v4()}`}>New flow</Link>
+      <div className="flex justify-between items-center">
+        <h1 className="text-3xl">Your flows</h1>
+
+        <Button asChild>
+          <Link href={`/console/${v4()}`}>New flow</Link>
+        </Button>
+      </div>
 
       <Suspense>
         <Flows />

@@ -129,7 +129,7 @@ export const Action: React.FC<ActionProps> = ({ id }) => {
       )}
       style={{ top: position.y, left: position.x, cursor }}
     >
-      <CardHeader className="flex flex-row gap-4">
+      <CardHeader className="flex flex-row justify-between">
         <ActionHeader id={id} />
 
         <ActionButtons id={id} disabled={isConnecting} />

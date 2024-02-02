@@ -4,6 +4,8 @@ import { Inter } from "next/font/google";
 
 import { Toaster } from "@/components/ui/sonner";
 
+import { Providers } from "./providers";
+
 import type { Metadata } from "next";
 const inter = Inter({ subsets: ["latin"] });
 
@@ -18,12 +20,14 @@ export default async function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en">
-      <body className={inter.className}>
-        {children}
+    <Providers>
+      <html lang="en">
+        <body className={inter.className}>
+          {children}
 
-        <Toaster />
-      </body>
-    </html>
+          <Toaster />
+        </body>
+      </html>
+    </Providers>
   );
 }

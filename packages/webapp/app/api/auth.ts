@@ -1,5 +1,6 @@
 import GithubProvider from "next-auth/providers/github";
 import { AuthOptions, getServerSession } from "next-auth";
+import { createOrReadUser } from "./db-user";
 
 export const auth = async () => {
   const session = await getServerSession(authOptions);
@@ -26,7 +27,9 @@ export const authOptions: AuthOptions = {
   callbacks: {
     async session({ session, token }) {
       if (session.user && token.sub) {
-        session.user.id = token.sub;
+        const dbUser = await createOrReadUser(token.sub);
+
+        session.user = { ...session.user, ...dbUser };
       }
 
       return session;

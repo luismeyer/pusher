@@ -1,9 +1,9 @@
 "use server";
 
 import { LoadResponse } from "@pusher/shared";
-import { auth } from "./auth";
 
-import { getFlow } from "./flowDB";
+import { auth } from "./auth";
+import { getFlow } from "./db-flow";
 import { res } from "./response";
 
 export const loadAction = async (id: string): Promise<LoadResponse> => {

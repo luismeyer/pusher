@@ -84,10 +84,6 @@ export const SubmitModal: React.FC<SubmitModalProps> = ({ setOpen, open }) => {
           </p>
         )}
 
-        <p className="text-yellow-600 text-sm">
-          Save you Flow id to edit it later: <br /> {flowData.id}
-        </p>
-
         <DialogFooter>
           <Button
             type="button"

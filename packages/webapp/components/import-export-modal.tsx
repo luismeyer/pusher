@@ -88,12 +88,13 @@ export const ImportExportModal: React.FC<ImportExportModalProps> = ({
   }, [importExport, setOpen, storeFlow, validateFlow]);
 
   useEffect(() => {
-    if (
-      textAreaRef.current &&
-      textAreaRef.current.scrollHeight < window.innerHeight * (3 / 4)
-    ) {
+    if (textAreaRef.current) {
       textAreaRef.current.style.height = "0";
-      textAreaRef.current.style.height = `${textAreaRef.current.scrollHeight}px`;
+
+      textAreaRef.current.style.height = `${Math.min(
+        window.innerHeight * (3 / 4),
+        textAreaRef.current.scrollHeight
+      )}px`;
     }
   }, [importExport]);
 

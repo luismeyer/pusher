@@ -1,14 +1,11 @@
 import { getServerSession } from "next-auth";
 import { redirect } from "next/navigation";
-
-import { Zoom } from "@/components/zoom";
-import { App } from "@/components/app";
 import { Suspense } from "react";
 
+import { App } from "@/components/app";
+
 type ConsolePage = {
-  params: {
-    id: string;
-  };
+  params: { id: string };
 };
 
 export default async function ConsolePage(props: ConsolePage) {

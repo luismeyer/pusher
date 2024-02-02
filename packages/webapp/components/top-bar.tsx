@@ -1,14 +1,20 @@
 "use client";
 
+import clsx from "clsx";
+import { AlertCircleIcon, ChevronLeftIcon } from "lucide-react";
+import { useSession } from "next-auth/react";
+import Link from "next/link";
 import { useMemo, useState } from "react";
 import { useRecoilState } from "recoil";
 
+import { useAddAction } from "@/state/actions";
 import { flowAtom } from "@/state/flow";
 import { isInterval } from "@pusher/shared";
 
 import { DebugModal } from "./debugModal";
 import { ExecutionsDrawer } from "./executionsDrawer";
-
+import { ImportExportModal } from "./import-export-modal";
+import { LoadFlowModal } from "./load-flow-modal";
 import { ResetModal } from "./resetModal";
 import { SubmitModal } from "./submitModal";
 import { Input } from "./ui/input";
@@ -18,6 +24,7 @@ import {
   MenubarCheckboxItem,
   MenubarContent,
   MenubarItem,
+  MenubarLabel,
   MenubarMenu,
   MenubarRadioGroup,
   MenubarRadioItem,
@@ -26,22 +33,17 @@ import {
   MenubarSubContent,
   MenubarSubTrigger,
   MenubarTrigger,
-  MenubarLabel,
 } from "./ui/menubar";
-import { useAddAction } from "@/state/actions";
-import clsx from "clsx";
-import { AlertCircleIcon, ChevronLeftIcon } from "lucide-react";
 import {
   Tooltip,
   TooltipContent,
   TooltipProvider,
   TooltipTrigger,
 } from "./ui/tooltip";
-import { ImportExportModal } from "./import-export-modal";
-import { LoadFlowModal } from "./load-flow-modal";
-import Link from "next/link";
 
 export const TopBar: React.FC = () => {
+  const { data: session } = useSession();
+
   const [flowData, setFlowData] = useRecoilState(flowAtom);
 
   const [isDebugOpen, setIsDebugOpen] = useState(false);
@@ -62,62 +64,33 @@ export const TopBar: React.FC = () => {
           {
             key: "click",
             label: "Click",
-            onClick: () =>
-              addAction({
-                id,
-                type: "click",
-                selector: "",
-              }),
+            onClick: () => addAction({ id, type: "click", selector: "" }),
           },
           {
             key: "scroll",
             label: "Scroll To Bottom",
-            onClick: () =>
-              addAction({
-                id,
-                type: "scrollToBottom",
-              }),
+            onClick: () => addAction({ id, type: "scrollToBottom" }),
           },
           {
             key: "timeout",
             label: "Timeout",
-            onClick: () =>
-              addAction({
-                id,
-                type: "timeout",
-                timeInSeconds: 0,
-              }),
+            onClick: () => addAction({ id, type: "timeout", timeInSeconds: 0 }),
           },
           {
             key: "wait",
             label: "Wait For Element",
-            onClick: () =>
-              addAction({
-                id,
-                type: "waitFor",
-                selector: "",
-              }),
+            onClick: () => addAction({ id, type: "waitFor", selector: "" }),
           },
           {
             key: "open",
             label: "Open Page",
-            onClick: () =>
-              addAction({
-                id,
-                type: "openPage",
-                pageUrl: "",
-              }),
+            onClick: () => addAction({ id, type: "openPage", pageUrl: "" }),
           },
           {
             key: "type",
             label: "Type Text",
             onClick: () =>
-              addAction({
-                id,
-                type: "type",
-                selector: "",
-                text: "",
-              }),
+              addAction({ id, type: "type", selector: "", text: "" }),
           },
           {
             key: "store",
@@ -133,12 +106,7 @@ export const TopBar: React.FC = () => {
           {
             key: "keyboard",
             label: "Keyboard Input",
-            onClick: () =>
-              addAction({
-                id,
-                type: "keyboard",
-                key: "Enter",
-              }),
+            onClick: () => addAction({ id, type: "keyboard", key: "Enter" }),
           },
         ],
       },
@@ -231,7 +199,7 @@ export const TopBar: React.FC = () => {
               </MenubarItem>
 
               <MenubarItem onClick={() => setIsSubmitOpen(true)}>
-                Submit
+                Save
               </MenubarItem>
             </MenubarContent>
           </MenubarMenu>
@@ -295,11 +263,13 @@ export const TopBar: React.FC = () => {
                   }
                 }}
               >
-                {["6h", "12h"].map((interval) => (
-                  <MenubarRadioItem key={interval} value={interval}>
-                    {interval}
-                  </MenubarRadioItem>
-                ))}
+                {["6h", "12h"].map((interval) => {
+                  return (
+                    <MenubarRadioItem key={interval} value={interval}>
+                      {interval}
+                    </MenubarRadioItem>
+                  );
+                })}
               </MenubarRadioGroup>
             </MenubarContent>
           </MenubarMenu>
