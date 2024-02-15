@@ -142,6 +142,12 @@ export const TopBar: React.FC = () => {
             onClick: () =>
               addAction({ id, type: "telegram", chatId: "", message: "" }),
           },
+          {
+            key: "12",
+            label: "Email",
+            onClick: () =>
+              addAction({ id, type: "email", email: "", message: "" }),
+          },
         ],
       },
     ],

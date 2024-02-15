@@ -132,6 +132,26 @@ export const ActionContent: React.FC<ActionContentProps> = ({ id }) => {
       ];
     }
 
+    if (data.type === "email") {
+      components = [
+        ...components,
+        <TextInput
+          id={id}
+          key={components.length}
+          value={data.email}
+          placeholder="Enter recieving Email"
+          onChange={(value) => setData((pre) => ({ ...pre, email: value }))}
+        />,
+        <TextInput
+          id={id}
+          key={components.length + 1}
+          value={data.message}
+          placeholder="Enter Telegram Message"
+          onChange={(value) => setData((pre) => ({ ...pre, message: value }))}
+        />,
+      ];
+    }
+
     if (data.type === "storeTextContent") {
       components = [
         ...components,

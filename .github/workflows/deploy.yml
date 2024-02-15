@@ -38,6 +38,7 @@ jobs:
       - name: Deploy AWS
         env:
           TELEGRAM_TOKEN: ${{ secrets.TELEGRAM_TOKEN }}
+          RESEND_TOKEN: ${{ secrets.RESEND_TOKEN }}
           BUCKET_NAME: ${{ secrets.BUCKET_NAME }}
           TABLE_NAME: ${{ secrets.TABLE_NAME }}
           RUNNER_FUNCTION_NAME: ${{ secrets.RUNNER_FUNCTION_NAME }}

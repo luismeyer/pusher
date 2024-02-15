@@ -13,6 +13,7 @@ import { timeout } from "./timeout";
 import { type } from "./type";
 import { waitFor } from "./waitFor";
 import { keyboard } from "./keyboard";
+import { sendEmail } from "./sendEmail";
 
 const replaceVariables = (
   action: Action,
@@ -102,6 +103,10 @@ export const executeActions = async (
 
     case "telegram":
       await sendTelegramMessage(action.chatId, action.message);
+      break;
+
+    case "email":
+      await sendEmail(action.email, action.message);
       break;
 
     case "storeTextContent":

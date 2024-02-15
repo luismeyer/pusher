@@ -6,4 +6,10 @@ export type TelegramAction = BaseAction & {
   chatId: string;
 };
 
-export type OutputAction = TelegramAction;
+export type EmailAction = BaseAction & {
+  type: "email";
+  message: string;
+  email: string;
+};
+
+export type OutputAction = TelegramAction | EmailAction;

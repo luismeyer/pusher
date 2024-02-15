@@ -18,6 +18,11 @@ if (!telegramToken) {
   throw new Error("TELEGRAM_TOKEN Env variable is not set");
 }
 
+const resendToken = process.env.RESEND_TOKEN;
+if (!resendToken) {
+  throw new Error("RESEND_TOKEN Env variable is not set");
+}
+
 const intervalIndexName = process.env.INTERVAL_INDEX_NAME;
 if (!intervalIndexName) {
   throw new Error("INTERVAL_INDEX_NAME Env variable is not set");
@@ -40,6 +45,7 @@ export const Environment = {
   tableName,
   runnerFunctionName,
   telegramToken,
+  resendToken,
   intervalIndexName,
   userIndexName,
   webSocketAppId: WEBSOCKET_APP_ID,

@@ -14,6 +14,7 @@ export const RunnerFunction: FunctionOptions = {
   timeoutMins: 15,
   memorySize: 5120,
   environment: {
+    RESEND_TOKEN: Environment.resendToken,
     TELEGRAM_TOKEN: Environment.telegramToken,
     BUCKET_NAME: Environment.bucketName,
     TABLE_NAME: Environment.tableName,

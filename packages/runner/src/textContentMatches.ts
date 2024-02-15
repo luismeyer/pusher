@@ -10,7 +10,7 @@ export const textContentMatches = async (
   try {
     const elementText = await textContent(page, selector);
 
-    return elementText?.includes(text);
+    return Boolean(elementText?.includes(text));
   } catch {
     return false;
   }

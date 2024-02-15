@@ -22,6 +22,7 @@ const TypeLabels: Record<Action["type"], string> = {
   timeout: "Timeout",
   storeTextContent: "Store Text Content in Variable",
   keyboard: "Keyboard Strokes",
+  email: "Email",
 };
 
 export const ActionHeader: React.FC<ActionHeaderProps> = ({ id }) => {
