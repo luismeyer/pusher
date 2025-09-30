@@ -8,10 +8,19 @@ export const createBrowser = async () => {
     ? pup.executablePath()
     : await chromium.executablePath();
 
+  const viewport = {
+    deviceScaleFactor: 1,
+    hasTouch: false,
+    height: 1080,
+    isLandscape: true,
+    isMobile: false,
+    width: 1920,
+  };
+
   return puppeteer.launch({
-    args: chromium.args,
-    defaultViewport: chromium.defaultViewport,
+    args: puppeteer.defaultArgs({ args: chromium.args, headless: "shell" }),
+    defaultViewport: viewport,
     executablePath,
-    headless: chromium.headless,
+    headless: "shell",
   });
 };
