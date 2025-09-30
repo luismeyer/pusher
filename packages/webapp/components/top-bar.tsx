@@ -42,8 +42,6 @@ import {
 } from "./ui/tooltip";
 
 export const TopBar: React.FC = () => {
-	const { data: session } = useSession();
-
 	const [flowData, setFlowData] = useRecoilState(flowAtom);
 
 	const [isDebugOpen, setIsDebugOpen] = useState(false);

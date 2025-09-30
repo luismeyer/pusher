@@ -1,6 +1,6 @@
 "use server";
 
-import { LoadResponse } from "@pusher/shared";
+import type { LoadResponse } from "@pusher/shared";
 
 import { auth } from "./auth";
 import { getFlow } from "./db-flow";

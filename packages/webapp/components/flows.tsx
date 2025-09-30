@@ -11,6 +11,7 @@ import {
 	CardHeader,
 	CardTitle,
 } from "@/components/ui/card";
+import { Badge } from "./ui/badge";
 
 export async function Flows() {
 	const res = await flowsAction();
@@ -28,10 +29,13 @@ export async function Flows() {
 			{res.data?.map((flow) => (
 				<Card key={flow.id} className="flex flex-col p-4 gap-5 w-full">
 					<CardHeader className="p-0">
-						<CardTitle className="text-2xl">{flow.name}</CardTitle>
+						<div className="flex items-center justify-between">
+							<CardTitle className="text-2xl">{flow.name}</CardTitle>
+							{flow.disabled && <Badge variant="destructive">Disabled</Badge>}
+						</div>
 
 						<CardDescription>
-							disabled: {flow.disabled ? "true" : "false"}
+							{flow.disabled ? "Disabled" : "Enabled"}
 						</CardDescription>
 					</CardHeader>
 

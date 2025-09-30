@@ -47,6 +47,7 @@
 		"@types/react-dom": "18.2.18",
 		"@types/uuid": "^9.0.1",
 		"autoprefixer": "^10.4.16",
+		"biome": "^0.3.3",
 		"eslint": "^8.35.0",
 		"eslint-config-next": "^14.0.4",
 		"postcss": "^8.4.33",
