@@ -57,7 +57,7 @@ export type NavigationAction =
   | KeyboardAction;
 
 export const isNavigationAction = (
-  action: Action
+  action: Action,
 ): action is NavigationAction =>
   action.type === "click" ||
   action.type === "scrollToBottom" ||

@@ -24,13 +24,13 @@ export const SchedulerFunctions = Intervals.map(
       TABLE_NAME: Environment.tableName,
       RUNNER_FUNCTION_NAME: Environment.runnerFunctionName,
     },
-  })
+  }),
 );
 
 export const createSchedulers = (
   stack: Stack,
   table: Table,
-  runner: AwsFunction
+  runner: AwsFunction,
 ) => {
   for (const functionOptions of SchedulerFunctions) {
     const scheduleLambda = createFunction(stack, functionOptions);

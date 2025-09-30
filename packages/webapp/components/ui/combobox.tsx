@@ -62,7 +62,7 @@ export const Combobox: React.FC<ComboboxProps> = ({ data, label }) => {
                 <CheckIcon
                   className={cn(
                     "ml-auto h-4 w-4",
-                    value === item.value ? "opacity-100" : "opacity-0"
+                    value === item.value ? "opacity-100" : "opacity-0",
                   )}
                 />
               </CommandItem>

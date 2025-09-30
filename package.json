@@ -16,6 +16,7 @@
 	},
 	"devDependencies": {
 		"@aws-sdk/client-s3": "^3.294.0",
+		"@biomejs/biome": "2.2.4",
 		"@types/node": "^22.18.7",
 		"decompress": "^4.2.1",
 		"node-fetch": "^3.3.1",

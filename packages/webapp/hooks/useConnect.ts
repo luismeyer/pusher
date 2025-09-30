@@ -23,7 +23,7 @@ export const useConnect = (id: string) => {
   const [connectType, setConnectType] = useRecoilState(connectTypeAtom);
 
   const hasTransitiveConnection = useRecoilValue(
-    areConnectedSelector({ start: connectStart, end: id })
+    areConnectedSelector({ start: connectStart, end: id }),
   );
 
   // should the action allow a connecting click

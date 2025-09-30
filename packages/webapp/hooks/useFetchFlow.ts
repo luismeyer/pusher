@@ -29,7 +29,7 @@ export const useFetchFlow = () => {
 
       return response;
     },
-    [load, loading, storeFlow]
+    [load, loading, storeFlow],
   );
 
   return {

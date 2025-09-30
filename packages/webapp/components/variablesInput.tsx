@@ -24,14 +24,14 @@ export const VariablesInput: React.FC<VariablesInputProps> = ({
   const inputRef = useRef<HTMLInputElement | null>(null);
 
   const [variablesList, setVariablesList] = useState<[string, string][]>(
-    Object.entries(variables)
+    Object.entries(variables),
   );
 
   // Sync the variables state with the execution state
   useEffect(() => {
     const newVariables = variablesList.reduce<Record<string, string>>(
       (acc, [key, value]) => ({ ...acc, [key]: value }),
-      {}
+      {},
     );
 
     if (JSON.stringify(newVariables) === JSON.stringify(variables)) {
@@ -55,15 +55,15 @@ export const VariablesInput: React.FC<VariablesInputProps> = ({
         inputRef.current?.focus();
 
         return setVariablesList(
-          removeItemFromArray(variablesList, variableIndex)
+          removeItemFromArray(variablesList, variableIndex),
         );
       }
 
       setVariablesList(
-        replaceItemInArray(variablesList, variableIndex, [newName, newValue])
+        replaceItemInArray(variablesList, variableIndex, [newName, newValue]),
       );
     },
-    [variablesList]
+    [variablesList],
   );
 
   const addVariable = useCallback(
@@ -72,7 +72,7 @@ export const VariablesInput: React.FC<VariablesInputProps> = ({
 
       setVariablesList([...variablesList, [name ?? "", value ?? ""]]);
     },
-    [variablesList]
+    [variablesList],
   );
 
   return (

@@ -120,7 +120,7 @@ export const createDDBServer = async () => {
             ],
           },
         ],
-      })
+      }),
     );
 
     console.info(`Created table: ${tableName}`);

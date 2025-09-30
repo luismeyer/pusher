@@ -41,7 +41,7 @@ const uploadFFMPEG = async (endpoint: string) => {
       Bucket: bucketName,
       Key: "ffmpeg",
       Body: Buffer.from(ffmpegData),
-    })
+    }),
   );
 };
 

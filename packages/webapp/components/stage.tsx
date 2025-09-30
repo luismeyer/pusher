@@ -55,7 +55,7 @@ export const Stage: React.FC = () => {
           updateText(text, pointerIndex.current);
         }, 50);
       }),
-    []
+    [],
   );
 
   const createText = useCallback(
@@ -79,7 +79,7 @@ export const Stage: React.FC = () => {
           updateText(text, pointerIndex.current);
         }, 75);
       }),
-    []
+    [],
   );
 
   const renderPointer = () => {

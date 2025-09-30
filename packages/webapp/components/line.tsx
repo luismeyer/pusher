@@ -66,7 +66,7 @@ export const Line: React.FC<LineProps> = ({ data }) => {
 
       return border;
     },
-    []
+    [],
   );
 
   const calculateState = useCallback(
@@ -84,7 +84,7 @@ export const Line: React.FC<LineProps> = ({ data }) => {
         border: calculateBorder(line, width, height),
       };
     },
-    [calculateBorder]
+    [calculateBorder],
   );
 
   const state = useMemo(() => calculateState(data), [calculateState, data]);

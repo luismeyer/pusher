@@ -7,7 +7,7 @@ import { res } from "./response";
 import { validateFlow } from "./validateFlow";
 
 export const validateAction = async (
-  flow: string
+  flow: string,
 ): Promise<AuthResponse<ValidateResponse>> => {
   const user = await auth();
   if (!user) {

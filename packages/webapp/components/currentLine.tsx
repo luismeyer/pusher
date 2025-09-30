@@ -44,7 +44,7 @@ export const CurrentLine: React.FC = () => {
           type,
         });
       },
-    [setCurrentLine]
+    [setCurrentLine],
   );
 
   useEffect(() => {

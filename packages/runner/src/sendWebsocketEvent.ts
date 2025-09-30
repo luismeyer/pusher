@@ -33,7 +33,7 @@ const pusherInstance = () => {
 export const sendWebsocketEvent = async <TEvent extends RunnerEvent>(
   event: TEvent,
   payload: RunnerPayloadMap[TEvent],
-  flow: Flow
+  flow: Flow,
 ) => {
   const pusher = pusherInstance();
 

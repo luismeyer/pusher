@@ -68,7 +68,7 @@ const createInvokeRoute = (app: Application, options: FunctionOptions) => {
           errorType: "Error",
         });
       }
-    }
+    },
   );
 };
 

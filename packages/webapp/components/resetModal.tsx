@@ -44,7 +44,7 @@ export const ResetModal: React.FC<ResetModalProps> = ({ setOpen, open }) => {
 
         setOpen(false);
       },
-    [useDeleteAction, setOpen]
+    [useDeleteAction, setOpen],
   );
 
   return (

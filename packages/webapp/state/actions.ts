@@ -45,7 +45,7 @@ export const useResetAction = () => {
         reset(relationAtom(id));
         reset(dataAtom(id));
       },
-    []
+    [],
   );
 };
 
@@ -59,12 +59,12 @@ export const useDeleteAction = () => {
 
         set(
           actionIdsAtom,
-          actionIds.filter((actionId) => actionId !== id)
+          actionIds.filter((actionId) => actionId !== id),
         );
 
         resetAction(id);
       },
-    []
+    [],
   );
 };
 
@@ -85,7 +85,7 @@ export const useAddAction = () => {
 
       setId(generateId());
     },
-    [generateId, id, setActions, setData]
+    [generateId, id, setActions, setData],
   );
 
   return { id, addAction };
@@ -170,7 +170,7 @@ export const storedVariablesSelector = selectorFamily({
         .map((id) => get(dataAtom(id)))
         .filter(
           (action): action is StoreTextContentAction =>
-            action.type === "storeTextContent"
+            action.type === "storeTextContent",
         )
         .map((action) => action.variableName)
         .filter((name) => Boolean(name));

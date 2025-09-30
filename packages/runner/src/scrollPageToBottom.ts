@@ -17,5 +17,5 @@ export const scrollPageToBottom = async (page: Page) =>
             resolve(true);
           }
         }, 100);
-      })
+      }),
   );

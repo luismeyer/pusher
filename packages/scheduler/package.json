@@ -1,22 +1,22 @@
 {
-  "name": "@pusher/scheduler",
-  "version": "1.0.0",
-  "description": "",
-  "keywords": [],
-  "license": "ISC",
-  "author": "",
-  "scripts": {
-    "build": "node esbuild.mjs --minify",
-    "build:watch": "node esbuild.mjs --watch",
-    "compile": "tsc --build",
-    "compile:watch": "tsc --build --watch --preserveWatchOutput"
-  },
-  "dependencies": {
-    "@aws-sdk/client-lambda": "^3.289.0",
-    "@pusher/shared": "*",
-    "duenamodb": "^1.4.0"
-  },
-  "devDependencies": {
-    "@pusher/esbuild": "*"
-  }
+	"name": "@pusher/scheduler",
+	"version": "1.0.0",
+	"description": "",
+	"keywords": [],
+	"license": "ISC",
+	"author": "",
+	"scripts": {
+		"build": "node esbuild.mjs --minify",
+		"build:watch": "node esbuild.mjs --watch",
+		"compile": "tsc --build",
+		"compile:watch": "tsc --build --watch --preserveWatchOutput"
+	},
+	"dependencies": {
+		"@aws-sdk/client-lambda": "^3.289.0",
+		"@pusher/shared": "*",
+		"duenamodb": "^1.4.0"
+	},
+	"devDependencies": {
+		"@pusher/esbuild": "*"
+	}
 }

@@ -27,7 +27,7 @@ export const lineSelector = selectorFamily({
       const createLine = (
         id: string,
         nextId: string,
-        type: ConnectType
+        type: ConnectType,
       ): Line => {
         const position = get(positionAtom(id));
         const size = get(sizeAtom(id));
@@ -47,7 +47,7 @@ export const lineSelector = selectorFamily({
       };
 
       const { nextAction, falseNextAction, trueNextAction } = get(
-        relationAtom(id)
+        relationAtom(id),
       );
 
       let lines: Line[] = [];

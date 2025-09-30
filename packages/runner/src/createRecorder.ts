@@ -23,14 +23,14 @@ const downloadFFMPEG = async () => {
   return fetch(url)
     .then((res) => res.arrayBuffer())
     .then((data) =>
-      writeFileSync(ffmpegPath, Buffer.from(data), { mode: 755 })
+      writeFileSync(ffmpegPath, Buffer.from(data), { mode: 755 }),
     );
 };
 
 export type StopRecorderFunction = () => Promise<string | undefined>;
 
 export const startRecorder = async (
-  page: Page
+  page: Page,
 ): Promise<StopRecorderFunction | undefined> => {
   await downloadFFMPEG();
 

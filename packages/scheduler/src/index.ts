@@ -17,11 +17,11 @@ export const handler = async () => {
   const flows = await flowsByInterval(INTERVAL);
 
   const runnableFlows = flows.filter(
-    ({ fails, disabled }) => !disabled && fails < 3
+    ({ fails, disabled }) => !disabled && fails < 3,
   );
 
   console.info(
-    `Runnable flows for ${INTERVAL} interval: ${runnableFlows.length}`
+    `Runnable flows for ${INTERVAL} interval: ${runnableFlows.length}`,
   );
 
   await Promise.all(runnableFlows.map(callRunner));

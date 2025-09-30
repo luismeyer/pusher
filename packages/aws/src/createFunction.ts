@@ -32,7 +32,7 @@ export const createFunction = (stack: Stack, options: FunctionOptions) => {
 
   const handler = fileName.replace(
     extname(fileName),
-    `.${handlerFunctionName}`
+    `.${handlerFunctionName}`,
   );
 
   return new AwsFunction(stack, functionName, {

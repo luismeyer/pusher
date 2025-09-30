@@ -5,7 +5,7 @@ import { textContent } from "./textContent";
 export const textContentMatches = async (
   page: Page,
   selector: string,
-  text: string
+  text: string,
 ) => {
   try {
     const elementText = await textContent(page, selector);

@@ -14,7 +14,7 @@ export const useCancelConnect = () => {
 
         set(connectStartAtom, undefined);
       },
-    []
+    [],
   );
 
   return cancelConnect;

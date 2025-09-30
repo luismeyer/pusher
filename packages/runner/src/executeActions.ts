@@ -21,7 +21,7 @@ import { sendEmail } from "./sendEmail";
 
 const replaceVariables = (
   action: Action,
-  variables?: Record<string, string | undefined>
+  variables?: Record<string, string | undefined>,
 ): Action => {
   if (!variables) {
     return action;
@@ -63,7 +63,7 @@ const replaceVariables = (
 export const executeActions = async (
   page: Page,
   rawAction: Action,
-  variables?: Record<string, string | undefined>
+  variables?: Record<string, string | undefined>,
 ): Promise<boolean> => {
   let decision = undefined;
 

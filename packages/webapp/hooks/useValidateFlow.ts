@@ -42,7 +42,7 @@ export const useValidateFlowString = () => {
         return { valid: false, error: "Invalid JSON" };
       }
     },
-    [validate]
+    [validate],
   );
 
   return validateFlow;

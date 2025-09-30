@@ -31,7 +31,7 @@ export const SubmitModal: React.FC<SubmitModalProps> = ({ setOpen, open }) => {
       async () => {
         return await snapshot.getPromise(serializedFlowSelector);
       },
-    []
+    [],
   );
 
   const submit = useActionCall(submitAction);

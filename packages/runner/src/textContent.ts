@@ -5,7 +5,7 @@ export const textContent = async (page: Page, selector: string) => {
 
   const elementText = await page.evaluate(
     (element) => element?.textContent,
-    element
+    element,
   );
 
   return elementText ? elementText.trim() : undefined;

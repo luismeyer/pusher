@@ -65,7 +65,7 @@ export const Action: React.FC<ActionProps> = ({ id }) => {
             set(dragIdAtom, id);
           }
         },
-      [allowConnect, connectPreviousAction, id, isConnecting]
+      [allowConnect, connectPreviousAction, id, isConnecting],
     );
 
   // stop drag
@@ -80,7 +80,7 @@ export const Action: React.FC<ActionProps> = ({ id }) => {
 
         set(dragIdAtom, undefined);
       },
-    []
+    [],
   );
 
   const cursor = useMemo(() => {
@@ -105,7 +105,7 @@ export const Action: React.FC<ActionProps> = ({ id }) => {
 
       stopDrag();
     },
-    [stopDrag]
+    [stopDrag],
   );
 
   useEffect(() => {
@@ -125,7 +125,7 @@ export const Action: React.FC<ActionProps> = ({ id }) => {
         "z-10 hover:z-20 absolute rounded-md hover:shadow-lg min-w-[400px] min-h-[200px] grid grid-rows-[auto_1fr]",
         {
           "border-blue-600": nextAction || parentAction,
-        }
+        },
       )}
       style={{ top: position.y, left: position.x, cursor }}
     >

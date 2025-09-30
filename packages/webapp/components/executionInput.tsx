@@ -31,13 +31,13 @@ export const ExecutionsInput: React.FC<ExecutionsInputProps> = ({
 
   const deleteExecution = useCallback(
     (index: number) => setExecutions(removeItemFromArray(executions, index)),
-    [executions, setExecutions]
+    [executions, setExecutions],
   );
 
   const updateExecution = useCallback(
     (index: number, execution: Execution) =>
       setExecutions(replaceItemInArray(executions, index, execution)),
-    [executions, setExecutions]
+    [executions, setExecutions],
   );
 
   const updateVariables = useCallback(
@@ -46,14 +46,14 @@ export const ExecutionsInput: React.FC<ExecutionsInputProps> = ({
 
       updateExecution(executionIndex, { ...execution, variables });
     },
-    [executions, updateExecution]
+    [executions, updateExecution],
   );
 
   const minimumVariables = useRecoilValue(defaultVariables);
 
   const missingVariables = useMemo(
     () => minimumVariables.filter((name) => !execution.variables[name]),
-    [execution.variables, minimumVariables]
+    [execution.variables, minimumVariables],
   );
 
   return (

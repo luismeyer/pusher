@@ -41,7 +41,7 @@ export const ImportExportModal: React.FC<ImportExportModalProps> = ({
       () => {
         return snapshot.getPromise(flowSelector);
       },
-    []
+    [],
   );
 
   const [importExport, setImportExport] = useState<string | undefined>("");
@@ -56,7 +56,7 @@ export const ImportExportModal: React.FC<ImportExportModalProps> = ({
     const publicFlow = JSON.stringify(
       { ...flow, id: undefined, fails: 0 },
       null,
-      4
+      4,
     );
 
     setImportExport(publicFlow);
@@ -93,7 +93,7 @@ export const ImportExportModal: React.FC<ImportExportModalProps> = ({
 
       textAreaRef.current.style.height = `${Math.min(
         window.innerHeight * (3 / 4),
-        textAreaRef.current.scrollHeight
+        textAreaRef.current.scrollHeight,
       )}px`;
     }
   }, [importExport]);

@@ -24,7 +24,7 @@ export const useDrag = () => {
           pointerActionOffsetY.current = undefined;
         }
       },
-    []
+    [],
   );
 
   const handleDrag = useRecoilCallback(
@@ -74,7 +74,7 @@ export const useDrag = () => {
 
         set(positionAtom(dragId), (pre) => ({ ...pre, y: newY }));
       },
-    [pointerActionOffsetX.current, pointerActionOffsetY.current]
+    [pointerActionOffsetX.current, pointerActionOffsetY.current],
   );
 
   return handleDrag;

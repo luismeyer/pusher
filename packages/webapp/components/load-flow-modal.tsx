@@ -45,7 +45,7 @@ export const LoadFlowModal: React.FC<LoadFlowModalProps> = ({
         setId("");
       }
     },
-    [fetchFlow, setOpen]
+    [fetchFlow, setOpen],
   );
 
   const reloadFlow = useCallback(async () => {

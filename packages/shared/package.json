@@ -1,14 +1,14 @@
 {
-  "name": "@pusher/shared",
-  "version": "1.0.0",
-  "description": "",
-  "main": "lib/index.js",
-  "types": "lib/index.d.ts",
-  "scripts": {
-    "compile": "tsc --build",
-    "compile:watch": "tsc --build --watch --preserveWatchOutput"
-  },
-  "keywords": [],
-  "author": "",
-  "license": "ISC"
+	"name": "@pusher/shared",
+	"version": "1.0.0",
+	"description": "",
+	"main": "dist/index.js",
+	"types": "dist/index.d.ts",
+	"scripts": {
+		"compile": "tsc --build",
+		"compile:watch": "tsc --build --watch --preserveWatchOutput"
+	},
+	"keywords": [],
+	"author": "",
+	"license": "ISC"
 }

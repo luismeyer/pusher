@@ -41,7 +41,7 @@ export const TextInput: React.FC<TextInputProps> = ({
     }
 
     const prefixInValue = addonBeforeOptions?.find(({ value }) =>
-      fullValue.startsWith(value)
+      fullValue.startsWith(value),
     );
 
     if (!prefixInValue) {
@@ -60,7 +60,7 @@ export const TextInput: React.FC<TextInputProps> = ({
 
       onChange(parsedPrefix + (options.value ?? value));
     },
-    [onChange, prefix, value]
+    [onChange, prefix, value],
   );
 
   const variableNames = useMemo(() => {
@@ -69,7 +69,7 @@ export const TextInput: React.FC<TextInputProps> = ({
     const matches = value.match(regex) ?? [];
 
     return matches.map((match) =>
-      match.replace("{{", "").replace("}}", "").trim()
+      match.replace("{{", "").replace("}}", "").trim(),
     );
   }, [value]);
 
@@ -80,7 +80,7 @@ export const TextInput: React.FC<TextInputProps> = ({
 
     return variableNames
       .filter(
-        (name) => !variables.includes(name) && !storedVariables.includes(name)
+        (name) => !variables.includes(name) && !storedVariables.includes(name),
       )
       .join(", ");
   }, [storedVariables, variableNames, variables]);

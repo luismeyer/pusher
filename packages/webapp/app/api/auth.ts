@@ -13,7 +13,7 @@ export const auth = async () => {
 
 if (!process.env.NEXTAUTH_GITHUB_ID || !process.env.NEXTAUTH_GITHUB_SECRET) {
   throw new Error(
-    "Missing NEXTAUTH_GITHUB_ID or NEXTAUTH_GITHUB_SECRET environment variables"
+    "Missing NEXTAUTH_GITHUB_ID or NEXTAUTH_GITHUB_SECRET environment variables",
   );
 }
 
