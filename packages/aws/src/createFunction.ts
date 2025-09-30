@@ -1,6 +1,11 @@
-import { Duration, Stack } from "aws-cdk-lib";
-import { Code, Function, Runtime, LayerVersion } from "aws-cdk-lib/aws-lambda";
-import { extname } from "path";
+import { Duration, type Stack } from "aws-cdk-lib";
+import {
+  Code,
+  Function as AwsFunction,
+  Runtime,
+  type LayerVersion,
+} from "aws-cdk-lib/aws-lambda";
+import { extname } from "node:path";
 
 export type FunctionOptions = {
   functionName: string;
@@ -30,7 +35,7 @@ export const createFunction = (stack: Stack, options: FunctionOptions) => {
     `.${handlerFunctionName}`
   );
 
-  return new Function(stack, functionName, {
+  return new AwsFunction(stack, functionName, {
     runtime: Runtime.NODEJS_18_X,
     functionName,
     handler,

@@ -1,9 +1,9 @@
-import { Stack } from "aws-cdk-lib";
+import type { Stack } from "aws-cdk-lib";
 import { Code, LayerVersion, Runtime } from "aws-cdk-lib/aws-lambda";
 import { resolve } from "path";
 import { chromiumLayerPath } from "./aws";
 
-import { createFunction, FunctionOptions } from "./createFunction";
+import { createFunction, type FunctionOptions } from "./createFunction";
 import { Environment } from "./readEnv";
 
 export const RunnerFunction: FunctionOptions = {
