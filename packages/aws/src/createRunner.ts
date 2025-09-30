@@ -1,6 +1,6 @@
 import type { Stack } from "aws-cdk-lib";
 import { Code, LayerVersion, Runtime } from "aws-cdk-lib/aws-lambda";
-import { resolve } from "path";
+import { resolve } from "node:path";
 import { chromiumLayerPath } from "./aws";
 
 import { createFunction, type FunctionOptions } from "./createFunction";
@@ -27,7 +27,7 @@ export const RunnerFunction: FunctionOptions = {
 export const createRunner = (stack: Stack) => {
   const chromiumLayer = new LayerVersion(stack, "ChromiumLayer", {
     code: Code.fromAsset(chromiumLayerPath),
-    compatibleRuntimes: [Runtime.NODEJS_18_X],
+    compatibleRuntimes: [Runtime.NODEJS_LATEST],
     description: "A layer to use chromium in lambda functions",
   });
 

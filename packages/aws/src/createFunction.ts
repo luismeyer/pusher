@@ -36,7 +36,7 @@ export const createFunction = (stack: Stack, options: FunctionOptions) => {
   );
 
   return new AwsFunction(stack, functionName, {
-    runtime: Runtime.NODEJS_18_X,
+    runtime: Runtime.NODEJS_LATEST,
     functionName,
     handler,
     code: Code.fromAsset(folderPath),

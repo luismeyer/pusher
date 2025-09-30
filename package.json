@@ -10,7 +10,7 @@
 		"build:watch": "turbo run build:watch",
 		"start": "turbo run dev build:watch compile:watch --concurrency 25",
 		"dev:scheduler": "pnpm run --filter @pusher/aws dev:scheduler",
-		"setup": "node scripts/setup.mjs",
+		"dev:setup": "node scripts/setup.mjs",
 		"compile": "turbo run compile",
 		"compile:watch": "turbo run compile:watch"
 	},
@@ -18,8 +18,6 @@
 		"@aws-sdk/client-s3": "^3.294.0",
 		"@types/node": "^22.18.7",
 		"decompress": "^4.2.1",
-		"decompress-tarxz": "^3.0.0",
-		"decompress-unzip": "^4.0.1",
 		"node-fetch": "^3.3.1",
 		"turbo": "^1.10.3",
 		"typescript": "^5.3.3"
