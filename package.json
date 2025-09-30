@@ -10,7 +10,7 @@
 		"build:watch": "turbo run build:watch",
 		"start": "turbo run dev build:watch compile:watch --concurrency 25",
 		"dev:scheduler": "pnpm run --filter @pusher/aws dev:scheduler",
-		"dev:setup": "node scripts/setup.mjs",
+		"setup-bucket": "node scripts/setup.mjs",
 		"compile": "turbo run compile",
 		"compile:watch": "turbo run compile:watch"
 	},

@@ -64,4 +64,4 @@ jobs:
           LINUX_FFMPEG_URL: ${{ vars.LINUX_FFMPEG_URL }}
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-        run: pnpm run setup
+        run: pnpm run setup-bucket
