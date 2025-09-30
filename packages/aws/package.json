@@ -10,7 +10,8 @@
 		"deploy": "cdk deploy",
 		"dev": "ts-node src/dev/index.ts",
 		"dev:scheduler": "ts-node src/dev/invokeScheduler.ts",
-		"synth": "cdk synth"
+		"synth": "cdk synth",
+		"bootstrap": "cdk bootstrap"
 	},
 	"dependencies": {
 		"@pusher/shared": "*",

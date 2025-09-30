@@ -1,6 +1,10 @@
-import { readFileSync } from "fs";
+import { readFileSync } from "node:fs";
 
-import { PutObjectCommand, S3Client, S3ClientConfig } from "@aws-sdk/client-s3";
+import {
+  PutObjectCommand,
+  S3Client,
+  type S3ClientConfig,
+} from "@aws-sdk/client-s3";
 import { createBucketUrl } from "@pusher/shared";
 
 const { BUCKET_NAME } = process.env;
