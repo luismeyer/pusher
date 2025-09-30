@@ -7,10 +7,14 @@ if (!process.env.RESEND_TOKEN) {
 const resend = new Resend(process.env.RESEND_TOKEN);
 
 export const sendEmail = async (email: string, message: string) => {
-  const wrappedMessage = `${message}\n\n<b>This message is not verified and could contain dangerous content!</b>`;
+  const wrappedMessage = `
+${message}
+<br />
+<br />
+<b>This message is not verified and could contain dangerous content!</b>`;
 
   await resend.emails.send({
-    from: "onboarding@resend.dev",
+    from: "notifications@luimey.dev",
     to: email,
     subject: "Pusher Notification",
     html: wrappedMessage,

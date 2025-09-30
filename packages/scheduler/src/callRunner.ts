@@ -1,5 +1,5 @@
 import { InvokeCommand, LambdaClient } from "@aws-sdk/client-lambda";
-import { Flow, RunnerPayload } from "@pusher/shared";
+import type { Flow, RunnerPayload } from "@pusher/shared";
 
 const { RUNNER_FUNCTION_NAME } = process.env;
 

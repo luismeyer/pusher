@@ -1,8 +1,8 @@
 import {
-  Flow,
+  type Flow,
   runnerChannel,
-  RunnerEvent,
-  RunnerPayloadMap,
+  type RunnerEvent,
+  type RunnerPayloadMap,
 } from "@pusher/shared";
 import Pusher from "pusher";
 

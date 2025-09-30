@@ -1,5 +1,5 @@
-import { Flow } from "./flow";
-import { RunnerResult } from "./runner";
+import type { Flow } from "./flow";
+import type { RunnerResult } from "./runner";
 
 export const runnerChannel = (flow: Flow) => `runner-channel-${flow.id}`;
 

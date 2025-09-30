@@ -1,6 +1,6 @@
 "use server";
 
-import { DebugResponse, Flow } from "@pusher/shared";
+import type { DebugResponse, Flow } from "@pusher/shared";
 
 import { callRunner } from "./callRunner";
 import { validateFlow } from "./validateFlow";

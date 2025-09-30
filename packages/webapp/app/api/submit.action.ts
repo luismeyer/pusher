@@ -2,7 +2,7 @@
 
 import { NOT } from "duenamodb";
 
-import { SubmitResponse } from "@pusher/shared";
+import type { SubmitResponse } from "@pusher/shared";
 
 import { auth } from "./auth";
 import { flowsByUser, saveFlow } from "./db-flow";

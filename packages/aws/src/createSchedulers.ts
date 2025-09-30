@@ -1,16 +1,16 @@
-import { Stack } from "aws-cdk-lib";
-import { Table } from "aws-cdk-lib/aws-dynamodb";
+import type { Stack } from "aws-cdk-lib";
+import type { Table } from "aws-cdk-lib/aws-dynamodb";
 import { Rule, Schedule } from "aws-cdk-lib/aws-events";
 import { LambdaFunction } from "aws-cdk-lib/aws-events-targets";
-import { Function } from "aws-cdk-lib/aws-lambda";
-import { resolve } from "path";
+import type { Function as AwsFunction } from "aws-cdk-lib/aws-lambda";
+import { resolve } from "node:path";
 
-import { Flow } from "@pusher/shared";
+import type { Flow } from "@pusher/shared";
 
-import { createFunction, FunctionOptions } from "./createFunction";
+import { createFunction, type FunctionOptions } from "./createFunction";
 import { Environment } from "./readEnv";
 
-const Intervals: Flow["interval"][] = ["6h", "12h"];
+const Intervals: Flow["interval"][] = ["1h", "3h", "6h", "12h"];
 
 export const SchedulerFunctions = Intervals.map(
   (interval): FunctionOptions => ({
@@ -30,9 +30,9 @@ export const SchedulerFunctions = Intervals.map(
 export const createSchedulers = (
   stack: Stack,
   table: Table,
-  runner: Function
+  runner: AwsFunction
 ) => {
-  SchedulerFunctions.forEach((functionOptions) => {
+  for (const functionOptions of SchedulerFunctions) {
     const scheduleLambda = createFunction(stack, functionOptions);
 
     const { INTERVAL } = functionOptions.environment;
@@ -47,5 +47,5 @@ export const createSchedulers = (
 
     table.grantReadData(scheduleLambda);
     runner.grantInvoke(scheduleLambda);
-  });
+  }
 };

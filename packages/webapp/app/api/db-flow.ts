@@ -1,6 +1,6 @@
 import { createGetItem, createPutItem, createQueryItems } from "duenamodb";
 
-import { Flow } from "@pusher/shared";
+import type { Flow } from "@pusher/shared";
 
 import { TableName } from "./db";
 

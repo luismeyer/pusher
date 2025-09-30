@@ -1,4 +1,4 @@
-import { FlowsResponse } from "@pusher/shared";
+import type { FlowsResponse } from "@pusher/shared";
 
 import { auth } from "./auth";
 import { flowsByUser } from "./db-flow";

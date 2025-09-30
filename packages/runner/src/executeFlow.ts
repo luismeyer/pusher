@@ -1,6 +1,6 @@
-import { Page } from "puppeteer-core";
+import type { Page } from "puppeteer-core";
 
-import { Flow } from "@pusher/shared";
+import type { Flow } from "@pusher/shared";
 
 import { executeActions } from "./executeActions";
 

@@ -1,6 +1,6 @@
 "use server";
 
-import { AuthResponse, ValidateResponse } from "@pusher/shared";
+import type { AuthResponse, ValidateResponse } from "@pusher/shared";
 import { auth } from "./auth";
 import { res } from "./response";
 

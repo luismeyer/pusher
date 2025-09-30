@@ -1,4 +1,4 @@
-import { Flow } from "@pusher/shared";
+import type { Flow } from "@pusher/shared";
 import { createQueryItems, DDBClient } from "duenamodb";
 
 DDBClient.params = {
@@ -8,7 +8,7 @@ DDBClient.params = {
 if (process.env.IS_LOCAL) {
   DDBClient.params = {
     region: "localhost",
-    endpoint: `http://localhost:3003`,
+    endpoint: "http://localhost:3003",
   };
 }
 

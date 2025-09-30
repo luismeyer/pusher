@@ -1,7 +1,7 @@
-import { RunnerPayload, RunnerResult } from "@pusher/shared";
+import type { RunnerPayload, RunnerResult } from "@pusher/shared";
 
 import { createBrowser } from "./createBrowser";
-import { startRecorder, StopRecorderFunction } from "./createRecorder";
+import { startRecorder, type StopRecorderFunction } from "./createRecorder";
 import { executeFlow } from "./executeFlow";
 import { increaseFails } from "./increaseFails";
 import { sendWebsocketEvent } from "./sendWebsocketEvent";
@@ -26,7 +26,7 @@ export const handler = async ({
       result = { type: "success" };
     })
     .catch(async (error: Error) => {
-      console.info(`Error in ${flow.id}:`, error.message);
+      console.info(`Error in ${flow.id}:`, error);
 
       if (!debug) {
         await increaseFails(flow);

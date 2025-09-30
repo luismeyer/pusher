@@ -1,6 +1,10 @@
-import { Page } from "puppeteer-core";
+import type { Page } from "puppeteer-core";
 
-import { Action, isDecisionAction, isNavigationAction } from "@pusher/shared";
+import {
+  type Action,
+  isDecisionAction,
+  isNavigationAction,
+} from "@pusher/shared";
 
 import { click } from "./click";
 import { exists } from "./exists";

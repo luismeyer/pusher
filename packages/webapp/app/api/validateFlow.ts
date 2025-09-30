@@ -1,6 +1,6 @@
-import { Action, Flow } from "@pusher/shared";
+import type { Action, Flow } from "@pusher/shared";
 
-import { DeepPartial } from "./deepPartial";
+import type { DeepPartial } from "./deepPartial";
 
 const isValidUrl = (string: string) => {
   if (string.includes("{{")) {
@@ -17,7 +17,7 @@ const isValidUrl = (string: string) => {
 };
 
 const validateAction = (action: DeepPartial<Action>): action is Action => {
-  Object.entries(action).forEach(([key, value]) => {
+  for (const [key, value] of Object.entries(action)) {
     if ("pageUrl" in action && !isValidUrl(action.pageUrl ?? "")) {
       throw new Error(`Invalid pageUrl in action: ${action.id}`);
     }
@@ -30,10 +30,10 @@ const validateAction = (action: DeepPartial<Action>): action is Action => {
       throw new Error(`Missing ${key} in action: ${action.id}`);
     }
 
-    if (typeof value === "object") {
+    if (typeof value === "object" && value !== null) {
       validateAction(value);
     }
-  });
+  }
 
   return true;
 };

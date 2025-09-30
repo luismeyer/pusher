@@ -1,15 +1,15 @@
-import {
+import type {
   ExistsAction,
   TextContentMatchesAction,
   DecisionAction,
 } from "./decisionAction";
-import {
+import type {
   ClickAction,
   TypeAction,
   WaitForAction,
   NavigationAction,
 } from "./navigationAction";
-import { OutputAction } from "./outputAction";
+import type { OutputAction } from "./outputAction";
 
 export type SelectorAction =
   | ClickAction
@@ -35,7 +35,7 @@ export type Execution = {
 };
 
 export const isInterval = (text: string): text is Flow["interval"] =>
-  text === "6h" || text === "12h";
+  text === "1h" || text === "3h" || text === "6h" || text === "12h";
 
 export type Flow = {
   user?: string;
@@ -43,7 +43,7 @@ export type Flow = {
   name: string;
   id: string;
   fails: number;
-  interval: "6h" | "12h";
+  interval: "1h" | "3h" | "6h" | "12h";
   disabled: boolean;
   executions?: Execution[];
   actionTree: Action;

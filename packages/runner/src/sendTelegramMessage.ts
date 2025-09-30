@@ -7,7 +7,11 @@ import TelegramBot from "node-telegram-bot-api";
 const bot = new TelegramBot(process.env.TELEGRAM_TOKEN, { polling: false });
 
 export const sendTelegramMessage = (chatId: string, message: string) => {
-  const wrappedMessage = `<p>${message}<p/> <br/> <b>This message is not verified and could contain dangerous content!</b>`;
+  const wrappedMessage = `
+<code>${message}</code>,
+
+<b>This message is not verified and could contain dangerous content!</b>
+`;
 
   return bot.sendMessage(chatId, wrappedMessage, { parse_mode: "HTML" });
 };
