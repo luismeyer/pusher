@@ -3,6 +3,6 @@
 
 import { runEsbuild } from "@pusher/esbuild/esbuild.mjs";
 
-await runEsbuild(`src/index.ts`, {
-  external: ["./lib-cov/fluent-ffmpeg", "@sparticuz/chromium"],
+await runEsbuild("src/index.ts", {
+	external: ["./lib-cov/fluent-ffmpeg", "@sparticuz/chromium"],
 });

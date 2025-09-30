@@ -12,6 +12,6 @@ export const createBrowser = async () => {
     args: chromium.args,
     defaultViewport: chromium.defaultViewport,
     executablePath,
-    headless: Boolean(chromium.headless),
+    headless: chromium.headless,
   });
 };

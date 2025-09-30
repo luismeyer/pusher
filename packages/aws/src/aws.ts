@@ -2,13 +2,13 @@
 import "source-map-support/register";
 
 import * as cdk from "aws-cdk-lib";
-import { writeFile } from "fs/promises";
-import { tmpdir } from "os";
+import { writeFile } from "node:fs/promises";
+import { tmpdir } from "node:os";
+import { existsSync } from "node:fs";
 
 import { AwsStack } from "./stack";
-import { existsSync } from "fs";
 
-export const chromiumLayerPath = tmpdir() + "/chromium-layer.zip";
+export const chromiumLayerPath = `${tmpdir()}/chromium-layer.zip`;
 
 const loadChromium = async () => {
   if (existsSync(chromiumLayerPath)) {
